@@ -1,0 +1,2031 @@
+<title>Futura Setup Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400;1,700&display=swap">
+<style>
+/* Layout: bento di sezioni (max 4 colonne) → vista a passi con avanzamento bloccato. Look Futura: nero con grana, menta + rosa, IBM Plex. */
+:root {
+  color-scheme: dark;
+  --bg: #0c0c0c;
+  --bg-raise: #151615;
+  --panel: #1a1b1a;
+  --line: #2a2c2b;
+  --line-strong: #3a3d3b;
+  --fg: #f2f0eb;
+  --muted: #a4a39d;
+  --faint: #8b8a84;
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --mint: #95f7ce;
+  --mint-deep: #1d2e27;
+  --pink: #ffafd6;
+  --pink-deep: #2c2128;
+  --lilac: #b9a8ff;
+  --lilac-deep: #221f2e;
+  --ink: #0c0c0c;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+  min-height: 100%;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .09;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.wrap { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; }
+a { color: var(--mint); text-underline-offset: 3px; }
+::selection { background: var(--mint); color: var(--ink); }
+html { scrollbar-color: var(--line-strong) var(--bg); accent-color: var(--mint); caret-color: var(--mint); }
+.sc-sub { margin: 0; font-size: 22px; font-weight: 500; }
+code, kbd { font-family: var(--mono); font-size: .88em; }
+:not(pre) > code { background: var(--bg-raise); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; color: var(--mint); }
+kbd { background: var(--panel); border: 1px solid var(--line-strong); border-bottom-width: 2px; padding: 1px 6px; border-radius: 6px; }
+b, strong { font-weight: 700; }
+em.k { font-style: italic; font-weight: 700; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mint); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- Top bar ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 14px 0; background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; text-decoration: none; color: var(--fg); }
+.brand b { font-family: var(--sans); font-weight: 700; letter-spacing: .02em; font-size: 15px; }
+.brand span { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+.os { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 3px; gap: 2px; }
+.os button { border: 0; background: transparent; padding: 5px 14px; border-radius: 999px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); cursor: pointer; }
+.os button[aria-pressed="true"] { background: var(--fg); color: var(--ink); }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px 48px; align-items: end; margin: 0 0 20px; padding-block: clamp(40px, 6vw, 80px) clamp(28px, 4vw, 48px); }
+.hero h1 { margin: 0 0 28px; line-height: 1; letter-spacing: -.02em; text-wrap: balance; display: grid; gap: .08em; }
+.hero h1 .hb { font-weight: 700; color: var(--pink); font-size: clamp(34px, 7.2vw, 96px); overflow-wrap: anywhere; }
+.hero h1 .hl { font-weight: 300; color: var(--fg); font-size: clamp(30px, 5vw, 66px); letter-spacing: -.01em; }
+.hero p { margin: 0; color: var(--muted); max-width: 60ch; font-size: 17px; }
+.hero p b { color: var(--fg); font-weight: 500; }
+.hero-meta { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 24px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+.hero-meta strong { color: var(--mint); font-weight: 500; }
+.seal { width: clamp(132px, 15vw, 200px); aspect-ratio: 1; max-width: 100%; color: var(--pink); }
+.seal svg { width: 100%; height: 100%; transform: rotate(var(--rot, 0deg)); will-change: transform; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .seal svg { transform: none; } *, *::before { transition: none !important; animation: none !important; } }
+/* motion */
+@keyframes rise { from { opacity: .35; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes from-right { from { opacity: .4; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes from-left { from { opacity: .4; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.hero h1 > span, .hero p, .hero-meta { animation: rise .9s var(--e-out) both; }
+.hero h1 > span:nth-child(2) { animation-delay: .08s; }
+.hero p { animation-delay: .16s; }
+.hero-meta { animation-delay: .22s; }
+.bento > * { animation: rise .8s var(--e-out) both; animation-delay: calc(.12s + var(--i, 0) * 45ms); }
+.step[data-dir="next"] { animation: from-right .5s var(--e-out) both; }
+.step[data-dir="prev"] { animation: from-left .5s var(--e-out) both; }
+.seg.just::before { transform-origin: left; animation: fill .6s var(--e-out) both; }
+.tile:active, .btn:active:not(:disabled), .copy:active { transform: scale(.98); }
+.go-arrow { display: inline-flex; align-items: center; gap: 8px; }
+.go-arrow svg { width: 14px; height: 14px; transition: transform .35s var(--e-out); }
+.tile:hover .go-arrow svg, .tile:focus-visible .go-arrow svg { transform: translateX(5px); }
+.copy svg { width: 12px; height: 12px; }
+.skip { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: -60px; z-index: 50; padding: 10px 16px; border-radius: 999px; background: var(--mint); color: var(--ink); font-family: var(--mono); font-size: 13px; text-decoration: none; }
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 10px); }
+h1.sec { margin: 0; font-size: 15px; font-weight: 400; color: var(--muted); }
+#app:focus { outline: none; }
+.os button, .filters button, .tabs button, .copy, .reset { min-height: 34px; }
+@media (pointer: coarse) {
+  .os button, .filters button, .tabs button, .copy, .reset, .back, .ol-item { min-height: 44px; }
+  .seg { height: 44px; }
+  .seg::before { top: 20px; }
+}
+
+/* ---------- Bento ---------- */
+.bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(210px, auto); gap: 14px; }
+.tile {
+  position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  text-align: left; padding: 22px; border-radius: var(--r); cursor: pointer;
+  background: var(--bg-raise); border: 1px solid var(--line); color: var(--fg);
+  transition: border-color .2s var(--e-quart), transform .2s var(--e-quart), background .2s var(--e-quart);
+}
+.tile:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.tile.mint { background: var(--mint-deep); border-color: color-mix(in srgb, var(--mint) 35%, transparent); }
+.tile.pink { background: var(--pink-deep); border-color: color-mix(in srgb, var(--pink) 30%, transparent); }
+.tile.mint:hover { border-color: var(--mint); }
+.tile.pink:hover { border-color: var(--pink); }
+.tile.span2 { grid-column: span 2; }
+.tile.span3 { grid-column: span 3; }
+.tile.span4 { grid-column: 1 / -1; }
+.groups { display: grid; gap: clamp(56px, 7vw, 96px); }
+.group { display: grid; gap: 22px; }
+.group-head { display: grid; justify-items: center; gap: 8px; text-align: center; padding-top: 26px; border-top: 1px solid var(--line-strong); }
+.group-head h2 { margin: 0; font-size: clamp(20px, 2vw, 26px); font-weight: 300; line-height: 1.15; letter-spacing: .04em; text-transform: uppercase; text-wrap: balance; }
+.group-head h2 em { font-style: italic; font-weight: 700; color: var(--fg); }
+.group-head p { margin: 0; color: var(--muted); max-width: 52ch; font-size: 14.5px; }
+.tile.soon { min-height: 0; }
+.group:last-child .bento { grid-auto-rows: auto; }
+.tile.tall { grid-row: span 2; }
+.tile .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.tile .idx { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; }
+.tile .tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--mint); }
+.tile.pink .tag { color: var(--pink); }
+.tile h3 { margin: 6px 0 0; font-size: 26px; line-height: 1.12; font-weight: 400; letter-spacing: -.01em; text-wrap: balance; }
+.tile.tall h3 { font-size: clamp(34px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.015em; }
+.tile.feature { background: var(--pink); border-color: var(--pink); color: var(--ink); }
+.tile.feature:hover { border-color: var(--fg); }
+.tile.feature .tag, .tile.feature .start-cue { color: var(--ink); }
+.tile.feature p, .tile.feature .meta, .tile.feature .req, .tile.feature .feat-note { color: color-mix(in srgb, var(--ink) 72%, var(--pink)); }
+.tile.feature .chip { color: var(--ink); border-color: color-mix(in srgb, var(--ink) 40%, var(--pink)); }
+.tile.feature .chip.go, .tile.feature .chip.done { background: var(--ink); color: var(--pink); border-color: var(--ink); }
+.tile.feature .bar { background: color-mix(in srgb, var(--ink) 15%, var(--pink)); }
+.tile.feature .bar i { background: var(--ink); }
+.tile.feature .big-num { color: var(--ink); }
+.tile.feature p { font-size: 16px; }
+.feat-note { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; }
+.tile h3 em { font-style: italic; font-weight: 700; }
+.tile p { margin: 0; color: var(--muted); font-size: 14.5px; max-width: 46ch; }
+.tile .foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 10px; }
+.tile .meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.tile .req { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+.bar { height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--mint); border-radius: 3px; transition: width .4s var(--e-quart); }
+.tile.pink .bar i { background: var(--pink); }
+.chip { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--muted); white-space: nowrap; }
+.chip.go { color: var(--ink); background: var(--mint); border-color: var(--mint); }
+.chip.done { color: var(--ink); background: var(--pink); border-color: var(--pink); }
+.tile .start-cue { font-family: var(--mono); font-size: 12px; color: var(--mint); letter-spacing: .08em; }
+.tile.soon { cursor: default; border-style: dashed; background: transparent; }
+.tile.soon:hover { transform: none; border-color: var(--line); }
+.tile.soon h3 { color: var(--muted); }
+.big-num { font-family: var(--sans); font-weight: 300; font-size: clamp(80px, 11vw, 150px); line-height: .9; color: var(--mint); letter-spacing: -.04em; }
+
+@media (max-width: 1020px) {
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile.span3 { grid-column: span 2; }
+  .tile.tall { grid-row: span 1; }
+}
+@media (max-width: 620px) {
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .tile.span2, .tile.span3, .tile.span4 { grid-column: span 1; }
+  .hero { grid-template-columns: 1fr; margin-top: 20px; }
+  .seal { display: none; }
+}
+
+/* ---------- Step view ---------- */
+.view-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 22px 0 6px; }
+.back { display: inline-flex; align-items: center; gap: 8px; background: none; border: 0; cursor: pointer; color: var(--muted); font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em; padding: 6px 0; }
+.back:hover { color: var(--fg); }
+.back svg { width: 14px; height: 14px; flex: none; }
+.reset { background: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 5px 12px; color: var(--muted); font-family: var(--mono); font-size: 11.5px; cursor: pointer; }
+.reset:hover { color: var(--fg); border-color: var(--fg); }
+
+.counter { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; padding: 18px 0 18px; border-bottom: 1px solid var(--line); }
+.counter .n { font-family: var(--sans); font-weight: 300; font-size: clamp(56px, 8vw, 96px); line-height: .85; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.counter .n span { color: var(--faint); }
+.counter .n.mint b { color: var(--mint); font-weight: 300; }
+.counter .n.pink b { color: var(--pink); font-weight: 300; }
+.counter .lbl { display: flex; flex-direction: column; gap: 4px; padding-bottom: 6px; }
+.counter .lbl .sec { font-size: 15px; color: var(--muted); }
+.segs { display: flex; gap: 6px; padding: 16px 0 0; }
+.seg { flex: 1; height: 30px; border: 0; background: transparent; padding: 0; cursor: pointer; position: relative; }
+.seg::before { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 4px; border-radius: 4px; background: var(--line); transition: background .25s var(--e-quart); }
+.seg.done::before { background: var(--mint); }
+.pink-sec .seg.done::before { background: var(--pink); }
+.seg.cur::before { background: var(--fg); }
+.seg.locked { cursor: not-allowed; }
+.seg.locked::before { background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 7px); }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 40px; padding-top: 30px; align-items: start; }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); } .outline { order: 2; } }
+.step h2 { margin: 0 0 18px; font-size: clamp(32px, 4.6vw, 58px); font-weight: 400; line-height: 1.1; letter-spacing: -.012em; text-wrap: balance; max-width: 22ch; }
+.step h2 em { font-style: italic; font-weight: 700; }
+.step .lead { color: var(--fg); font-size: 17px; max-width: 64ch; margin: 0 0 8px; }
+.step .lead + .lead { color: var(--muted); font-size: 15.5px; }
+.step ol.sub { margin: 14px 0 6px; padding-left: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; max-width: 64ch; }
+.step ol.sub li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 8px; color: var(--fg); }
+.step ol.sub li::before { content: counter(s, decimal-leading-zero); font-family: var(--mono); font-size: 12px; color: var(--mint); padding-top: 3px; }
+.qa { width: 100%; border-collapse: collapse; margin: 14px 0 4px; font-size: 14.5px; }
+.qa-wrap { overflow-x: auto; max-width: 100%; }
+.qa th { text-align: left; font-family: var(--mono); font-weight: 500; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line-strong); }
+.qa td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.qa td:last-child { color: var(--mint); font-family: var(--mono); font-size: 13px; }
+
+.block { margin: 20px 0 0; border-radius: 12px; border: 1px solid var(--line-strong); background: #111211; overflow: hidden; }
+.block .bh { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 10px 9px 14px; border-bottom: 1px solid var(--line); }
+.block .kind { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+.block .kind::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.block.term .kind { color: var(--mint); }
+.block.prompt { border: 0; }
+.block.prompt .kind { color: var(--pink); }
+.block.cc .kind { color: var(--lilac); }
+.block .hint { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-left: 10px; letter-spacing: 0; text-transform: none; }
+.copy { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--fg); padding: 5px 12px; border-radius: 8px; font-family: var(--mono); font-size: 12px; cursor: pointer; white-space: nowrap; }
+.copy:hover { border-color: var(--fg); }
+.copy.ok { background: var(--mint); color: var(--ink); border-color: var(--mint); }
+.block pre { margin: 0; padding: 16px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; color: var(--fg); white-space: pre; }
+.block.prompt pre { white-space: pre-wrap; word-break: break-word; font-size: 14px; }
+.block .note { padding: 14px 16px; color: var(--muted); font-size: 14.5px; }
+.block .cap { padding: 0 16px 14px; color: var(--muted); font-size: 13.5px; }
+
+.expect { margin: 26px 0 0; padding: 16px 18px; border-radius: 12px; background: var(--pink-deep); border: 1px solid color-mix(in srgb, var(--pink) 30%, transparent); display: grid; gap: 4px; max-width: 72ch; }
+.expect .eyebrow { color: var(--pink); }
+.expect div:last-child { color: var(--fg); font-size: 15px; }
+
+.gate { margin-top: 26px; display: flex; flex-direction: column; gap: 16px; padding-top: 22px; border-top: 1px solid var(--line); }
+.check { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 14px 16px; border-radius: 12px; border: 1px dashed var(--line-strong); user-select: none; }
+.check:hover { border-color: var(--muted); }
+.check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.check .box { flex: none; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--muted); display: grid; place-items: center; transition: background .2s var(--e-quart), border-color .2s var(--e-quart); }
+.check .box svg { width: 15px; height: 15px; opacity: 0; transition: opacity .15s var(--e-quart); }
+.check input:checked + .box { background: var(--mint); border-color: var(--mint); }
+.check input:checked + .box svg { opacity: 1; }
+.check input:focus-visible + .box { outline: 2px solid var(--mint); outline-offset: 3px; }
+.check.on { border-style: solid; border-color: color-mix(in srgb, var(--mint) 45%, transparent); background: var(--mint-deep); }
+.check .ct { display: grid; }
+.check .ct b { font-weight: 500; }
+.check .ct small { color: var(--muted); font-size: 13px; }
+.nav { display: flex; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 22px; border-radius: 999px; border: 1px solid var(--line-strong); background: transparent; color: var(--fg); font-family: var(--mono); font-size: 13px; letter-spacing: .06em; cursor: pointer; transition: background .2s var(--e-quart), color .2s var(--e-quart), border-color .2s var(--e-quart); }
+.btn:hover:not(:disabled) { border-color: var(--fg); }
+.btn.primary { background: var(--mint); color: var(--ink); border-color: var(--mint); font-weight: 600; }
+.btn.primary:hover:not(:disabled) { background: var(--fg); border-color: var(--fg); }
+.pink-sec .btn.primary { background: var(--pink); border-color: var(--pink); }
+.btn:disabled { cursor: not-allowed; opacity: .55; }
+.btn.primary:disabled { background: transparent; color: var(--muted); border-color: var(--line-strong); border-style: dashed; opacity: 1; }
+.btn svg { width: 14px; height: 14px; }
+
+.outline { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 84px); display: grid; gap: 4px; }
+.outline .eyebrow { margin-bottom: 8px; color: var(--muted); }
+.ol-item { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; text-align: left; padding: 9px 10px; border-radius: 10px; border: 1px solid transparent; background: none; color: var(--muted); cursor: pointer; font-size: 14px; }
+.ol-item .no { font-family: var(--mono); font-size: 11.5px; }
+.ol-item:hover:not(:disabled) { background: var(--bg-raise); color: var(--fg); }
+.ol-item.cur { border-color: var(--line-strong); background: var(--bg-raise); color: var(--fg); }
+.ol-item.done .no { color: var(--mint); }
+.pink-sec .ol-item.done .no { color: var(--pink); }
+.ol-item:disabled { cursor: not-allowed; color: var(--faint); }
+.ol-item svg { width: 13px; height: 13px; }
+
+.finish { padding: 40px 0 10px; display: grid; gap: 18px; max-width: 760px; }
+.finish h2 { font-size: clamp(34px, 5vw, 56px); font-weight: 400; line-height: 1.05; margin: 0; letter-spacing: -.015em; }
+.finish h2 em { font-style: italic; font-weight: 700; color: var(--pink); }
+.finish p { color: var(--muted); margin: 0; font-size: 17px; max-width: 58ch; }
+.finish .nav { justify-content: flex-start; }
+
+/* ---------- Library ---------- */
+.lib-intro { display: grid; gap: 10px; padding: 26px 0 8px; max-width: 760px; }
+.lib-intro h2 { margin: 0; font-size: clamp(32px, 4.4vw, 52px); font-weight: 400; line-height: 1.05; letter-spacing: -.015em; }
+.lib-intro h2 em { font-style: italic; font-weight: 700; color: var(--mint); }
+.lib-intro p { margin: 0; color: var(--muted); }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 0; }
+.filters button { border: 1px solid var(--line-strong); background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 999px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; cursor: pointer; }
+.filters button:hover { color: var(--fg); border-color: var(--fg); }
+.filters button[aria-pressed="true"] { background: var(--fg); color: var(--ink); border-color: var(--fg); }
+.filters button span { opacity: .6; margin-left: 4px; }
+.lib { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1020px) { .lib { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .lib { grid-template-columns: minmax(0, 1fr); } }
+.skill { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: var(--r); background: var(--bg-raise); border: 1px solid var(--line); min-width: 0; }
+.skill .row { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.skill .cat { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--mint); }
+.skill .cat.c-motion { color: var(--pink); }
+.skill .cat.c-mkt { color: var(--lilac); }
+.skill .cat.c-doc, .skill .cat.c-make { color: var(--muted); }
+.skill h4 { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: -.005em; }
+.skill .src { font-family: var(--mono); font-size: 12px; color: var(--faint); text-decoration: none; }
+.skill .src:hover { color: var(--fg); }
+.skill p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.skill .block { margin-top: auto; }
+.skill .block pre { font-size: 12.5px; padding: 12px 14px; }
+.warn { margin-top: 26px; padding: 14px 16px; border-radius: 12px; border: 1px dashed var(--line-strong); color: var(--muted); font-size: 14px; max-width: 80ch; }
+
+footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: .04em; }
+.fade-in { animation: fade .35s ease both; }
+@keyframes fade { from { opacity: .001; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.showcase { margin-top: 64px; padding-top: 36px; border-top: 1px solid var(--line); display: grid; gap: 22px; }
+.showcase > header { display: grid; gap: 10px; max-width: 760px; }
+.showcase h2 { margin: 0; font-size: clamp(28px, 3.6vw, 44px); font-weight: 400; line-height: 1.08; letter-spacing: -.012em; text-wrap: balance; }
+.showcase h2 em { font-style: italic; font-weight: 700; color: var(--pink); }
+.showcase header p { margin: 0; color: var(--muted); }
+.caps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1100px) { .caps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .caps { grid-template-columns: minmax(0, 1fr); } }
+.cap-card { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: var(--r); background: var(--bg-raise); border: 1px solid var(--line); min-width: 0; }
+.cap-card .tool { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; color: var(--mint); overflow-wrap: anywhere; }
+.pink-sec .cap-card .tool { color: var(--pink); }
+.cap-card h3 { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.25; }
+.cap-card p { margin: 0; color: var(--muted); font-size: 14px; }
+.cap-card .block { margin-top: auto; }
+.cap-card .block, .cap-card .block.prompt { border: 0; }
+.cap-card .block pre { font-size: 12.5px; padding: 12px 14px; max-height: 190px; overflow-y: auto; }
+.cap-card .block .kind { font-size: 10px; }
+.sk-wrap { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 18px; }
+@media (max-width: 900px) { .sk-wrap { grid-template-columns: minmax(0, 1fr); } }
+.sk-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+@media (max-width: 620px) { .sk-list { grid-template-columns: minmax(0, 1fr); } }
+.sk-list div { padding: 12px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; min-width: 0; }
+.sk-list b { font-family: var(--mono); font-weight: 500; font-size: 13px; color: var(--fg); overflow-wrap: anywhere; }
+.sk-list span { color: var(--muted); font-size: 13.5px; }
+.sk-install { display: grid; gap: 10px; }
+.sk-install .block { margin: 0; }
+.sk-install .block.prompt pre { font-size: 13px; }
+.md-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .md-grid { grid-template-columns: minmax(0, 1fr); } }
+.md-card { display: grid; gap: 8px; padding: 18px; border-radius: var(--r); background: var(--bg-raise); border: 1px solid var(--line); min-width: 0; align-content: start; }
+.md-card h4 { margin: 0; font-size: 19px; font-weight: 500; }
+.md-card > p { margin: 0; color: var(--muted); font-size: 14px; }
+.md-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 6px; }
+@media (max-width: 520px) { .md-pair { grid-template-columns: minmax(0, 1fr); } }
+.md-pair .block { margin: 0; }
+.md-pair .block pre { font-size: 12.5px; padding: 12px 14px; white-space: pre-wrap; word-break: break-word; }
+.md-out { border: 1px dashed var(--line-strong); border-radius: 12px; padding: 9px 14px 14px; min-width: 0; }
+.md-out .kind { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.md-render { margin-top: 8px; font-size: 14.5px; overflow-x: auto; }
+.md-render > :first-child { margin-top: 0; }
+.md-render > :last-child { margin-bottom: 0; }
+.md-render h1 { font-size: 22px; margin: 0 0 6px; font-weight: 700; }
+.md-render h2 { font-size: 17px; margin: 0 0 4px; font-weight: 700; }
+.md-render h3 { font-size: 15px; margin: 0; font-weight: 700; color: var(--muted); }
+.md-render p { margin: 0 0 8px; }
+.md-render ul, .md-render ol { margin: 0; padding-left: 20px; }
+.md-render ul.md-check { list-style: none; padding-left: 0; }
+.md-render a { color: var(--mint); text-decoration: underline; }
+.md-render blockquote { margin: 0; padding-left: 12px; border-left: 3px solid var(--pink); color: var(--muted); font-style: italic; }
+.md-render table { border-collapse: collapse; font-size: 13px; }
+.md-render th, .md-render td { border: 1px solid var(--line-strong); padding: 4px 10px; text-align: left; }
+.md-render hr { border: 0; border-top: 1px solid var(--line-strong); margin: 8px 0; }
+.md-render .md-pre { margin: 0; padding: 10px; background: #111211; border-radius: 8px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; }
+.md-render .md-img { display: inline-block; padding: 18px 14px; border: 1px solid var(--line-strong); border-radius: 8px; color: var(--muted); font-size: 12.5px; font-family: var(--mono); }
+.md-render .md-fm { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13.5px; }
+.md-render .md-fm dt { font-family: var(--mono); color: var(--mint); }
+.md-render .md-fm dd { margin: 0; }
+.md-ctx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1020px) { .md-ctx { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .md-ctx { grid-template-columns: minmax(0, 1fr); } }
+.md-tpls { display: grid; gap: 14px; }
+.md-tpl { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; padding: 20px; border-radius: var(--r); background: var(--bg-raise); border: 1px solid var(--line); }
+@media (max-width: 820px) { .md-tpl { grid-template-columns: minmax(0, 1fr); } }
+.md-tpl .tool { font-family: var(--mono); font-size: 11px; color: var(--pink); letter-spacing: .06em; }
+.md-tpl h3 { margin: 6px 0; font-size: 21px; font-weight: 500; }
+.md-tpl p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.md-tpl .block { margin: 0; }
+.md-tpl .block pre { max-height: 360px; overflow: auto; font-size: 13px; }
+.md-tips { list-style: none; margin: 0; padding: 0; counter-reset: t; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; max-width: 1000px; }
+@media (max-width: 720px) { .md-tips { grid-template-columns: minmax(0, 1fr); } }
+.md-tips li { counter-increment: t; display: grid; grid-template-columns: 40px 1fr; gap: 4px 10px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.md-tips li::before { content: counter(t, decimal-leading-zero); grid-row: span 2; font-family: var(--mono); color: var(--pink); font-size: 13px; padding-top: 3px; }
+.md-tips b { font-weight: 500; font-size: 17px; }
+.md-tips span { color: var(--muted); font-size: 14.5px; }
+.variant-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 0 4px; }
+.variant-bar > span { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+.sk-note { font-size: 13px !important; color: var(--pink) !important; }
+.lib-band { margin: 4px 0 16px; padding: 14px 16px; border-radius: 12px; background: var(--pink-deep); border: 1px solid color-mix(in srgb, var(--pink) 30%, transparent); color: var(--fg); font-size: 14.5px; max-width: 80ch; }
+.ui-group { display: grid; gap: 14px; margin-bottom: 30px; }
+.ui-card { text-decoration: none; color: var(--fg); transition: border-color .25s var(--e-quart), transform .25s var(--e-quart); }
+.ui-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.ui-card h3 .go-arrow { color: var(--mint); vertical-align: middle; }
+.ui-card:hover .go-arrow svg { transform: translateX(5px); }
+.sym-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 820px) { .sym-grid { grid-template-columns: minmax(0, 1fr); } }
+.sym-card { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 18px; padding: 20px; border-radius: var(--r); background: var(--bg-raise); border: 1px solid var(--line); }
+.sym-g { font-family: var(--mono); font-size: 44px; line-height: 1; color: var(--mint); text-align: center; padding-top: 4px; }
+.sym-card h3 { margin: 0 0 6px; font-size: 19px; font-weight: 500; }
+.sym-card p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; }
+.sym-ex { margin: 0; padding: 10px 12px; border-radius: 10px; background: #111211; font-family: var(--mono); font-size: 13px; white-space: pre-wrap; color: var(--fg); }
+.key-list { display: grid; max-width: 920px; }
+.key-row { display: grid; grid-template-columns: minmax(130px, 200px) minmax(0, 1fr); gap: 18px; align-items: baseline; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.key-row > span:last-child { color: var(--muted); }
+.key-k kbd { font-size: 13px; }
+.cmd-c { font-family: var(--mono); font-size: 14px; color: var(--mint); background: none !important; border: 0 !important; padding: 0 !important; }
+.cmd-group { display: grid; gap: 6px; margin-bottom: 30px; }
+@media (max-width: 520px) { .key-row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.toggles { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.os .ag-ico { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: currentColor; opacity: .7; }
+.os button[aria-pressed="true"] .ag-ico { background: var(--pink); opacity: 1; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); padding: 0 6px; }
+.tabs button { border: 0; background: none; padding: 9px 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs button:hover { color: var(--fg); }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--pink); }
+.skill .panel { margin-top: auto; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: #111211; }
+.skill .panel .block { margin: 0; border: 0; border-radius: 0; }
+.zip { display: grid; gap: 10px; padding: 14px 16px; }
+.zip a.btn { justify-self: start; padding: 9px 16px; font-size: 12px; text-decoration: none; }
+.zip p { margin: 0; font-size: 13.5px; }
+.agent-note { margin: 18px 0 0; padding: 12px 14px; border-left: 2px solid var(--lilac); background: var(--lilac-deep); border-radius: 0 10px 10px 0; color: var(--fg); font-size: 14.5px; max-width: 72ch; }
+</style>
+
+<a class="skip" href="#app" id="skip">Vai al contenuto</a>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#" id="home-link"><b>FUTURA AI ACADEMY</b><span>Setup Lab</span></a>
+    <div class="toggles">
+      <div class="os" role="group" aria-label="Agente">
+        <button type="button" id="ag-claude" data-ag="claude" aria-pressed="true"><span class="ag-ico"></span>Claude Code</button>
+        <button type="button" id="ag-codex" data-ag="codex" aria-pressed="false"><span class="ag-ico"></span>Codex</button>
+      </div>
+      <div class="os" role="group" aria-label="Sistema operativo">
+        <button type="button" id="os-mac" data-os="mac" aria-pressed="true">macOS</button>
+        <button type="button" id="os-win" data-os="win" aria-pressed="false">Windows</button>
+      </div>
+    </div>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer>
+    <span>futuraaiacademy.com · Moduli Talent Garden</span>
+    <span>Il tuo avanzamento resta salvato solo in questo browser</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   AGENTI — i testi usano segnaposto sostituiti in base all'agente:
+   {A} nome, {a} comando, {SK} cartella skill globali, {FS} skill Figma.
+   ============================================================ */
+const AG = {
+  claude: { A: "Claude Code", a: "claude", CTX: "CLAUDE.md", CTXG: "~/.claude/CLAUDE.md", SK: "~/.claude/skills", FS: " e la skill figma-generate-library", npx: "claude-code" },
+  codex:  { A: "Codex", a: "codex", CTX: "AGENTS.md", CTXG: "~/.codex/AGENTS.md", SK: "~/.agents/skills", FS: "", npx: "codex" }
+};
+
+/* ============================================================
+   CONTENUTI — per aggiungere una sezione: un oggetto in SECTIONS
+   e una tile in LAYOUT. Blocchi: k = "term" (Terminale),
+   "cc" (comando dentro l'agente), "prompt" (testo per l'agente).
+   win: comando per Windows (null = non serve).
+   codex: campi che cambiano quando l'agente è Codex.
+   ============================================================ */
+const SECTIONS = [
+  {
+    id: "setup", tone: "mint", tag: "Setup base · inizia qui · Terminale",
+    title: "Installare <em>{A}</em>",
+    short: "Terminale, Homebrew, Node.js e {A}. È l'unica sezione in cui usi il Terminale: dopo parli solo con l'agente.",
+    time: "30 min",
+    steps: [
+      { t: "Controlla di avere <em>tutto pronto</em>",
+        d: ["Ti servono un Mac con macOS 13 o successivo, la password del Mac e un abbonamento Claude <b>Pro o Max</b>: il piano gratuito non include Claude Code.",
+            "Controlla la versione del sistema da <b>Menu Apple → Informazioni su questo Mac</b> (su Windows: <b>Impostazioni → Sistema → Informazioni</b>).",
+            "Il Terminale lo userai solo in questa sezione. Da lì in poi darai le istruzioni direttamente all'agente."],
+        codex: { d: ["Ti servono un Mac con macOS 13 o successivo, la password del Mac e un account <b>ChatGPT</b> con un piano a pagamento: Codex è incluso nei piani Plus, Pro, Business, Edu ed Enterprise.",
+            "Controlla la versione del sistema da <b>Menu Apple → Informazioni su questo Mac</b> (su Windows: <b>Impostazioni → Sistema → Informazioni</b>).",
+            "Il Terminale lo userai solo in questa sezione. Da lì in poi darai le istruzioni direttamente all'agente."] },
+        blocks: [],
+        ok: "macOS 13 o successivo (su Windows: Windows 10 versione 1809 o successiva) e l'abbonamento attivo." },
+      { t: "Apri il <em>Terminale</em>",
+        d: ["Il Terminale è una finestra dove si scrivono comandi invece di cliccare. Premi <kbd>Cmd</kbd> + <kbd>Spazio</kbd>, scrivi <code>Terminale</code> e premi <kbd>Invio</kbd>. Su Windows apri <b>PowerShell</b> dal menu Start."],
+        list: ["Copia il comando dal riquadro con il tasto <b>Copia</b>.", "Incollalo nel Terminale con <kbd>Cmd</kbd> + <kbd>V</kbd> e premi <kbd>Invio</kbd>.", "Aspetta che torni il cursore lampeggiante prima del comando successivo.", "Se ti chiede la password del Mac, scrivila anche se non vedi i caratteri: è normale."],
+        blocks: [{ k: "term", code: `echo "Pronta per {A}"` }],
+        ok: "Il Terminale risponde ripetendo la frase <i>Pronta per {A}</i>." },
+      { t: "Installa <em>Homebrew</em>",
+        d: ["Homebrew è il programma che installa gli altri programmi da terminale. Prima controlla se ce l'hai già: se risponde con un numero, segna il passo come fatto."],
+        blocks: [
+          { k: "term", label: "1 · Controlla", code: `brew --version`, win: null, winNote: "Su Windows Homebrew non serve: userai <code>winget</code>, già incluso nel sistema. Segna il passo come fatto." },
+          { k: "term", label: "2 · Installa (solo se ti ha risposto command not found)", code: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`, win: null },
+          { k: "term", label: "3 · Next steps (Mac con chip M1, M2, M3, M4…)", code: `echo >> ~/.zprofile\necho 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile\neval "$(/opt/homebrew/bin/brew shellenv)"`, win: null,
+            cap: "Alla fine dell'installazione Homebrew mostra una sezione <b>Next steps</b>: se i comandi sono diversi da questi, usa i suoi." }
+        ],
+        ok: "<code>brew --version</code> risponde con un numero di versione, per esempio <code>Homebrew 4.6.0</code>." },
+      { t: "Installa <em>Node.js</em>",
+        d: ["Node.js serve all'agente per installare skill e strumenti con <code>npx</code>. Su Windows installiamo anche Git."],
+        blocks: [
+          { k: "term", label: "Installa", code: `brew install node`, win: `winget install OpenJS.NodeJS.LTS\nwinget install --id Git.Git` },
+          { k: "term", label: "Verifica (apri prima un nuovo Terminale)", code: `node --version` }
+        ],
+        ok: "<code>v22</code> o un numero più alto." },
+      { t: "Installa <em>Claude Code</em>",
+        d: ["Usiamo l'installer ufficiale di Anthropic, che si aggiorna da solo. Non vedrai una barra di avanzamento: aspetta che torni il cursore.", "Poi <b>chiudi il Terminale e aprine uno nuovo</b> prima di verificare."],
+        blocks: [
+          { k: "term", label: "Installa", code: `curl -fsSL https://claude.ai/install.sh | bash`, win: `irm https://claude.ai/install.ps1 | iex` },
+          { k: "term", label: "Verifica", code: `claude --version` },
+          { k: "term", label: "Controllo completo", code: `claude doctor` }
+        ],
+        ok: "Un numero di versione seguito da <code>(Claude Code)</code>. Se vedi <code>command not found</code>, chiudi e riapri il Terminale.",
+        codex: {
+          t: "Installa <em>Codex</em>",
+          d: ["Usiamo l'installer ufficiale di OpenAI. Su Windows lo installiamo con npm, che è arrivato insieme a Node.js.", "Poi <b>chiudi il Terminale e aprine uno nuovo</b> prima di verificare."],
+          blocks: [
+            { k: "term", label: "Installa", code: `curl -fsSL https://chatgpt.com/codex/install.sh | sh`, win: `npm install -g @openai/codex` },
+            { k: "term", label: "Verifica", code: `codex --version` }
+          ],
+          ok: "Un numero di versione, per esempio <code>codex-cli 0.143.0</code>. Se vedi <code>command not found</code>, chiudi e riapri il Terminale." } },
+      { t: "Crea la cartella del corso e <em>accedi</em>",
+        d: ["Creiamo una cartella di lavoro e apriamo {A} lì dentro. Al primo avvio si apre il browser: accedi con lo stesso account che usi su claude.ai e conferma.", "Questo è l'ultimo comando da Terminale: da ora in poi scrivi solo dentro {A}. Per uscire scrivi <code>/exit</code>."],
+        codex: { d: ["Creiamo una cartella di lavoro e apriamo {A} lì dentro. Al primo avvio scegli <b>Sign in with ChatGPT</b>: si apre il browser, accedi con il tuo account ChatGPT e conferma.", "Questo è l'ultimo comando da Terminale: da ora in poi scrivi solo dentro {A}. Per uscire scrivi <code>/exit</code>."] },
+        blocks: [{ k: "term", code: `mkdir -p ~/Documents/Corso-AI\ncd ~/Documents/Corso-AI\n{a}`, win: `mkdir $HOME\\Documents\\Corso-AI -Force\ncd $HOME\\Documents\\Corso-AI\n{a}` }],
+        ok: "La schermata di {A} con il campo dove scrivere." },
+      { t: "Fai lavorare l'agente <em>per la prima volta</em>",
+        d: ["Ora {A} può leggere e creare file nella cartella del corso. Dagli il primo compito."],
+        blocks: [{ k: "prompt", code: `Crea un file README.md in questa cartella. Scrivi in tre righe che questa è la cartella di lavoro del mio corso di AI per creativi, e aggiungi una lista vuota "Progetti" da riempire più avanti.` }],
+        ok: "Se {A} ti chiede il permesso di creare il file, accetta: nella cartella <code>Corso-AI</code> trovi <code>README.md</code>." }
+    ]
+  },
+  {
+    id: "figma-mcp", tone: "pink", tag: "Connettore",
+    title: "Collegare <em>Figma</em>",
+    short: "Chiedi a {A} di collegarsi a Figma: potrà leggere e scrivere nei tuoi file di design.",
+    time: "10 min", requires: "{A}",
+    steps: [
+      { t: "Controlla i <em>requisiti</em>",
+        d: ["Ti serve un account Figma con piano a pagamento: è quello che permette all'agente di scrivere nei file.", "Apri {A} nella cartella del corso. Da qui in poi parli solo con l'agente: è lui che esegue i comandi."],
+        blocks: [],
+        ok: "{A} è aperto e sei dentro con il tuo account." },
+      { t: "Chiedi a {A} di <em>collegare Figma</em>",
+        d: ["L'agente installa il collegamento a Figma. Quando ti chiede il permesso di eseguire un comando, rispondi di sì."],
+        blocks: [{ k: "prompt", code: `Collega Figma a Claude Code: installa il plugin ufficiale di Figma (figma@claude-plugins-official).\nSe il plugin non si installa, aggiungi invece il server MCP di Figma per tutti i miei progetti: nome figma, trasporto http, indirizzo https://mcp.figma.com/mcp.\nAlla fine dimmi cosa hai fatto e cosa devo fare per autenticarmi.` }],
+        codex: { blocks: [{ k: "prompt", code: `Collega Figma a Codex: aggiungi il server MCP di Figma con "codex mcp add figma --url https://mcp.figma.com/mcp".\nPoi esegui "codex mcp login figma" e aspetta che io completi l'accesso nel browser. Alla fine verifica con "codex mcp list".` }] },
+        ok: "L'agente conferma che Figma è stato aggiunto." },
+      { t: "Riavvia <em>{A}</em>",
+        d: ["I nuovi collegamenti si caricano solo all'avvio di una sessione. Apri una nuova sessione di {A} nella stessa cartella: nell'app basta il tasto per una nuova sessione o chat."],
+        blocks: [],
+        ok: "Sei di nuovo dentro {A}." },
+      { t: "Autorizza Figma <em>dal browser</em>",
+        list: ["Scrivi <code>/mcp</code> dentro {A} e premi <kbd>Invio</kbd>.", "Seleziona <b>figma</b> con le frecce.", "Scegli <b>Authenticate</b>: si apre il browser.", "Clicca <b>Allow access</b> e torna in {A}."],
+        codex: { t: "Controlla <em>il collegamento</em>", list: ["Scrivi <code>/mcp</code> dentro {A} e premi <kbd>Invio</kbd>.", "Cerca <b>figma</b> tra i server attivi.", "Se non risulta autenticato, chiedi a Codex: <i>esegui codex mcp login figma</i>, e completa l'accesso nel browser."] },
+        blocks: [{ k: "cc", code: `/mcp` }],
+        ok: "In <code>/mcp</code> figma risulta collegato." },
+      { t: "Verifica con <em>una domanda</em>",
+        d: ["In Figma seleziona un frame, fai <b>tasto destro → Copy link to selection</b> e incolla il link nel prompt."],
+        blocks: [{ k: "prompt", code: `Usa l'MCP di Figma: dimmi il mio username Figma. Poi descrivimi questo frame: colori, tipografia e componenti usati.\n[incolla qui il link al frame]` }],
+        ok: "L'agente risponde con il tuo nome Figma e una descrizione del frame." }
+    ]
+  },
+  {
+    id: "higgsfield-mcp", tone: "pink", tag: "Connettore · immagini e video",
+    title: "Collegare <em>Higgsfield</em>",
+    short: "Chiedi a {A} di collegarsi a Higgsfield e genera immagini e video parlando con lui.",
+    time: "10 min", requires: "{A}",
+    steps: [
+      { t: "Prepara l'account <em>Higgsfield</em>",
+        d: ["Crea un account su <a href=\"https://higgsfield.ai\" target=\"_blank\" rel=\"noopener\">higgsfield.ai</a> e controlla di avere crediti. Ogni immagine o video generato dall'agente consuma crediti come se lo generassi tu dal sito."],
+        blocks: [],
+        ok: "Sei dentro il tuo account Higgsfield e vedi il saldo crediti." },
+      { t: "Chiedi a {A} di <em>collegare Higgsfield</em>",
+        d: ["Quando l'agente ti chiede il permesso di eseguire il comando, rispondi di sì."],
+        blocks: [{ k: "prompt", code: `Aggiungi a Claude Code il server MCP di Higgsfield per tutti i miei progetti: nome higgsfield, trasporto http, indirizzo https://mcp.higgsfield.ai/mcp.\nPoi dimmi cosa devo fare per autenticarmi.` }],
+        codex: { blocks: [{ k: "prompt", code: `Aggiungi a Codex il server MCP di Higgsfield con "codex mcp add higgsfield --url https://mcp.higgsfield.ai/mcp".\nPoi esegui "codex mcp login higgsfield" e aspetta che io completi l'accesso nel browser.` }] },
+        ok: "L'agente conferma che il server higgsfield è stato aggiunto." },
+      { t: "Riavvia e <em>autenticati</em>",
+        list: ["Apri una nuova sessione di {A} nella stessa cartella.", "Scrivi <code>/mcp</code> e seleziona <b>higgsfield</b>.", "Scegli <b>Authenticate</b>: si apre il browser.", "Accedi con il tuo account Higgsfield e conferma."],
+        codex: { t: "Riavvia e <em>controlla</em>", list: ["Apri una nuova sessione di {A} nella stessa cartella.", "Scrivi <code>/mcp</code> e cerca <b>higgsfield</b> tra i server attivi.", "Se non risulta autenticato, chiedi a Codex: <i>esegui codex mcp login higgsfield</i>."] },
+        blocks: [{ k: "cc", code: `/mcp` }],
+        ok: "In <code>/mcp</code> higgsfield risulta collegato." },
+      { t: "Verifica <em>il collegamento</em>",
+        d: ["Chiedi all'agente cosa può fare con Higgsfield prima di spendere crediti."],
+        blocks: [{ k: "prompt", code: `Usa l'MCP di Higgsfield: dimmi quanti crediti ho e quali modelli per immagini e video posso usare. Non generare ancora niente.` }],
+        ok: "L'agente risponde con il tuo saldo e l'elenco dei modelli." },
+      { t: "La tua <em>prima generazione</em>",
+        d: ["Chiedi sempre il costo prima di generare: così decidi tu quando spendere."],
+        blocks: [{ k: "prompt", code: `Con Higgsfield genera un'immagine 16:9: una scrivania minimale con un laptop color menta, luce morbida laterale, stile editoriale, palette rosa e verde menta.\nPrima di generare dimmi modello scelto e costo in crediti, e aspetta il mio ok.` }],
+        ok: "L'agente propone modello e costo, tu confermi, e ricevi il link all'immagine." }
+    ]
+  },
+  {
+    id: "skill", tone: "mint", tag: "Potenzia l'agente",
+    title: "Installare <em>una skill</em>",
+    short: "Le skill insegnano all'agente un metodo. Gli chiedi di installarle e lui le scarica.",
+    time: "15 min", requires: "{A}",
+    steps: [
+      { t: "Capisci <em>cos'è una skill</em>",
+        d: ["Una skill è una cartella con un file <code>SKILL.md</code>: istruzioni, esempi e a volte script che l'agente legge quando servono. Quelle globali di {A} stanno in <code>{SK}</code>. Chiedi all'agente di spiegartelo e di mostrarti cosa hai già."],
+        blocks: [{ k: "prompt", code: `Spiegami in 5 righe cos'è una skill e la differenza tra skill globali e skill di progetto. Poi mostrami quali skill ho già installato.` }],
+        ok: "La spiegazione e l'elenco delle tue skill (anche vuoto)." },
+      { t: "Installa la tua <em>prima skill</em>",
+        d: ["Installiamo <b>frontend-design</b>, la skill ufficiale di Anthropic per interfacce curate. L'agente la scarica da GitHub e la mette nella cartella giusta."],
+        blocks: [{ k: "prompt", code: `Installa la skill frontend-design dal repository github.com/anthropics/skills come skill globale, in ~/.claude/skills, così la uso in tutti i progetti.\nUsa un metodo non interattivo e alla fine dimmi dove si trova il file SKILL.md.` }],
+        codex: { d: ["Installiamo <b>frontend-design</b>, la skill di Anthropic per interfacce curate. Codex ha un installatore integrato: si chiama con <code>$skill-installer</code>."],
+          blocks: [{ k: "prompt", code: `$skill-installer installa la skill frontend-design dal repository github.com/anthropics/skills come skill globale, in ~/.agents/skills. Alla fine dimmi dove si trova il file SKILL.md.` }] },
+        ok: "L'agente conferma il percorso, per esempio <code>{SK}/frontend-design/SKILL.md</code>." },
+      { t: "Installa <em>una raccolta</em> di skill",
+        d: ["Molte raccolte si distribuiscono come plugin. Claude Code può aggiungere il marketplace e installare il plugin per te."],
+        blocks: [{ k: "prompt", code: `Aggiungi il marketplace di plugin anthropics/skills e installa il plugin example-skills.\nSe da riga di comando non riesci, dimmi esattamente cosa scrivere qui in Claude Code.` }],
+        codex: { d: ["Con Codex una raccolta si installa scaricando tutte le skill di un repository."],
+          blocks: [{ k: "prompt", code: `$skill-installer installa tutte le skill del repository github.com/anthropics/skills (cartella skills) in ~/.agents/skills, tranne quelle che ho già. Elencami cosa hai installato.` }] },
+        ok: "L'agente conferma le skill installate, oppure ti dà i comandi da scrivere." },
+      { t: "Riavvia e <em>verifica</em>",
+        d: ["Le skill si caricano all'avvio di una sessione. Apri una nuova sessione di {A} nella stessa cartella: nell'app basta il tasto per una nuova sessione o chat. Poi chiedigli cosa sa fare."],
+        blocks: [{ k: "prompt", code: `Quali skill hai a disposizione? Elencale con una riga di descrizione ciascuna.` }],
+        codex: { d: ["Codex di solito vede le nuove skill senza riavviare. Scrivi <code>/skills</code> per l'elenco; se non compaiono, esci e riapri."],
+          blocks: [{ k: "cc", code: `/skills` }] },
+        ok: "Nell'elenco trovi <b>frontend-design</b> e le altre skill installate." },
+      { t: "Usa la skill <em>su un compito vero</em>",
+        d: ["Nominare la skill nel prompt la attiva in modo sicuro."],
+        codex: { d: ["In Codex richiami una skill scrivendo <code>$</code> seguito dal suo nome."] },
+        blocks: [{ k: "prompt", code: `Usa la skill frontend-design per creare una landing page in un solo file index.html per un workshop di AI per creativi: titolo, programma in 4 tappe, docente, call to action. Poi aprila nel browser.` }],
+        ok: "Il file <code>index.html</code> nella cartella e la pagina aperta nel browser." },
+      { t: "Crea <em>la tua skill</em>",
+        d: ["Con <b>skill-creator</b> trasformi un tuo metodo di lavoro in una skill riutilizzabile."],
+        blocks: [{ k: "prompt", code: `Usa la skill skill-creator per creare una skill chiamata "brief-creativo" che trasforma i miei appunti sparsi in un brief strutturato: obiettivo, target, tono di voce, deliverable, vincoli, scadenze. Salvala in ~/.claude/skills e mostrami il SKILL.md.` }],
+        codex: { d: ["<b>skill-creator</b> è già incluso in Codex: lo richiami con <code>$skill-creator</code>."],
+          blocks: [{ k: "prompt", code: `$skill-creator crea una skill chiamata "brief-creativo" che trasforma i miei appunti sparsi in un brief strutturato: obiettivo, target, tono di voce, deliverable, vincoli, scadenze. Salvala in ~/.agents/skills e mostrami il SKILL.md.` }] },
+        ok: "La cartella <code>{SK}/brief-creativo</code> con dentro <code>SKILL.md</code>." }
+    ]
+  },
+  {
+    id: "github", tone: "mint", tag: "Connettore · progetti",
+    title: "Collegare <em>GitHub</em>",
+    short: "Crei l'account, poi {A} installa GitHub CLI, ti fa accedere e salva il tuo lavoro.",
+    time: "15 min", requires: "{A}",
+    steps: [
+      { t: "Crea l'account <em>GitHub</em>",
+        d: ["GitHub è il servizio dove vivono i progetti fatti di file, con la storia di ogni modifica. Il piano gratuito basta: include i repository privati."],
+        list: ["Vai su <a href=\"https://github.com/signup\" target=\"_blank\" rel=\"noopener\">github.com/signup</a>.", "Usa un'email che controlli spesso.", "Scegli uno username professionale: comparirà nei link dei tuoi progetti.", "Conferma l'email con il codice che ti arriva.", "Attiva l'autenticazione a due fattori: <b>Settings → Password and authentication</b>."],
+        blocks: [],
+        ok: "Sei dentro GitHub con la verifica a due fattori attiva." },
+      { t: "Chiedi all'agente di installare <em>GitHub CLI</em>",
+        d: ["<code>gh</code> è lo strumento con cui l'agente crea repository, salva le modifiche e apre proposte al posto tuo."],
+        blocks: [{ k: "prompt", code: `Installa GitHub CLI (gh) sul mio computer con il gestore di pacchetti adatto al mio sistema, poi verifica la versione installata.` }],
+        ok: "L'agente ti mostra la versione, per esempio <code>gh version 2.x</code>." },
+      { t: "Accedi a GitHub <em>con il browser</em>",
+        d: ["L'agente avvia il login e ti mostra un codice di 8 caratteri. Apri <a href=\"https://github.com/login/device\" target=\"_blank\" rel=\"noopener\">github.com/login/device</a>, incolla il codice e clicca <b>Authorize</b>. Poi torna dall'agente e scrivi <i>fatto</i>."],
+        blocks: [{ k: "prompt", code: `Avvia il login a GitHub con gh in modalità browser e protocollo HTTPS (gh auth login --web --git-protocol https), eseguendolo in background.\nMostrami subito il codice di 8 caratteri, poi aspetta che io ti scriva "fatto" e verifica con gh auth status.` }],
+        ok: "L'agente conferma <i>Logged in to github.com account</i> seguito dal tuo username." },
+      { t: "Presentati <em>a Git</em>",
+        d: ["Git firma ogni modifica con nome ed email. L'agente li legge dal tuo account GitHub, così non devi scriverli."],
+        blocks: [{ k: "prompt", code: `Configura Git a livello globale con il nome e l'email del mio account GitHub: leggili con gh api user. Se l'email è privata, usa l'indirizzo noreply di GitHub. Mostrami la configurazione finale.` }],
+        ok: "L'agente ti mostra <code>user.name</code> e <code>user.email</code> configurati." },
+      { t: "Il primo <em>repository</em>",
+        blocks: [{ k: "prompt", code: `Elenca i miei repository GitHub. Poi inizializza git in questa cartella, crea un repository privato chiamato "corso-ai" e caricaci il README. Dammi il link.` }],
+        ok: "Il link al nuovo repository privato su github.com." }
+    ]
+  },
+  {
+    id: "design-system", tone: "mint", tag: "Progetto · da zero",
+    title: "Creare un <em>design system</em>",
+    short: "Dal brief ai token, ai componenti, fino alle variabili in Figma e al repository. Tutto a prompt.",
+    time: "60–90 min", requires: "{A} + Figma + GitHub",
+    steps: [
+      { t: "Prepara la <em>cartella di progetto</em>",
+        d: ["Ogni design system vive in una cartella sua. Apri {A} nella cartella del corso e chiedigli di prepararla."],
+        blocks: [{ k: "prompt", code: `Crea una cartella design-system dentro questa cartella del corso. Per tutto questo progetto lavora sempre lì dentro.` }],
+        ok: "L'agente conferma di aver creato <code>design-system</code>." },
+      { t: "Fatti intervistare: <em>il brief</em>",
+        d: ["Invece di scrivere il brief da sola o da solo, fatti fare le domande giuste. Rispondi una domanda alla volta."],
+        blocks: [{ k: "prompt", code: `Stiamo creando un design system da zero. Intervistami con massimo 8 domande, una alla volta, su: nome del prodotto, pubblico, personalità del brand (3 aggettivi), colori di riferimento, tipografia, densità dell'interfaccia, piattaforme (web, mobile), requisiti di accessibilità.\nAlla fine riassumi tutto in design-system/BRIEF.md.` }],
+        ok: "Il file <code>BRIEF.md</code> con le tue risposte organizzate." },
+      { t: "Le fondamenta: <em>i token</em>",
+        d: ["I token sono le decisioni di base con un nome: colori, tipografia, spazi, raggi. Tutto il resto si costruisce sopra."],
+        blocks: [{ k: "prompt", code: `Leggi BRIEF.md e crea i design token in design-system/tokens/tokens.json (formato W3C Design Tokens):\n- colori primitivi con scale 50–900\n- colori semantici (background, surface, text, border, primary, success, warning, danger) per tema chiaro e scuro\n- scala tipografica, spacing su base 4, radius, ombre\nGenera anche tokens.css con le variabili CSS e verifica che i contrasti testo/sfondo rispettino WCAG AA. Dimmi quali coppie hai dovuto correggere.` }],
+        ok: "La cartella <code>tokens</code> con <code>tokens.json</code> e <code>tokens.css</code>, più il resoconto dei contrasti." },
+      { t: "I <em>componenti</em> base",
+        d: ["Ora i token diventano interfaccia. Chiedi una pagina che mostri ogni componente in tutti i suoi stati."],
+        blocks: [{ k: "prompt", code: `Usando solo le variabili di tokens.css, crea design-system/components/index.html: una pagina che mostra Button (primary, secondary, ghost; stati hover, focus, disabled), Input, Select, Checkbox, Card, Badge e Alert, in tema chiaro e scuro. Aprila nel browser quando hai finito.` }],
+        ok: "La pagina dei componenti aperta nel browser, con il cambio tema funzionante." },
+      { t: "La <em>documentazione</em>",
+        d: ["Un design system senza regole non si usa. Scrivile pensando anche agli agenti AI che lo useranno dopo di te."],
+        blocks: [{ k: "prompt", code: `Scrivi design-system/DESIGN.md: principi del sistema, come usare i token, e per ogni componente quando usarlo, quando no, e gli errori da evitare. Scrivilo come istruzioni che un altro agente AI leggerà prima di disegnare con questo sistema.` }],
+        ok: "Il file <code>DESIGN.md</code> con principi e regole per componente." },
+      { t: "Portalo <em>in Figma</em>",
+        d: ["Con l'MCP di Figma, l'agente crea variabili e componenti nel file. Lavora una sezione alla volta: controlla ogni screenshot prima di dire di proseguire."],
+        blocks: [{ k: "prompt", code: `Usa l'MCP di Figma{FS}. Crea un nuovo file Figma "Design System — [nome prodotto]" con:\n1. collezioni di variabili: Primitives, Semantic (modalità Light e Dark), Spacing, Radius\n2. stili di testo dalla scala tipografica\n3. i componenti di components/index.html come componenti Figma con varianti\nProcedi una sezione alla volta e mostrami uno screenshot alla fine di ognuna.` }],
+        ok: "Il file Figma con variabili, stili di testo e componenti con varianti." },
+      { t: "Salvalo <em>su GitHub</em>",
+        blocks: [{ k: "prompt", code: `Inizializza git nella cartella design-system, fai il primo commit e crea con gh un repository privato "design-system-[nome prodotto]". Aggiungi un README che spiega la struttura delle cartelle. Dammi il link.` }],
+        ok: "Il link al repository con <code>tokens</code>, <code>components</code>, <code>DESIGN.md</code> e <code>BRIEF.md</code>." }
+    ]
+  },
+  {
+    id: "design-system-repo", tone: "pink", tag: "Progetto · da una repo",
+    title: "Design system <em>da una repo GitHub</em>",
+    short: "Parti dal codice esistente: l'agente lo clona, fa l'audit, estrae i token e lo ricostruisce in Figma.",
+    time: "60 min", requires: "{A} + Figma + GitHub",
+    steps: [
+      { t: "Scegli <em>la repository</em>",
+        d: ["Può essere il codice di un progetto su cui lavori o un design system open source da studiare. Se non hai un'idea, fatti proporre qualche candidato."],
+        blocks: [{ k: "prompt", code: `Cerca su GitHub, con gh, 10 repository popolari di design system o design token. Mostrameli in una tabella con nome, stelle, tecnologia e una riga su cosa contengono. Consigliami il più adatto per esercitarsi.` }],
+        ok: "Hai scelto una repository e sai il suo nome nel formato <code>proprietario/nome</code>." },
+      { t: "Fai <em>clonare</em> la repo all'agente",
+        d: ["Sostituisci <code>proprietario/nome</code> con la repository scelta."],
+        blocks: [{ k: "prompt", code: `Clona la repository proprietario/nome dentro questa cartella del corso. Per tutto questo progetto lavora sempre dentro la cartella clonata.` }],
+        ok: "L'agente conferma che la repository è stata clonata e ti dice il nome della cartella." },
+      { t: "L'<em>audit</em> del sistema esistente",
+        d: ["Prima di cambiare qualcosa, fai capire all'agente cosa c'è. Questo prompt è in sola lettura."],
+        blocks: [{ k: "prompt", code: `Esplora questa repository e fai un audit del design system che contiene:\n- dove sono definiti colori, tipografia, spacing, radius, ombre e componenti\n- in che formato (CSS, SCSS, JSON, Tailwind, TypeScript)\n- valori duplicati, incoerenze e valori scritti a mano fuori dai token\nScrivi il risultato in AUDIT.md con i percorsi dei file. Non modificare nessun altro file.` }],
+        ok: "Il file <code>AUDIT.md</code> con la mappa dei token e delle incoerenze." },
+      { t: "Estrai i token in <em>un'unica fonte</em>",
+        blocks: [{ k: "prompt", code: `Partendo da AUDIT.md, estrai i token reali in design-system/tokens.json, formato W3C Design Tokens, con primitivi e semantici separati. Per ogni token annota il file di origine. Elencami i valori che hai dovuto unificare o normalizzare e perché.` }],
+        ok: "<code>design-system/tokens.json</code> e l'elenco delle normalizzazioni." },
+      { t: "Ricostruiscilo <em>in Figma</em>",
+        d: ["Ora il codice diventa libreria Figma, fedele a quello che c'è davvero in produzione."],
+        blocks: [{ k: "prompt", code: `Usa l'MCP di Figma{FS}. Crea un file Figma con le variabili di design-system/tokens.json e i 5 componenti più usati nella repository, con le stesse varianti e proprietà del codice. Procedi una sezione alla volta e mostrami uno screenshot alla fine di ognuna.` }],
+        ok: "Il file Figma con variabili e componenti allineati al codice." },
+      { t: "Salva il lavoro <em>su un branch</em>",
+        d: ["Non lavorare mai direttamente sul ramo principale di una repo che non è solo tua."],
+        blocks: [{ k: "prompt", code: `Crea un branch "design-system-audit" e fai commit di AUDIT.md e della cartella design-system. Se la repository è mia apri una pull request con gh e dammi il link. Se non è mia, crea prima un fork nel mio account e lavora lì.` }],
+        ok: "Il link alla pull request (o al tuo fork) con audit e token." }
+    ]
+  },
+  {
+    id: "video-setup", tone: "mint", tag: "Video · setup",
+    title: "Prepararsi a <em>montare video</em>",
+    short: "FFmpeg, sottotitoli automatici e motion graphic: {A} installa tutto e monta per te da prompt.",
+    time: "30 min", requires: "{A} + Node.js",
+    steps: [
+      { t: "Cosa installiamo e <em>perché</em>",
+        d: ["Per montare con l'agente servono pochi strumenti, tutti gratuiti e tutti installati da {A} con un prompt:"],
+        list: ["<b>FFmpeg</b>: il motore che taglia, unisce, converte, ridimensiona e comprime i video. È quello che usano quasi tutti i programmi di montaggio.", "<b>whisper.cpp</b>: trascrive l'audio sul tuo computer e crea i sottotitoli, anche in italiano.", "<b>Remotion</b>: una skill per creare titoli e motion graphic animati scritti in codice ed esportati in MP4.", "Una <b>cartella di progetto</b> ordinata, con le regole di esportazione per i social."],
+        blocks: [],
+        ok: "Hai {A} aperto nella cartella del corso e almeno un video di prova (anche girato con il telefono)." },
+      { t: "Installa <em>FFmpeg</em>",
+        d: ["Quando {A} ti chiede il permesso di eseguire il comando di installazione, rispondi di sì. Può richiedere qualche minuto."],
+        blocks: [{ k: "prompt", code: `Installa FFmpeg sul mio computer con il gestore di pacchetti adatto al mio sistema. Poi verifica che ffmpeg e ffprobe funzionino e dimmi la versione installata.` }],
+        ok: "L'agente ti mostra la versione, per esempio <code>ffmpeg version 7.x</code>." },
+      { t: "Crea la <em>cartella del montaggio</em>",
+        d: ["Una struttura fissa aiuta l'agente a sapere dove prendere i file e dove salvare le esportazioni. Le regole finiscono in {CTX}, così non devi ripeterle."],
+        blocks: [{ k: "prompt", code: `Crea la cartella video-lab dentro questa cartella del corso, con le sottocartelle raw (girato originale), assets (musica, loghi, font), sottotitoli ed export.\nPoi crea video-lab/{CTX} con queste regole:\n- non modificare mai i file in raw: lavora sempre su copie\n- preset Reel/TikTok: 1080×1920, 30 fps, H.264, audio AAC 192 kbps\n- preset YouTube: 1920×1080, 30 fps, H.264\n- i file esportati si chiamano progetto_formato_data.mp4 e vanno in export\n- prima di sovrascrivere un file chiedimi conferma` }],
+        ok: "La cartella <code>video-lab</code> con le quattro sottocartelle e il file <code>{CTX}</code>." },
+      { t: "Il primo <em>montaggio con FFmpeg</em>",
+        d: ["Copia un video in <code>video-lab/raw</code>. Poi chiedi all'agente le operazioni base: analisi, taglio, formato verticale e compressione."],
+        blocks: [{ k: "prompt", code: `Lavora in video-lab. Prendi il video che trovi in raw e:\n1. dimmi durata, risoluzione, fps e codec (usa ffprobe)\n2. taglia dal secondo 5 al secondo 20\n3. crea la versione verticale 1080×1920 con il preset Reel, riempiendo lo schermo senza bande nere\n4. comprimila sotto i 50 MB senza perdita visibile\nSalva tutto in export e mostrami i comandi ffmpeg che hai usato, spiegati in una riga ciascuno.` }],
+        ok: "In <code>video-lab/export</code> trovi il video tagliato e verticale, con i comandi spiegati." },
+      { t: "Sottotitoli <em>automatici</em>",
+        d: ["whisper.cpp lavora sul tuo computer: l'audio non viene caricato su nessun servizio. Il primo avvio scarica il modello della lingua, qualche centinaio di MB."],
+        blocks: [{ k: "prompt", code: `Installa whisper.cpp e scarica un modello multilingua adatto all'italiano (medium se il computer lo regge, altrimenti small).\nPoi trascrivi l'audio del video in export, salva i sottotitoli in sottotitoli/ come file .srt con righe di massimo 32 caratteri, e crea una versione del video con i sottotitoli impressi: font bianco, bordo nero, in basso al centro, sopra la zona dei pulsanti di Instagram.` }],
+        ok: "Un file <code>.srt</code> in <code>sottotitoli</code> e un video con i sottotitoli in <code>export</code>." },
+      { t: "Titoli animati con <em>Remotion</em>",
+        d: ["Remotion trasforma la descrizione di un'animazione in un video MP4. L'agente scrive il codice, tu descrivi il risultato come faresti con un motion designer."],
+        blocks: [{ k: "prompt", code: `Installa le skill di Remotion (repository github.com/remotion-dev/skills) come skill globali in {SK}.\nPoi crea in video-lab un progetto Remotion con un'intro di 4 secondi 1080×1920: sfondo #0C0C0C, il titolo "Workshop AI" che entra parola per parola dal basso, colore #FFAFD6, font IBM Plex Sans bold, uscita in dissolvenza.\nRenderizzala in export/intro.mp4 e infine uniscila con FFmpeg all'inizio del video con i sottotitoli.` }],
+        ok: "<code>export/intro.mp4</code> e il video finale con intro e sottotitoli." },
+      { t: "Trasforma il flusso <em>in una skill</em>",
+        d: ["Quello che hai appena fatto si può rifare con una parola. Fai salvare all'agente il procedimento come skill riutilizzabile."],
+        blocks: [{ k: "prompt", code: `Crea una skill chiamata "reel-pronto" con tutto il flusso di oggi: taglio, formato verticale, sottotitoli automatici, intro e compressione per Instagram. Deve chiedermi all'inizio il video sorgente, i secondi da tenere e il testo dell'intro. Salvala in {SK}.` }],
+        ok: "La cartella <code>{SK}/reel-pronto</code> con il suo <code>SKILL.md</code>." }
+    ]
+  },
+  {
+    id: "nle", tone: "pink", tag: "Video · programmi",
+    title: "Collegare <em>After Effects, DaVinci o CapCut</em>",
+    short: "Fai lavorare {A} dentro il tuo programma di montaggio: composizioni, timeline, bozze e render.",
+    time: "30–45 min", requires: "{A} + Setup video",
+    variants: [
+      { id: "ae", label: "After Effects", steps: [
+        { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
+          d: ["After Effects da solo non parla con l'agente. Serve un ponte: <b>ae-mcp</b>, un progetto open source della community (non di Adobe) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede After Effects."],
+          list: ["After Effects 2022 o successivo, installato da Creative Cloud.", "Node.js, che hai già dalla sezione di installazione.", "In After Effects: <b>Impostazioni → Scripting ed espressioni</b> → attiva <b>Consenti agli script di scrivere file e accedere alla rete</b>."],
+          blocks: [],
+          ok: "After Effects è installato e l'opzione per gli script è attiva." },
+        { t: "Scarica e installa <em>ae-mcp</em>",
+          d: ["L'agente scarica il progetto da GitHub nella cartella <code>strumenti</code> del corso e lo prepara. Approva i comandi che ti propone."],
+          blocks: [{ k: "prompt", code: `Scarica il progetto github.com/p10q/ae-mcp in una cartella "strumenti" dentro questa cartella del corso (creala se manca), poi esegui npm install e npm run build. Dimmi quando la cartella dist è pronta.` }],
+          ok: "L'agente conferma che <code>strumenti/ae-mcp/dist</code> è pronta." },
+        { t: "Installa il pannello <em>in After Effects</em>",
+          d: ["Il ponte ha un pannello che vive dentro After Effects e legge i comandi dell'agente."],
+          blocks: [{ k: "prompt", code: `Installa l'estensione CEP di ae-mcp che si trova in strumenti/ae-mcp/cep-extension: su macOS con lo script install.sh, su Windows copiandola nella cartella delle estensioni CEP. Attiva anche la modalità debug delle estensioni CEP, necessaria per i pannelli non firmati. Dimmi in quale cartella l'hai installata.` }],
+          ok: "L'agente ti dice dove ha installato l'estensione e che la modalità debug è attiva." },
+        { t: "Registra <em>il collegamento</em>",
+          blocks: [{ k: "prompt", code: `Registra ae-mcp come server MCP di {A} per tutti i miei progetti, con il nome ae-mcp: comando node con il percorso completo di strumenti/ae-mcp/dist/stdio-server-hybrid.js e la variabile d'ambiente AE_USE_FILE_BRIDGE=true.` }],
+          ok: "L'agente conferma che il server <code>ae-mcp</code> è registrato." },
+        { t: "Accendi il pannello e <em>apri una nuova sessione</em>",
+          list: ["Chiudi e riapri After Effects.", "Vai in <b>Finestra → Estensioni → AE MCP Bridge</b> e attiva <b>Auto Process</b>. Lascia il pannello aperto.", "Apri una nuova sessione di {A} nella stessa cartella: i collegamenti si caricano solo all'avvio.", "Scrivi <code>/mcp</code> e cerca <b>ae-mcp</b>."],
+          blocks: [{ k: "cc", code: `/mcp` }, { k: "prompt", label: "Se in /mcp non lo vedi", code: `Elenca i server MCP configurati per te e dimmi se c'è ae-mcp. Se manca, controlla quale dei passi precedenti non è andato a buon fine (cartella scaricata, build, estensione, registrazione) e completalo.` }],
+          ok: "In <code>/mcp</code> compare ae-mcp e in After Effects il pannello è aperto con Auto Process attivo." },
+        { t: "La prima <em>composizione</em>",
+          blocks: [{ k: "prompt", code: `In After Effects crea una composizione "Reel intro" 1080×1920, 30 fps, 6 secondi, sfondo #0C0C0C.\nAggiungi il testo "AI per creativi" in IBM Plex Sans bold, colore #FFAFD6, che entra dal basso con un'animazione morbida nei primi 0,8 secondi, e una forma cerchio color menta che pulsa lentamente dietro il testo.\nPoi aggiungila alla coda di rendering in H.264 nella cartella video-lab/export.` }],
+          ok: "In After Effects trovi la composizione animata e il render in coda." },
+        { t: "Controllo finale <em>e piano B</em>",
+          d: ["Fai verificare all'agente che tutto funzioni. Se il ponte non va sul tuo computer, il piano B è uno script <code>.jsx</code> che esegui tu da <b>File → Script → Esegui file di script</b>: funziona sempre, senza installare niente."],
+          blocks: [{ k: "prompt", code: `Fai un controllo del collegamento con After Effects: elenca gli strumenti di ae-mcp che vedi e leggi le informazioni del progetto aperto.\nSe non funziona, scrivi invece uno script ExtendScript compatibile ES3 (niente arrow function né template literal) che crei la stessa composizione "Reel intro", salvalo in video-lab/assets/reel-intro.jsx e spiegami come eseguirlo.` }],
+          ok: "L'agente legge il progetto aperto, oppure ti consegna lo script di piano B." }
+      ] },
+      { id: "resolve", label: "DaVinci Resolve", steps: [
+        { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
+          d: ["DaVinci Resolve da solo non parla con l'agente. Serve <b>davinci-resolve-mcp</b>, un progetto open source della community (non di Blackmagic) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede Resolve."],
+          list: ["DaVinci Resolve 18.5 o successivo. Con la versione <b>Studio</b> il collegamento è diretto; con la <b>gratuita</b> serve anche un piccolo ponte (passo 3).", "Python 3.10–3.12: se manca, lo installa l'agente nel passo 2.", "Solo Studio: <b>Preferenze → Sistema → Generali</b> → <b>Scripting esterno</b> su <b>Locale</b>."],
+          blocks: [],
+          ok: "Resolve è installato e sai se hai la versione Studio o quella gratuita." },
+        { t: "Scarica e installa <em>davinci-resolve-mcp</em>",
+          d: ["Il progetto ha un installatore che scarica tutto e registra il collegamento. Approva i comandi che l'agente ti propone."],
+          blocks: [{ k: "prompt", code: `Installa il server MCP per DaVinci Resolve del progetto github.com/samuelgursky/davinci-resolve-mcp con "npx davinci-resolve-mcp setup". Se serve, installa prima Python 3.12.\nRegistralo come server MCP di {A} per tutti i miei progetti, con il nome davinci-resolve.` }],
+          ok: "L'agente conferma l'installazione e la registrazione di <code>davinci-resolve</code>." },
+        { t: "Solo versione gratuita: <em>il ponte</em>",
+          d: ["Se hai Resolve Studio, segna il passo come fatto. Con la versione gratuita l'agente installa uno script che poi avvii tu da dentro Resolve: <b>Area di lavoro → Script → resolve_bridge</b>."],
+          blocks: [{ k: "prompt", code: `Ho DaVinci Resolve gratuito: installa il ponte del server MCP con lo script scripts/install_resolve_bridge.py e dimmi dove trovarlo dentro Resolve.` }],
+          ok: "Dentro Resolve, da Area di lavoro → Script, avvii <code>resolve_bridge</code>." },
+        { t: "Apri una <em>nuova sessione</em>",
+          d: ["Apri Resolve con un progetto. Poi apri una nuova sessione di {A} nella stessa cartella: i collegamenti si caricano solo all'avvio. Scrivi <code>/mcp</code> e cerca <b>davinci-resolve</b>."],
+          blocks: [{ k: "cc", code: `/mcp` }, { k: "prompt", label: "Se in /mcp non lo vedi", code: `Elenca i server MCP configurati per te e dimmi se c'è davinci-resolve. Se manca, controlla cosa non è andato a buon fine nell'installazione e completalo.` }],
+          ok: "In <code>/mcp</code> compare davinci-resolve." },
+        { t: "La prima <em>timeline</em>",
+          blocks: [{ k: "prompt", code: `In DaVinci Resolve crea una timeline "Reel test" 1080×1920 a 30 fps. Importa nel media pool i video di video-lab/raw, mettili in timeline nell'ordine dei nomi dei file e aggiungi un marker blu all'inizio di ogni clip con il nome del file.` }],
+          ok: "In Resolve trovi la timeline con le clip e i marker." },
+        { t: "Colore e <em>render</em>",
+          blocks: [{ k: "prompt", code: `Sulla timeline "Reel test": applica a tutte le clip una correzione di base coerente (bilanciamento del bianco e contrasto leggero), poi aggiungi alla coda di render un'esportazione H.264 1080×1920 in video-lab/export e avvia il render. Dimmi quando è finito.` }],
+          ok: "Il video renderizzato in <code>video-lab/export</code>." },
+        { t: "Controllo <em>finale</em>",
+          d: ["Il progetto ha un controllo che dice cosa funziona e quali funzioni extra mancano (per esempio Whisper per le trascrizioni)."],
+          blocks: [{ k: "prompt", code: `Esegui il controllo scripts/doctor.py di davinci-resolve-mcp e riassumimi in parole semplici cosa funziona, cosa manca e se vale la pena installare qualcosa in più.` }],
+          ok: "Un riepilogo di cosa funziona e cosa manca." }
+      ] },
+      { id: "capcut", label: "CapCut", steps: [
+        { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
+          d: ["CapCut non ha un collegamento ufficiale. Serve <b>VectCutAPI</b>, un progetto open source della community (non di ByteDance) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede CapCut.", "VectCutAPI non monta dentro CapCut: crea <b>bozze</b> che poi apri in CapCut desktop, rifinisci ed esporti."],
+          list: ["CapCut desktop installato.", "FFmpeg, dalla sezione <b>Prepararsi a montare video</b>.", "Python 3.10 o successivo: se manca, lo installa l'agente nel passo 2."],
+          blocks: [],
+          ok: "CapCut desktop è installato e hai completato il setup video." },
+        { t: "Scarica e installa <em>VectCutAPI</em>",
+          d: ["L'agente scarica il progetto da GitHub nella cartella <code>strumenti</code> del corso, crea un ambiente Python dedicato e installa quello che serve. Approva i comandi che ti propone."],
+          blocks: [{ k: "prompt", code: `Scarica il progetto github.com/sun-guannan/VectCutAPI in una cartella "strumenti" dentro questa cartella del corso (creala se manca).\nCrea un ambiente Python dedicato (3.10 o successivo, installalo se manca), installa requirements.txt e requirements-mcp.txt, e crea config.json con draft_profile impostato su capcut_legacy e senza caricamenti online.` }],
+          ok: "L'agente conferma: cartella <code>strumenti/VectCutAPI</code>, dipendenze installate e <code>config.json</code> creato." },
+        { t: "Registra <em>il collegamento</em>",
+          blocks: [{ k: "prompt", code: `Registra mcp_server.py di VectCutAPI come server MCP di {A} per tutti i miei progetti, con il nome capcut-api. Usa il Python dell'ambiente dedicato e fallo partire dalla cartella di VectCutAPI (serve per trovare i modelli delle bozze).` }],
+          ok: "L'agente conferma che <code>capcut-api</code> è registrato." },
+        { t: "Apri una <em>nuova sessione</em>",
+          d: ["I collegamenti si caricano solo all'avvio. Apri una nuova sessione di {A} nella stessa cartella, scrivi <code>/mcp</code> e cerca <b>capcut-api</b>."],
+          blocks: [{ k: "cc", code: `/mcp` }, { k: "prompt", label: "Se in /mcp non lo vedi", code: `Elenca i server MCP configurati per te e dimmi se c'è capcut-api. Se manca, controlla cosa non è andato a buon fine nei passi precedenti (cartella scaricata, ambiente Python, registrazione) e completalo.` }],
+          ok: "In <code>/mcp</code> compare capcut-api." },
+        { t: "La prima <em>bozza</em>",
+          blocks: [{ k: "prompt", code: `Con capcut-api crea una bozza 1080×1920: inserisci i video di video-lab/raw in sequenza, aggiungi in apertura il titolo "AI per creativi" per 2 secondi, una transizione morbida tra le clip e i sottotitoli dal file .srt in video-lab/sottotitoli. Salva la bozza.` }],
+          ok: "L'agente salva una cartella che inizia con <code>dfd_</code>." },
+        { t: "Apri la bozza <em>in CapCut</em>",
+          d: ["Le bozze vanno spostate nella cartella dove CapCut cerca i progetti. Chiedi all'agente di farlo, poi apri CapCut."],
+          blocks: [{ k: "prompt", code: `Trova la cartella delle bozze di CapCut desktop sul mio computer e copiaci la bozza appena creata. Dimmi il percorso.` }],
+          ok: "Aprendo CapCut desktop trovi la bozza tra i progetti: rifinisci ed esporti da lì." },
+        { t: "Controllo <em>finale</em>",
+          d: ["VectCutAPI ha un test che prova tutte le funzioni: testo, video, audio, immagini e salvataggio della bozza."],
+          blocks: [{ k: "prompt", code: `Esegui test_mcp_client.py di VectCutAPI con il Python dell'ambiente dedicato e riassumimi in italiano quali funzioni sono state verificate. Poi cancella la bozza di prova che il test ha creato.` }],
+          ok: "Il test passa e l'agente elenca le funzioni verificate." }
+      ] }
+    ]
+  },
+  {
+    id: "dreamina", tone: "pink", tag: "Connettore · canvas",
+    title: "Collegare <em>Dreamina Canvas</em>",
+    short: "Il comando e la skill di Dreamina: {A} lavora per te direttamente sulla canvas di Dreamina, generando immagini e video.",
+    time: "15 min", requires: "{A} + abbonamento Dreamina Advanced",
+    steps: [
+      { t: "Cosa ti serve e <em>cosa installiamo</em>",
+        d: ["Dreamina Canvas è in <b>beta privata</b>, aperta agli abbonati <b>Advanced</b> di Dreamina: controlla il tuo piano su <a href=\"https://dreamina.capcut.com/ai-tool/install\" target=\"_blank\" rel=\"noopener\">dreamina.capcut.com</a> prima di iniziare."],
+        list: ["<b>Il comando dreamina-canvas</b>: si installa nella cartella <code>~/.local/bin</code> e collega l'agente alla canvas.", "<b>La skill dreamina-canvas-cli</b>: spiega all'agente come usare il comando. Si installa in <code>~/.agents/skills</code>.", "Ogni generazione consuma i crediti del tuo account Dreamina."],
+        blocks: [],
+        ok: "Hai un abbonamento Dreamina Advanced e {A} è aperto nella cartella del corso." },
+      { t: "Installa <em>comando e skill</em>",
+        d: ["Questo è il prompt ufficiale di Dreamina: l'agente sceglie da solo il comando giusto per il tuo sistema. Approva i comandi che ti propone."],
+        blocks: [{ k: "prompt", code: `Please install the Dreamina Canvas CLI and Skill using the command for my operating system and terminal:\n\n- macOS / Linux: curl -fsSL https://dreamina.capcut.com/canvas-cli/install.sh | bash\n- Windows PowerShell: irm https://dreamina.capcut.com/canvas-cli/install.ps1 | iex\n- Windows CMD: curl.exe -fsSLO https://dreamina.capcut.com/canvas-cli/install.bat && install.bat\n\nAfter installation, read the CLI Skill and guide me through verifying that the CLI works, signing in, and authorizing access.\nRispondimi in italiano.` }],
+        ok: "L'agente conferma che il comando <code>dreamina-canvas</code> e la skill sono installati." },
+      { t: "Rendi la skill visibile <em>a {A}</em>",
+        d: ["L'installatore mette la skill in <code>~/.agents/skills</code>, la cartella che legge Codex. Claude Code invece cerca le skill in <code>~/.claude/skills</code>: chiedi all'agente di collegarla anche lì."],
+        blocks: [{ k: "prompt", code: `Collega la skill di Dreamina anche a Claude Code: crea un collegamento da ~/.agents/skills/dreamina-canvas-cli a ~/.claude/skills/dreamina-canvas-cli (se la cartella ~/.claude/skills non esiste, creala). Poi conferma che il file SKILL.md si legge da lì.` }],
+        codex: { d: ["L'installatore mette la skill in <code>~/.agents/skills</code>, che è proprio la cartella che legge Codex: non serve fare niente. Controlla solo che ci sia."],
+          blocks: [{ k: "prompt", code: `Controlla che in ~/.agents/skills ci sia la cartella dreamina-canvas-cli con il suo SKILL.md e dimmi in una riga a cosa serve.` }] },
+        ok: "L'agente conferma che la skill dreamina-canvas-cli è leggibile da {A}." },
+      { t: "Verifica che il comando <em>funzioni</em>",
+        d: ["Il comando si installa in <code>~/.local/bin</code>. Se quella cartella non è tra quelle che il computer conosce, il comando risulta \"non trovato\": l'agente la aggiunge."],
+        blocks: [{ k: "prompt", code: `Verifica che il comando dreamina-canvas funzioni e mostrami la sua versione e l'aiuto. Se risulta "command not found", aggiungi ~/.local/bin al PATH nel file di configurazione della mia shell e riprova.` }],
+        ok: "L'agente ti mostra versione e aiuto di <code>dreamina-canvas</code>." },
+      { t: "Accedi e <em>autorizza</em>",
+        d: ["L'agente avvia l'accesso seguendo la skill. Si apre il browser: entra con il tuo account Dreamina e autorizza l'accesso. Poi torna dall'agente e scrivi <i>fatto</i>."],
+        blocks: [{ k: "prompt", code: `Seguendo la skill dreamina-canvas-cli, avvia l'accesso al mio account Dreamina e l'autorizzazione. Dimmi cosa devo fare nel browser, aspetta che io ti scriva "fatto" e poi verifica che l'accesso sia attivo.` }],
+        ok: "L'agente conferma che sei collegata o collegato al tuo account Dreamina." },
+      { t: "Apri una <em>nuova sessione</em>",
+        d: ["Le skill si caricano all'avvio di una sessione. Apri una nuova sessione di {A} nella stessa cartella e controlla che la skill compaia."],
+        blocks: [{ k: "cc", code: `/skills` }],
+        ok: "Nell'elenco delle skill compare <b>dreamina-canvas-cli</b>." },
+      { t: "La prima creazione <em>sulla canvas</em>",
+        d: ["Chiedi sempre il costo prima di generare."],
+        blocks: [{ k: "prompt", code: `Con Dreamina Canvas crea una nuova canvas chiamata "Moodboard Futura" e genera 4 immagini 4:5 per una campagna di un corso di AI per creativi: palette nero, rosa #FFAFD6 e menta #95F7CE, luce morbida, stile editoriale.\nPrima di generare dimmi quali modelli usi e quanti crediti servono, e aspetta il mio ok. Alla fine dammi il link alla canvas.` }],
+        ok: "Aprendo il link trovi la canvas con le immagini generate." },
+      { t: "Controllo <em>finale</em>",
+        blocks: [{ k: "prompt", code: `Leggi la skill dreamina-canvas-cli e fammi una tabella in italiano con i comandi principali di dreamina-canvas: cosa fa ciascuno e un esempio di prompt che posso darti per usarlo.` }],
+        ok: "Una tabella con i comandi principali, da tenere come promemoria." }
+    ]
+  }
+];
+
+/* Sezioni con varianti (es. programma scelto): steps segue la variante attiva */
+SECTIONS.forEach(s => {
+  if (!s.variants) return;
+  Object.defineProperty(s, "steps", { get() { const v = s.variants.find(x => x.id === (store.vars && store.vars[s.id])) || s.variants[0]; return v.steps; } });
+});
+/* ============================================================
+   VETRINA "Cosa puoi fare" per le sezioni connettore.
+   caps: funzioni con prompt d'esempio · skills: metodi pronti.
+   ============================================================ */
+const SHOWCASE = {
+  "higgsfield-mcp": {
+    name: "Higgsfield",
+    intro: "L'MCP dà all'agente gli strumenti di Higgsfield: oltre 30 modelli per immagini, video, audio e 3D. Chiedi sempre il costo in crediti prima di generare.",
+    caps: [
+      { tool: "generate_image", t: "Immagini da testo", d: "Key visual, moodboard, varianti di stile. L'agente sceglie il modello adatto al compito.", p: "Con Higgsfield genera 4 varianti 4:5 di un key visual per un festival di musica elettronica: palette rosa e menta, tipografia assente, stile editoriale. Prima dimmi modello e costo." },
+      { tool: "generate_video", t: "Video da testo o da immagine", d: "Anima un'immagine che hai già approvato oppure parti da una descrizione di regia.", p: "Anima questa immagine in un video di 5 secondi: slow dolly-in, livello occhi, luce che cambia lentamente. Mantieni stile e colori. Dimmi il costo prima di generare.\n[allega o indica l'immagine]" },
+      { tool: "upscale · remove_background · reframe", t: "Ritocco e formati", d: "Togli lo sfondo, aumenta la risoluzione, adatta lo stesso visual a 9:16, 1:1 e 16:9.", p: "Prendi l'ultima immagine generata: rimuovi lo sfondo, poi crea le versioni 1:1, 4:5 e 9:16 estendendo la scena in modo coerente." },
+      { tool: "Marketing Studio", t: "Ads e UGC di prodotto", d: "Video pubblicitari e contenuti in stile UGC partendo dalla foto o dal link di un prodotto.", p: "Usa il Marketing Studio di Higgsfield per creare un video UGC 9:16 di 15 secondi per questo prodotto: hook nei primi 2 secondi, persona che lo usa a casa, call to action finale.\n[link o foto del prodotto]" },
+      { tool: "Soul ID", t: "Personaggi coerenti", d: "Allena un'identità da 5–20 foto e riusala in immagini e video mantenendo lo stesso volto.", p: "Voglio un personaggio coerente per una serie di contenuti. Spiegami come allenare un Soul ID con le mie foto, quante ne servono e quanto costa, poi guidami passo per passo." },
+      { tool: "generate_audio", t: "Musica, effetti e voce", d: "Tracce di sottofondo, effetti sonori, voci narranti e doppiaggio in altre lingue.", p: "Genera una traccia di 20 secondi per questo video: elettronica minimale, 110 bpm, senza voce. Poi proponimi 3 effetti sonori per le transizioni." },
+      { tool: "virality_predictor", t: "Analisi dei video", d: "Fai valutare un video prima di pubblicarlo: punti deboli, hook, ritmo.", p: "Analizza questo video con il Virality Predictor di Higgsfield e dimmi i 3 interventi che migliorerebbero di più il risultato.\n[link al video]" },
+      { tool: "balance · show_generations", t: "Crediti e archivio", d: "Controlla il saldo e ritrova quello che hai generato senza aprire il sito.", p: "Quanti crediti mi restano su Higgsfield? Mostrami le ultime 10 generazioni con link e modello usato." }
+    ],
+    skillsIntro: "Le skill ufficiali di Higgsfield aggiungono metodi pronti sopra gli strumenti. Usano la CLI di Higgsfield, che l'agente installa insieme alle skill.",
+    skills: [
+      ["higgsfield-generate", "Immagini, video, 3D e audio con oltre 30 modelli, Marketing Studio e Virality Predictor."],
+      ["higgsfield-product-photoshoot", "Foto prodotto in 10 modalità: studio, lifestyle, Pinterest, hero banner, pack per ads."],
+      ["higgsfield-brandkit", "Identità visiva completa: palette, logo, tipografia, mockup e brandbook."],
+      ["higgsfield-soul-id", "Allena un volto riutilizzabile da 5–20 foto per personaggi coerenti."],
+      ["higgsfield-video-explainer", "Video spiegati con voce narrante, partendo da un tema o da un documento."],
+      ["higgsfield-youtube-thumbnail", "Copertine per YouTube e cover per video verticali."],
+      ["higgsfield-marketplace-cards", "Immagini per schede prodotto dei marketplace e moduli in stile A+."],
+      ["higgsfield-websites", "Siti, web app e giochi creati e pubblicati da Higgsfield."]
+    ],
+    install: {
+      claude: `Installa le skill ufficiali di Higgsfield: aggiungi il marketplace higgsfield-ai/skills e installa il plugin higgsfield@higgsfield.\nPoi installa la CLI di Higgsfield se manca e avvia "higgsfield auth login", aspettando che io completi l'accesso nel browser.\nSe da riga di comando non riesci con il plugin, dimmi quali comandi /plugin scrivere.`,
+      codex: `$skill-installer installa le skill del repository github.com/higgsfield-ai/skills in ~/.agents/skills.\nPoi installa la CLI di Higgsfield se manca e avvia "higgsfield auth login", aspettando che io completi l'accesso nel browser.`,
+      term: `npx skills add higgsfield-ai/skills`,
+      src: "higgsfield-ai/skills"
+    }
+  },
+  "figma-mcp": {
+    name: "Figma",
+    intro: "L'MCP di Figma fa leggere all'agente i tuoi file (struttura, variabili, screenshot) e gli fa scrivere direttamente nel canvas. Copia il link di un frame con tasto destro → Copy link to selection e incollalo nel prompt.",
+    caps: [
+      { tool: "get_design_context", t: "Da design a codice", d: "Trasforma un frame in codice fedele, usando i componenti e i token del progetto.", p: "Trasforma questo frame Figma in una pagina HTML e CSS fedele al design, responsive. Usa le variabili di Figma come variabili CSS.\n[link al frame]" },
+      { tool: "get_variable_defs", t: "Estrai i token", d: "Leggi colori, tipografia e spaziature usati in un frame o in tutto il file.", p: "Elenca tutte le variabili Figma usate in questo frame (colori, tipografia, spacing, radius) e salvale in tokens.json.\n[link al frame]" },
+      { tool: "get_screenshot", t: "Revisione UX", d: "L'agente guarda la schermata e ti restituisce una critica strutturata.", p: "Fai uno screenshot di questo frame e fai una revisione UX: gerarchia, leggibilità, contrasti, stati mancanti. Dammi 5 interventi in ordine di priorità.\n[link al frame]" },
+      { tool: "use_figma", t: "Disegna nel file", d: "Crea o modifica schermate direttamente in Figma, con auto layout e componenti veri.", p: "In questo file Figma crea una schermata di login mobile 390×844 usando i componenti e le variabili già presenti. Mostrami uno screenshot alla fine.\n[link al file]" },
+      { tool: "figma-generate-library", t: "Costruisci una libreria", d: "Variabili, stili e componenti con varianti a partire da un design system in codice.", p: "Usa i token in tokens.json per creare in Figma le collezioni di variabili (Primitives, Semantic con Light e Dark) e un componente Button con varianti e stati." },
+      { tool: "create_new_file", t: "Nuovi file", d: "Apri un nuovo file Design, FigJam o Slides senza uscire dalla conversazione.", p: "Crea un nuovo file Figma Design chiamato \"Esercizio modulo 3\" e dammi il link." },
+      { tool: "generate_diagram", t: "Diagrammi in FigJam", d: "User flow, mappe del sito, journey e flussi decisionali generati da una descrizione.", p: "Crea in FigJam lo user flow di un'app di prenotazione per un corso: dalla scoperta al pagamento, con i casi di errore." },
+      { tool: "Code Connect", t: "Collega design e codice", d: "Associa i componenti Figma ai componenti del tuo codice, così il passaggio è sempre coerente.", p: "Collega con Code Connect i componenti Button e Card di questo file Figma ai componenti corrispondenti del mio progetto.\n[link al file]" }
+    ],
+    skillsIntro: "Con Claude Code le skill arrivano insieme al plugin ufficiale figma@claude-plugins-official. Codex legge le stesse istruzioni direttamente dal server MCP di Figma.",
+    skills: [
+      ["figma-use", "La base: come leggere e scrivere nei file Figma senza errori. Va caricata prima di ogni modifica."],
+      ["figma-generate-design", "Trasforma una pagina o un'interfaccia in una schermata Figma con i componenti del design system."],
+      ["figma-generate-library", "Costruisce un design system in Figma: variabili, temi chiaro e scuro, componenti con varianti."],
+      ["figma-design-to-code", "Implementa in codice un design Figma rispettando componenti e token."],
+      ["figma-code-connect", "Collega i componenti Figma ai componenti del codice."],
+      ["figma-generate-diagram", "Diagrammi e flussi in FigJam."],
+      ["figma-use-slides", "Crea e modifica presentazioni in Figma Slides."],
+      ["figma-use-motion", "Aggiunge animazioni ai livelli Figma: keyframe, easing, durate."]
+    ],
+    install: {
+      claude: `Installa il plugin ufficiale di Figma (figma@claude-plugins-official), che contiene le skill di Figma. Poi elencami le skill Figma che hai a disposizione.`,
+      codex: `Leggi le skill messe a disposizione dal server MCP di Figma (risorse skill://figma/...) ed elencamele con una riga di descrizione ciascuna.`,
+      term: `claude plugin install figma@claude-plugins-official`,
+      termCodex: `codex mcp list`,
+      src: "anthropics/claude-plugins-official"
+    }
+  },
+  "github": {
+    name: "GitHub",
+    intro: "Con GitHub CLI collegata l'agente salva il tuo lavoro, crea repository, apre e revisiona proposte di modifica. Tu chiedi a parole, lui usa gh e git.",
+    caps: [
+      { tool: "git commit · git push", t: "Salva il lavoro", d: "Ogni versione importante resta nella cronologia, con un messaggio che spiega cosa è cambiato.", p: "Salva il lavoro di oggi: fai commit di tutte le modifiche con un messaggio chiaro in italiano e caricale su GitHub." },
+      { tool: "gh repo create", t: "Nuovo repository", d: "Un progetto nuovo diventa un repository privato in un passaggio.", p: "Crea un repository privato su GitHub per questa cartella, con un README che descrive il progetto, e dammi il link." },
+      { tool: "gh pr create", t: "Branch e pull request", d: "Prova un'idea su un ramo separato e proponila senza toccare la versione principale.", p: "Crea un branch \"nuova-palette\", applica la nuova palette ai token, fai commit e apri una pull request con una descrizione delle modifiche." },
+      { tool: "gh pr review", t: "Revisione di una proposta", d: "L'agente legge le modifiche di una pull request e ti dice cosa controllare.", p: "Leggi la pull request numero 3 di questo repository e riassumimi cosa cambia, cosa potrebbe rompersi e cosa devo verificare prima di approvarla." },
+      { tool: "gh issue", t: "Lista di cose da fare", d: "Le issue diventano il backlog del progetto, anche condiviso con il team.", p: "Leggi DESIGN.md e crea su GitHub una issue per ogni componente ancora da progettare, con descrizione e criteri di completamento." },
+      { tool: "GitHub Pages", t: "Pubblica un sito", d: "Un progetto HTML diventa un sito online con un link da condividere.", p: "Pubblica questa cartella su GitHub Pages: configura il repository, attiva Pages e dammi il link del sito quando è online." },
+      { tool: "gh repo clone", t: "Studia un progetto esistente", d: "Scarica qualsiasi repository pubblico e fattelo spiegare.", p: "Clona il repository proprietario/nome e spiegami come è organizzato: cartelle, tecnologie, dove sono gli stili e i componenti." },
+      { tool: "git log · git diff", t: "Cronologia e ripristino", d: "Rivedi cosa è cambiato e torna a una versione precedente quando serve.", p: "Mostrami cosa è cambiato negli ultimi 5 commit in parole semplici. Poi dimmi come tornare alla versione di ieri senza perdere niente." }
+    ],
+    skillsIntro: "Per GitHub non serve una skill: l'agente usa questi comandi di GitHub CLI e Git. Non devi impararli, ma riconoscerli ti aiuta a capire cosa sta facendo quando ti chiede il permesso.",
+    skills: [
+      ["gh repo", "Crea, clona, visualizza e configura repository."],
+      ["gh pr", "Apre, controlla, revisiona e unisce le pull request."],
+      ["gh issue", "Crea e gestisce le issue, cioè le cose da fare."],
+      ["gh auth", "Gestisce l'accesso al tuo account GitHub."],
+      ["gh release", "Pubblica versioni del progetto con le note di rilascio."],
+      ["gh run", "Controlla le automazioni (GitHub Actions) e i loro errori."],
+      ["git commit", "Salva una versione delle modifiche con un messaggio."],
+      ["git branch", "Crea rami separati per provare idee senza rischi."]
+    ]
+  }
+};
+
+SHOWCASE["video-setup"] = {
+  name: "il video",
+  heading: "Altri strumenti per <em>il video</em>",
+  intro: "Quando il flusso base funziona, questi strumenti allargano quello che puoi fare. Anche qui li installa l'agente con un prompt.",
+  caps: [
+    { tool: "HyperFrames · HeyGen", t: "Video da HTML e CSS", d: "Un'alternativa a Remotion per chi ragiona come nel web: composizioni in HTML, CSS e animazioni, esportate in MP4 identici a ogni render. Richiede Node.js 22+ e FFmpeg.", p: "Installa le skill di HyperFrames (repository github.com/heygen-com/hyperframes). Poi crea in video-lab un progetto con \"npx hyperframes init reel-hf\": un reel 1080×1920 di 6 secondi con tre frasi che compaiono una dopo l'altra su sfondo #0C0C0C, colore #95F7CE. Fammelo vedere con \"npx hyperframes preview\" e poi renderizzalo in export con \"npx hyperframes render\"." },
+    { tool: "Demucs", t: "Separa voce e musica", d: "Divide una traccia in voce, batteria, basso e resto. Utile per togliere la musica sotto un'intervista o recuperare solo la voce. Il progetto è archiviato ma funziona.", p: "Installa Demucs con \"python3 -m pip install -U demucs\" in un ambiente Python dedicato. Poi separa la voce dalla musica nell'audio del video che trovi in video-lab/raw (\"demucs --two-stems=vocals\") e salva le due tracce in video-lab/assets." },
+    { tool: "Recordly", t: "Registrazioni dello schermo", d: "App gratuita per registrare lo schermo e trasformarlo in demo curate, con zoom ed effetti del cursore. Si scarica dalla pagina delle release su GitHub (macOS 14+, Windows 10+).", p: "Ho registrato una demo con Recordly e l'ho salvata in video-lab/raw. Tagliala alle parti dove succede qualcosa, aggiungi i sottotitoli automatici e crea una versione 16:9 per YouTube e una 9:16 per i Reel con FFmpeg." },
+    { tool: "Whisper · OpenAI", t: "Trascrizione più precisa", d: "Il modello originale di OpenAI da cui nasce whisper.cpp. Più lento sul Mac, utile se vuoi confrontare le trascrizioni o lavorare in Python.", p: "Installa Whisper di OpenAI (github.com/openai/whisper) in un ambiente Python dedicato e trascrivi l'audio del video in video-lab/raw con il modello medium in italiano. Confronta il risultato con il file .srt fatto con whisper.cpp e dimmi quale è più preciso." }
+  ],
+  subTitle: "Gli strumenti di questa sezione",
+  skillsIntro: "Riepilogo di cosa usa il video e a cosa serve.",
+  skills: [
+    ["FFmpeg", "Taglio, conversione, formati, compressione e unione dei video."],
+    ["whisper.cpp", "Trascrizione e sottotitoli sul tuo computer."],
+    ["Remotion", "Titoli e motion graphic scritti in React."],
+    ["HyperFrames", "Video da HTML e CSS, alternativa a Remotion."],
+    ["Demucs", "Separazione di voce e musica."],
+    ["Recordly", "Registrazione dello schermo per demo e tutorial."]
+  ]
+};
+
+/* Repository di skill per categoria */
+const CATS = [
+  { id: "all", name: "Tutte" },
+  { id: "design", name: "Design di prodotto", cls: "" },
+  { id: "motion", name: "Motion graphic", cls: "c-motion" },
+  { id: "3d", name: "3D, shader ed effetti", cls: "c-motion" },
+  { id: "write", name: "Scrittura e presentazioni", cls: "c-mkt" },
+  { id: "mkt", name: "Marketing", cls: "c-mkt" },
+  { id: "doc", name: "Documenti e slide", cls: "c-doc" },
+  { id: "method", name: "Metodo di lavoro", cls: "" },
+  { id: "make", name: "Crea le tue", cls: "c-make" },
+  { id: "dev", name: "Per chi sviluppa", cls: "c-doc" },
+  { id: "adv", name: "Oltre: contesto e memoria", cls: "c-make" }
+];
+/* how: "skill" = una skill di un repo · "repo" = tutte le skill del repo · "plugin" = plugin Claude Code */
+const SKILLS = [
+  { cat: "design", name: "frontend-design", src: "anthropics/skills", how: "skill", d: "Interfacce con una direzione estetica precisa: tipografia, colore, layout. Evita il look generico da AI." },
+  { cat: "design", name: "Impeccable", src: "pbakaus/impeccable", how: "plugin", plugin: "impeccable", d: "Linguaggio di design per agenti: 24 comandi (critique, polish, animate…) e controlli automatici sui difetti tipici delle UI fatte con l'AI." },
+  { cat: "design", name: "UI UX Pro Max", src: "nextlevelbuilder/ui-ux-pro-max-skill", how: "plugin", plugin: "ui-ux-pro-max@ui-ux-pro-max-skill", d: "Stili, palette, abbinamenti di font e linee guida UX per web e mobile." },
+  { cat: "design", name: "Figma", src: "anthropics/claude-plugins-official", how: "figma", d: "Collegamento e skill ufficiali di Figma: genera schermate, librerie, variabili e componenti nei tuoi file." },
+  { cat: "design", name: "web-design-guidelines", src: "vercel-labs/agent-skills", how: "skill", d: "Revisione delle interfacce su accessibilità, performance e buone pratiche UX." },
+  { cat: "design", name: "canvas-design", src: "anthropics/skills", how: "skill", d: "Poster e composizioni grafiche statiche, esportate in PNG o PDF." },
+  { cat: "motion", name: "Remotion", src: "remotion-dev/skills", how: "repo", d: "Video e motion graphic scritti in React: titoli animati, video social, data video, sottotitoli." },
+  { cat: "motion", name: "GSAP", src: "greensock/gsap-skills", how: "repo", d: "Animazioni web con GSAP: timeline, ScrollTrigger, plugin e performance. Skill ufficiale GreenSock." },
+  { cat: "motion", name: "algorithmic-art", src: "anthropics/skills", how: "skill", d: "Arte generativa con p5.js: pattern, particelle, flow field, animazioni interattive." },
+  { cat: "motion", name: "slack-gif-creator", src: "anthropics/skills", how: "skill", d: "GIF animate leggere, pronte per Slack e per i social." },
+  { cat: "mkt", name: "Instagram Agent", src: "Jakeschincariol/instagram-agent-skill", how: "custom", d: "13 skill per Instagram: script dei Reel con hook valutati (/ig-reel), caroselli, storie, caption, piano settimanale (/ig-plan), punteggio del profilo (/ig-profile), analisi dei post (/ig-audit), bozze di commenti e DM.",
+    pc: `Aggiungi il marketplace di plugin Jakeschincariol/instagram-agent-skill e installa il plugin instagram-agent.\nSe da riga di comando non riesci, copia le cartelle skills/ig-* del repository in ~/.claude/skills. Poi verifica che /ig-reel funzioni.`,
+    px: `$skill-installer installa le skill della cartella skills (quelle che iniziano con ig-) del repository github.com/Jakeschincariol/instagram-agent-skill come skill globali in ~/.agents/skills. Poi elencami cosa hai installato.`,
+    tc: `git clone https://github.com/Jakeschincariol/instagram-agent-skill.git\ncp -r instagram-agent-skill/skills/ig-* ~/.claude/skills/`,
+    tx: `git clone https://github.com/Jakeschincariol/instagram-agent-skill.git\ncp -r instagram-agent-skill/skills/ig-* ~/.agents/skills/`,
+    note: "Non si collega a Instagram e non pubblica: prepara i contenuti, li pubblichi tu. Pensata per l'inglese. Per Codex il progetto non dà istruzioni ufficiali." },
+  { cat: "mkt", name: "copywriting", src: "coreyhaines31/marketingskills", how: "skill", d: "Testi per pagine, annunci e campagne, con struttura e framework di persuasione." },
+  { cat: "mkt", name: "social", src: "coreyhaines31/marketingskills", how: "skill", d: "Contenuti e piani editoriali per i social." },
+  { cat: "mkt", name: "ad-creative", src: "coreyhaines31/marketingskills", how: "skill", d: "Concept e varianti creative per campagne a pagamento." },
+  { cat: "mkt", name: "content-strategy", src: "coreyhaines31/marketingskills", how: "skill", d: "Strategia dei contenuti: pilastri, formati, calendario." },
+  { cat: "mkt", name: "seo-audit", src: "coreyhaines31/marketingskills", how: "skill", d: "Audit SEO di un sito con priorità di intervento." },
+  { cat: "doc", name: "document-skills", src: "anthropics/skills", how: "skill", names: "pptx docx xlsx pdf", d: "Crea e modifica PowerPoint, Word, Excel e PDF: deck, report, tabelle." },
+  { cat: "doc", name: "theme-factory", src: "anthropics/skills", how: "skill", d: "Applica un tema coerente di colori e font a slide, documenti e pagine." },
+  { cat: "make", name: "skills CLI · Vercel", src: "vercel-labs/skills", how: "custom", nozip: true, d: "Il comando npx skills, quello usato dalla scheda Terminale di questa libreria. Serve a cercare, installare, elencare, aggiornare e rimuovere skill per Claude Code, Codex e altri agenti. Le skill disponibili si sfogliano su skills.sh.",
+    pc: `Usa la CLI skills di Vercel (npx skills) per cercare skill su [tema, per esempio "motion design"] con "npx skills find". Mostrami i risultati in una tabella con nome, repository e cosa fa, e consigliami le 3 più adatte a una designer. Non installare niente finché non te lo dico.`,
+    px: `Usa la CLI skills di Vercel (npx skills) per cercare skill su [tema, per esempio "motion design"] con "npx skills find". Mostrami i risultati in una tabella con nome, repository e cosa fa, e consigliami le 3 più adatte a una designer. Non installare niente finché non te lo dico.`,
+    tc: `npx skills find motion\nnpx skills add <proprietario/repository> -g -a claude-code\nnpx skills list\nnpx skills update\nnpx skills remove <nome-skill>`,
+    tx: `npx skills find motion\nnpx skills add <proprietario/repository> -g -a codex\nnpx skills list\nnpx skills update\nnpx skills remove <nome-skill>`,
+    note: "Richiede Node.js 22.20 o successivo. -g installa per tutti i progetti, -a sceglie l'agente." },
+  { cat: "make", name: "skill-creator", src: "anthropics/skills", how: "skill", d: "Crea, testa e migliora le tue skill partendo da un tuo metodo di lavoro." },
+  { cat: "make", name: "mcp-builder", src: "anthropics/skills", how: "skill", d: "Costruisci un server MCP per collegare all'agente un servizio che non ne ha uno." },
+  { cat: "design", name: "Taste Skill", src: "Leonxlnx/taste-skill", how: "custom", d: "Dà all'agente una direzione artistica: foto vere, scelte visive precise e un controllo nel browser, invece di pagine generiche.",
+    pc: `Aggiungi il marketplace di plugin Leonxlnx/taste-skill e installa il plugin taste-skill@taste-skill.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Aggiungi il marketplace di plugin Leonxlnx/taste-skill ("codex plugin marketplace add Leonxlnx/taste-skill") e installa il plugin taste-skill@taste-skill ("codex plugin add taste-skill@taste-skill").`,
+    tc: `npx skills add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend -g -a claude-code`,
+    tx: `codex plugin marketplace add Leonxlnx/taste-skill\ncodex plugin add taste-skill@taste-skill` },
+  { cat: "design", name: "Awesome Design MD", src: "VoltAgent/awesome-design-md", how: "custom", d: "File DESIGN.md ricavati dai siti di brand come Stripe, Linear o Claude: li copi nel progetto e l'agente costruisce seguendo quel sistema visivo. Non è una skill: è una raccolta di riferimenti.",
+    pc: `Scarica dal repository github.com/VoltAgent/awesome-design-md il DESIGN.md di [nome brand] e salvalo in riferimento/DESIGN-[brand].md. Spiegami in 5 punti cosa rende riconoscibile quel sistema visivo, poi costruisci una pagina di prova che lo segue.`,
+    tc: `git clone https://github.com/VoltAgent/awesome-design-md.git`,
+    note: "Approfondimento e template nella pagina Markdown e contesto." },
+  { cat: "design", name: "Design DNA", src: "zanwei/design-dna", how: "repo", d: "Trasforma screenshot o URL di riferimento in un \"DNA\" del design (token, stile, effetti) e lo applica ai tuoi contenuti. Ottima insieme alle sezioni sui design system." },
+  { cat: "design", name: "Emil Kowalski · design", src: "emilkowalski/skills", how: "skill", names: "emil-design-eng apple-design prototype pick-ui-library break-ui", d: "Qualità dei componenti, principi Apple per il web, varianti a confronto, scelta della libreria UI giusta e stress test con dati estremi." },
+  { cat: "motion", name: "Emil Kowalski · animazione", src: "emilkowalski/skills", how: "skill", names: "animate review-animations improve-animations find-animation-opportunities animation-vocabulary animation-performance", d: "Costruire, rivedere e migliorare le animazioni; capire cosa animare e cosa no; il vocabolario per descrivere un movimento all'agente." },
+  { cat: "motion", name: "Motion Design", src: "LottieFiles/motion-design-skill", how: "repo", d: "Timing, easing, coreografia e principi Disney applicati all'interfaccia, con qualsiasi libreria di animazione." },
+  { cat: "motion", name: "transitions.dev", src: "Jakubantalik/transitions.dev", how: "repo", d: "Oltre 40 transizioni CSS tra stati e viste, con la skill per farle scegliere e applicare all'agente." },
+  { cat: "motion", name: "Genjutsu", src: "AThevon/genjutsu", how: "custom", d: "Movimento, microinterazioni e design system per web, Android e iOS: propone una tesi di interazione da approvare prima di scrivere codice.",
+    pc: `Aggiungi il marketplace di plugin AThevon/genjutsu e installa il plugin genjutsu.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `$skill-installer installa le skill del repository github.com/AThevon/genjutsu come skill globali in ~/.agents/skills. Le istruzioni ufficiali per Codex sono su genjutsu.athevon.dev/docs/install: controllale prima di procedere.`,
+    tc: `npx skills add https://genjutsu.athevon.dev -g`,
+    note: "Per Codex la pagina del progetto non dà un comando ufficiale: il prompt fa leggere all'agente le istruzioni del sito." },
+  { cat: "3d", name: "Three.js Skills", src: "cloudai-x/threejs-skills", how: "repo", d: "13 skill aggiornate su three.js: scene, geometrie, materiali, luci, texture, shader, post-processing, interazione, React Three Fiber e ottimizzazione dei modelli.",
+    note: "Il progetto documenta solo Claude Code: con Codex funziona come skill normale, ma non è verificato dagli autori." },
+  { cat: "3d", name: "img2threejs", src: "img2threejs/img2threejs", how: "custom", nozip: true, d: "Ricostruisce l'oggetto di un'immagine di riferimento come modello Three.js fatto solo di codice, pronto da animare. Lavora per fasi (forma base, dettagli, ottimizzazione) e confronta i render con l'originale.",
+    pc: `Installa la skill img2threejs con "npx --yes img2threejs@latest install --host claude", poi esegui il controllo "npx img2threejs@latest doctor". Dimmi di aprire una nuova sessione e come usare /img2threejs con un'immagine.`,
+    px: `Installa la skill img2threejs con "npx --yes img2threejs@latest install --host codex", poi esegui il controllo "npx img2threejs@latest doctor". Dimmi di aprire una nuova sessione e come usarla con un'immagine.`,
+    tc: `npx --yes img2threejs@latest install --host claude\nnpx img2threejs@latest doctor`,
+    tx: `npx --yes img2threejs@latest install --host codex\nnpx img2threejs@latest doctor`,
+    note: "Richiede Node.js 18+, Git e Python 3.10+. In Claude Code si usa con /img2threejs e il percorso dell'immagine." },
+  { cat: "3d", name: "React Three Fiber", src: "pmndrs/react-three-fiber", how: "custom", d: "Three.js scritto come componenti React: scene 3D dichiarative, con drei per luci, camere, testi e modelli pronti.",
+    pc: `Crea in questa cartella un progetto React con Vite e installa React Three Fiber con "npm install three @types/three @react-three/fiber @react-three/drei".\nPoi realizza una hero 3D: un oggetto in vetro che ruota lentamente su sfondo #0C0C0C, luce morbida, colori #95F7CE e #FFAFD6, e il titolo sopra. Avvia il progetto e dammi il link locale.`,
+    tc: `npm create vite@latest hero-3d -- --template react\ncd hero-3d\nnpm install three @types/three @react-three/fiber @react-three/drei`,
+    note: "È una libreria di codice, non una skill: non si installa nell'agente, l'agente la usa dentro il tuo progetto. Le Three.js Skills qui sopra la conoscono già." },
+  { cat: "3d", name: "ShaderGradient", src: "ruucm/shadergradient", how: "custom", d: "Sfondi a gradiente 3D in movimento, molto usati nelle hero. Si disegnano nell'editor shadergradient.co e si portano nel codice; esiste anche come plugin per Figma e Framer.",
+    pc: `Nel progetto React di questa cartella installa ShaderGradient con "npm i @shadergradient/react @react-three/fiber three three-stdlib camera-controls" e "npm i -D @types/three".\nCrea uno sfondo a gradiente animato a tutta pagina con i colori #0C0C0C, #95F7CE e #FFAFD6, movimento lento, e mettilo dietro alla hero. Se ti incollo un link dall'editor shadergradient.co, usa quei parametri.`,
+    tc: `npm i @shadergradient/react @react-three/fiber three three-stdlib camera-controls\nnpm i -D @types/three`,
+    note: "È una libreria di codice, non una skill: non si installa nell'agente, l'agente la usa dentro il tuo progetto. Prima di chiedere all'agente puoi provare i colori nell'editor su shadergradient.co." },
+  { cat: "3d", name: "Liquid Glass JS", src: "dashersw/liquid-glass-js", how: "custom", d: "Contenitori e bottoni in stile Liquid Glass di Apple, con rifrazione, sfocatura e maschere in WebGL, senza strumenti di build.",
+    pc: `Scarica il repository github.com/dashersw/liquid-glass-js nella cartella strumenti del corso. Poi crea una pagina HTML che usa container.js, button.js, styles.css e glass.css del progetto (più html2canvas da CDN): una card e due bottoni in vetro liquido sopra una foto a tutto schermo. Aprila nel browser.`,
+    tc: `git clone https://github.com/dashersw/liquid-glass-js.git`,
+    note: "È una libreria di codice, non una skill: non si installa nell'agente, l'agente la usa dentro il tuo progetto. Non c'è ancora un pacchetto npm: si scaricano i file del repository." },
+  { cat: "3d", name: "Liquid Logo", src: "paper-design/liquid-logo", how: "custom", nozip: true, d: "Trasforma il tuo logo in metallo liquido animato con gli shader di Paper. Lo strumento si usa sul sito liquid.paper.design.",
+    pc: `Sto per usare liquid.paper.design per trasformare il mio logo in metallo liquido. Prepara il logo che trovi in assets come SVG monocromatico pulito: forme piene, niente testo sottile né dettagli troppo piccoli, sfondo trasparente, salvato in assets/logo-liquid.svg. Poi dimmi come inserire nella hero del sito il video o l'immagine che esporterò dal sito.`,
+    tc: `git clone https://github.com/paper-design/liquid-logo.git`,
+    note: "Non è una skill né un pacchetto da installare: è uno strumento online. L'agente ti aiuta a preparare il logo e a inserire il risultato nel sito." },
+  { cat: "write", name: "Frontend Slides", src: "zarazhangrui/frontend-slides", how: "custom", d: "Presentazioni in un unico file HTML, da zero o convertite da PowerPoint, senza strumenti di build.",
+    pc: `Aggiungi il marketplace di plugin github.com/zarazhangrui/frontend-slides e installa il plugin frontend-slides@frontend-slides.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui, uno per messaggio. Poi dimmi come richiamarlo.`,
+    px: `$skill-installer installa la skill del repository github.com/zarazhangrui/frontend-slides come skill globale in ~/.agents/skills, partendo dal suo SKILL.md.`,
+    tc: `claude plugin marketplace add zarazhangrui/frontend-slides\nclaude plugin install frontend-slides@frontend-slides`,
+    note: "Si richiama con /frontend-slides:frontend-slides. Per Codex il progetto non dà un comando ufficiale." },
+  { cat: "write", name: "Diagram Design", src: "cathrynlavery/diagram-design", how: "custom", d: "Oltre 40 tipi di diagramma editoriale in file HTML/SVG autonomi, coerenti con il tuo brand.",
+    pc: `Aggiungi il marketplace di plugin cathrynlavery/diagram-design e installa il plugin diagram-design@diagram-design.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Aggiungi il marketplace di plugin cathrynlavery/diagram-design e installa il plugin diagram-design@diagram-design ("codex plugin marketplace add" e "codex plugin add").`,
+    tc: `claude plugin marketplace add cathrynlavery/diagram-design\nclaude plugin install diagram-design@diagram-design`,
+    tx: `codex plugin marketplace add cathrynlavery/diagram-design\ncodex plugin add diagram-design@diagram-design` },
+  { cat: "write", name: "Humanizer", src: "blader/humanizer", how: "custom", d: "Riscrive i testi generati dall'AI perché suonino scritti da una persona, senza cambiarne il contenuto.",
+    pc: `Aggiungi il marketplace di plugin blader/humanizer e installa il plugin humanizer@humanizer.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Installa la skill Humanizer con "npx skills add blader/humanizer --global --agent codex" e dimmi dove si trova.`,
+    tc: `claude plugin marketplace add blader/humanizer\nclaude plugin install humanizer@humanizer`,
+    tx: `npx skills add blader/humanizer --global --agent codex`,
+    note: "Pensata per testi in inglese." },
+  { cat: "write", name: "Stop Slop", src: "hardikpandya/stop-slop", how: "repo", d: "Regole per togliere dalla prosa formule stereotipate, riempitivi e frasi fatte tipiche dell'AI.",
+    note: "Pensata per testi in inglese. Il progetto non dà un comando di installazione: il prompt copia la cartella della skill." },
+  { cat: "method", name: "Handoff e Wayfinder", src: "mattpocock/skills", how: "custom", d: "Handoff riassume la conversazione in un documento per riprendere il lavoro in una nuova sessione. Wayfinder pianifica progetti grandi come mappa di decisioni. Il plugin installa l'intera raccolta.",
+    pc: `Installa il plugin mattpocock-skills@claude-plugins-official, poi dimmi come richiamare le skill handoff e wayfinder.`,
+    px: `Aggiungi il marketplace di plugin mattpocock/skills e installa il plugin mattpocock-skills@mattpocock ("codex plugin marketplace add" e "codex plugin add"). Poi dimmi come richiamare handoff e wayfinder.`,
+    tc: `claude plugin install mattpocock-skills@claude-plugins-official`,
+    tx: `codex plugin marketplace add mattpocock/skills\ncodex plugin add mattpocock-skills@mattpocock` },
+  { cat: "method", name: "Agent Skills · Addy Osmani", src: "addyosmani/agent-skills", how: "custom", d: "25 procedure da professionista per specificare, costruire, testare e rivedere un progetto: ideale quando un sito o un tool cresce.",
+    pc: `Aggiungi il marketplace di plugin addyosmani/agent-skills e installa il plugin agent-skills@addy-agent-skills.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Aggiungi il marketplace di plugin addyosmani/agent-skills e installa il plugin agent-skills@agent-skills ("codex plugin marketplace add" e "codex plugin add").`,
+    tc: `claude plugin marketplace add addyosmani/agent-skills\nclaude plugin install agent-skills@addy-agent-skills`,
+    tx: `codex plugin marketplace add addyosmani/agent-skills\ncodex plugin add agent-skills@agent-skills` },
+  { cat: "method", name: "Understand Anything", src: "Egonex-AI/Understand-Anything", how: "custom", d: "Analizza un progetto (codice, documenti, wiki) e lo trasforma in un grafo di conoscenza da esplorare e interrogare. Si usa con /understand e /understand-dashboard.",
+    pc: `Aggiungi il marketplace di plugin Egonex-AI/Understand-Anything e installa il plugin understand-anything.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Installa Understand Anything per Codex con lo script ufficiale: curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/install.sh | bash -s codex. Poi dimmi di aprire una nuova sessione e come usare $understand.`,
+    tc: `claude plugin marketplace add Egonex-AI/Understand-Anything\nclaude plugin install understand-anything`,
+    tx: `curl -fsSL https://raw.githubusercontent.com/Egonex-AI/Understand-Anything/main/install.sh | bash -s codex` },
+  { cat: "doc", name: "AnyDoc", src: "firecrawl/anydoc", how: "custom", d: "Converte Word, PowerPoint, Excel, PDF, EPUB e altri formati in Markdown pulito, così l'agente legge meglio i materiali del cliente.",
+    pc: `Installa la skill AnyDoc con "npx skills add firecrawl/anydoc" come skill globale e anche la sua CLI con "npm install -g @firecrawl/anydoc". Poi converti in Markdown il primo documento che trovi nella cartella brief.`,
+    px: `Installa la skill AnyDoc con "npx skills add firecrawl/anydoc" come skill globale per Codex e anche la sua CLI con "npm install -g @firecrawl/anydoc". Poi converti in Markdown il primo documento che trovi nella cartella brief.`,
+    tc: `npx skills add firecrawl/anydoc -g -a claude-code\nnpm install -g @firecrawl/anydoc`,
+    tx: `npx skills add firecrawl/anydoc -g -a codex\nnpm install -g @firecrawl/anydoc`,
+    note: "Per i documenti scansionati serve un OCR a parte." },
+  { cat: "dev", name: "Playwright", src: "microsoft/playwright-mcp", how: "custom", nozip: true, d: "Fa usare all'agente un browser vero: apre le pagine, clicca, compila form e controlla che il sito funzioni.",
+    pc: `Aggiungi il server MCP di Playwright per tutti i miei progetti: nome playwright, comando npx @playwright/mcp@latest.`,
+    px: `Aggiungi il server MCP di Playwright a Codex con: codex mcp add playwright npx "@playwright/mcp@latest".`,
+    tc: `claude mcp add playwright npx @playwright/mcp@latest`,
+    tx: `codex mcp add playwright npx "@playwright/mcp@latest"` },
+  { cat: "dev", name: "Google Workspace CLI", src: "googleworkspace/cli", how: "custom", d: "Comando gws per Drive, Gmail, Calendar, Docs e Sheets, con skill per farlo usare all'agente.",
+    pc: `Installa Google Workspace CLI con "npm install -g @googleworkspace/cli" e le sue skill con "npx skills add https://github.com/googleworkspace/cli". Poi avvia "gws auth setup" e guidami nell'accesso con il mio account Google.`,
+    px: `Installa Google Workspace CLI con "npm install -g @googleworkspace/cli" e le sue skill per Codex con "npx skills add https://github.com/googleworkspace/cli". Poi avvia "gws auth setup" e guidami nell'accesso con il mio account Google.`,
+    tc: `npm install -g @googleworkspace/cli\nnpx skills add https://github.com/googleworkspace/cli\ngws auth setup`,
+    note: "La configurazione dell'accesso a Google richiede qualche passaggio nella Google Cloud Console." },
+  { cat: "dev", name: "OmniRoute", src: "diegosouzapw/OmniRoute", how: "custom", nozip: true, d: "Un unico punto di accesso locale a centinaia di provider e modelli, con fallback quando uno non risponde.",
+    pc: `Leggi il README di github.com/diegosouzapw/OmniRoute, installa OmniRoute con il comando npm indicato e spiegami come avviare Claude Code passando da OmniRoute con "omniroute run claude". Non configurare nessuna chiave senza chiedermelo.`,
+    px: `Leggi il README di github.com/diegosouzapw/OmniRoute, installa OmniRoute con il comando npm indicato e spiegami come usare "omniroute configure codex". Non configurare nessuna chiave senza chiedermelo.`,
+    tc: `omniroute run claude --model <provider/modello>`,
+    tx: `omniroute configure codex`,
+    note: "Servono account e chiavi dei provider che vuoi usare. Il comando di installazione va letto dal README." },
+  { cat: "adv", name: "Headroom", src: "headroomlabs-ai/headroom", how: "custom", nozip: true, d: "Comprime output degli strumenti, log e file prima che arrivino al modello: meno contesto sprecato nelle sessioni lunghe.",
+    pc: `Installa Headroom con "uv tool install --python 3.13 \\"headroom-ai[all]\\"" (installa uv se manca). Poi spiegami come avviare Claude Code passando da Headroom con "headroom wrap claude".`,
+    px: `Installa Headroom con "uv tool install --python 3.13 \\"headroom-ai[all]\\"" (installa uv se manca). Poi spiegami come avviare Codex passando da Headroom con "headroom wrap codex".`,
+    tc: `uv tool install --python 3.13 "headroom-ai[all]"\nheadroom wrap claude`,
+    tx: `uv tool install --python 3.13 "headroom-ai[all]"\nheadroom wrap codex` },
+  { cat: "adv", name: "Graphify", src: "Graphify-Labs/graphify", how: "custom", nozip: true, d: "Costruisce un grafo interrogabile del progetto (codice, documenti, PDF): l'agente trova le relazioni senza rileggere tutto ogni volta.",
+    pc: `Installa Graphify con "uv tool install graphifyy" (installa uv se manca), poi esegui "graphify install". Dimmi di aprire una nuova sessione e come usare /graphify.`,
+    px: `Installa Graphify con "uv tool install graphifyy" (installa uv se manca), poi esegui "graphify install --platform codex". Dimmi di aprire una nuova sessione e come usare $graphify.`,
+    tc: `uv tool install graphifyy\ngraphify install`,
+    tx: `uv tool install graphifyy\ngraphify install --platform codex` },
+  { cat: "adv", name: "MemPalace", src: "MemPalace/mempalace", how: "custom", nozip: true, d: "Memoria persistente in locale: salva conversazioni e file e li ritrova per significato quando riprendi un progetto.",
+    pc: `Installa MemPalace con "npx skills add MemPalace/mempalace" e configura il suo server MCP per Claude Code. Poi indicizza questa cartella del corso con "mempalace mine".`,
+    px: `Installa la CLI di MemPalace con "uv tool install mempalace" e collegala a Codex come server MCP seguendo il README di github.com/MemPalace/mempalace. Poi indicizza questa cartella del corso con "mempalace mine".`,
+    tc: `uv tool install mempalace\nmempalace mine ~/Documents/Corso-AI`,
+    note: "Per Codex il progetto non dà istruzioni dedicate: si collega come server MCP." },
+  { cat: "adv", name: "Ponytail", src: "DietrichGebert/ponytail", how: "custom", d: "Spinge l'agente verso la soluzione più semplice: meno codice, stesse garanzie su validazione, sicurezza ed errori.",
+    pc: `Aggiungi il marketplace di plugin DietrichGebert/ponytail e installa il plugin ponytail@ponytail.\nSe da riga di comando non riesci, dimmi quali comandi /plugin scrivere qui.`,
+    px: `Aggiungi il marketplace di plugin DietrichGebert/ponytail e installa il plugin ponytail@ponytail ("codex plugin marketplace add" e "codex plugin add"). Poi ricordami di aprire /hooks per autorizzare i suoi due hook e di aprire una nuova sessione.`,
+    tc: `claude plugin marketplace add DietrichGebert/ponytail\nclaude plugin install ponytail@ponytail`,
+    tx: `codex plugin marketplace add DietrichGebert/ponytail\ncodex plugin add ponytail@ponytail` }
+];
+function skillPrompt(x, ag) {
+  const own = ag === "codex" ? (x.px || x.pc) : x.pc; if (own) return own;
+  const what = x.names ? `le skill ${x.names.split(" ").join(", ")}` : `la skill ${x.name}`;
+  if (ag === "codex") {
+    if (x.how === "figma") return `Collega Figma a Codex: esegui "codex mcp add figma --url https://mcp.figma.com/mcp", poi "codex mcp login figma" e aspetta che io completi l'accesso nel browser.`;
+    if (x.how === "skill") return `$skill-installer installa ${what} dal repository github.com/${x.src} come skill globale, in ~/.agents/skills. Alla fine dimmi dove si trova il file SKILL.md.`;
+    return `$skill-installer installa le skill del repository github.com/${x.src} come skill globali, in ~/.agents/skills. Elencami cosa hai installato.`;
+  }
+  if (x.how === "figma") return `Installa il plugin ufficiale di Figma (figma@claude-plugins-official), poi dimmi come autenticarmi con /mcp.`;
+  if (x.how === "plugin") return `Aggiungi il marketplace di plugin ${x.src} e installa il plugin ${x.plugin}.\nSe da riga di comando non riesci, dimmi esattamente quali comandi /plugin scrivere qui in Claude Code.`;
+  if (x.how === "repo") return `Installa le skill del repository github.com/${x.src} come skill globali, in ~/.claude/skills.\nUsa un metodo non interattivo, poi elencami le skill installate e dimmi se devo aprire una nuova sessione per usarle.`;
+  return `Installa ${what} dal repository github.com/${x.src} come skill globale, in ~/.claude/skills.\nUsa un metodo non interattivo, poi dimmi dove si trova il file SKILL.md e se devo aprire una nuova sessione per usarla.`;
+}
+function skillTerm(x, ag) {
+  const ownT = ag === "codex" ? (x.tx || x.tc) : x.tc; if (ownT) return ownT;
+  if (x.how === "figma") return ag === "codex" ? `codex mcp add figma --url https://mcp.figma.com/mcp\ncodex mcp login figma` : `claude plugin install figma@claude-plugins-official`;
+  const sk = x.how === "skill" ? ` --skill ${x.names || x.name}` : "";
+  return `npx skills add ${x.src}${sk} -g -a ${AG[ag].npx}`;
+}
+
+/* Disposizione del bento (max 4 colonne) */
+const GROUPS = [
+  { id: "percorsi", title: "Percorsi <em>guidati</em>", desc: "Passo dopo passo, con il passo successivo che si sblocca solo quando hai finito quello attuale.",
+    items: [
+      { id: "setup", cls: "span2 tall" },
+      { id: "skill", cls: "" },
+      { id: "video-setup", cls: "" },
+      { id: "nle", cls: "span2" },
+      { id: "figma-mcp", cls: "" },
+      { id: "higgsfield-mcp", cls: "" },
+      { id: "github", cls: "" },
+      { id: "dreamina", cls: "" },
+      { id: "design-system", cls: "span2" },
+      { id: "design-system-repo", cls: "span2" }
+    ] },
+  { id: "consultazione", title: "Repository e <em>consultazione</em>", desc: "Nessun passo da completare: materiali da sfogliare e copiare quando ti servono.",
+    items: [
+      { id: "library", cls: "span2" },
+      { id: "markdown", cls: "span2" },
+      { id: "commands", cls: "span2" },
+      { id: "ui-refs", cls: "span2" }
+    ] }
+];
+const LAYOUT = GROUPS.flatMap(g => g.items);
+
+/* ============================================================ */
+const KEY = "futura-setup-lab-v2";
+let store = { os: "mac", agent: "claude", prog: {}, cat: "all" };
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s) store = Object.assign(store, s); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+
+const app = document.getElementById("app");
+const byId = id => SECTIONS.find(s => s.id === id);
+const strip = h => h.replace(/<[^>]+>/g, "");
+const pad = n => String(n).padStart(2, "0");
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const T = s => s == null ? s : String(s).replace(/\{(A|a|SK|FS|CTXG|CTX)\}/g, (_, k) => AG[store.agent][k]);
+const stepOf = st => (store.agent === "codex" && st.codex) ? Object.assign({}, st, st.codex) : st;
+const varOf = id => { const s = byId(id); if (!s || !s.variants) return ""; const v = (store.vars || {})[id]; return s.variants.some(x => x.id === v) ? v : s.variants[0].id; };
+const pkey = id => store.agent + ":" + id + (varOf(id) ? ":" + varOf(id) : "");
+const ICON_LOCK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+const ICON_ARROW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+const ICON_BACK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg>';
+
+function prog(id) {
+  const s = byId(id), k = pkey(id);
+  if (!store.prog[k]) store.prog[k] = { done: [], cur: 0 };
+  const p = store.prog[k];
+  p.done = s.steps.map((_, i) => !!p.done[i]);
+  return p;
+}
+const firstOpen = p => { const i = p.done.indexOf(false); return i === -1 ? p.done.length : i; };
+const doneCount = p => p.done.filter(Boolean).length;
+
+/* ---------- Home ---------- */
+function renderHome() {
+  const A = AG[store.agent].A;
+  const tileHTML = (L, n) => tileOne(L, n).replace(/^(\s*<(?:button|div)[^>]*?)class="tile/, `$1style="--i:${n}" class="tile`);
+  const tileOne = (L, n) => {
+    if (L.id === "library") {
+      return `<button type="button" class="tile ${L.cls}" data-go="library">
+        <div class="row"><span class="tag">Repository</span><span class="chip">Consultazione</span></div>
+        <h3>Libreria di <em>skill</em> per categoria</h3>
+        <p>${SKILLS.length} skill per design di prodotto, motion graphic, marketing e documenti. Per ognuna: il prompt per ${A}, il comando da Terminale e il file ZIP.</p>
+        <div class="foot"><div class="meta"><span>${CATS.slice(1).map(c => c.name).join(" · ")}</span><span class="start-cue go-arrow">Esplora ${ICON_ARROW}</span></div></div>
+      </button>`;
+    }
+    if (L.id === "markdown") {
+      return `<button type="button" class="tile pink ${L.cls}" data-go="markdown">
+        <div class="row"><span class="tag">Guida</span><span class="chip">Consultazione</span></div>
+        <h3>Markdown e <em>contesto</em></h3>
+        <p>Sintassi, file ${AG[store.agent].CTX} e template da copiare.</p>
+        <div class="foot"><div class="meta"><span>${MD_SYNTAX.length} elementi · ${MD_TPL.length} template</span><span class="start-cue go-arrow" style="color:var(--pink)">Apri ${ICON_ARROW}</span></div></div>
+      </button>`;
+    }
+    if (L.id === "commands") {
+      return `<button type="button" class="tile mint ${L.cls}" data-go="commands">
+        <div class="row"><span class="tag">Guida</span><span class="chip">Consultazione</span></div>
+        <h3>Comandi e <em>scorciatoie</em></h3>
+        <p>Cosa fanno / @ ! e gli altri simboli, i tasti utili e i comandi di ${AG[store.agent].A}, divisi per uso.</p>
+        <div class="foot"><div class="meta"><span>${CMDS[store.agent].cmd.reduce((a, g) => a + g[1].length, 0)} comandi · ${CMDS[store.agent].keys.length} scorciatoie</span><span class="start-cue go-arrow">Apri ${ICON_ARROW}</span></div></div>
+      </button>`;
+    }
+    if (L.id === "ui-refs") {
+      return `<button type="button" class="tile ${L.cls}" data-go="ui-refs">
+        <div class="row"><span class="tag">Riferimenti</span><span class="chip">Consultazione</span></div>
+        <h3>Librerie e <em>riferimenti UI</em></h3>
+        <p>Componenti da adattare e archivi da studiare prima di progettare.</p>
+        <div class="foot"><div class="meta"><span>${UIREFS.reduce((a, g) => a + g.items.length, 0)} siti</span><span class="start-cue go-arrow">Apri ${ICON_ARROW}</span></div></div>
+      </button>`;
+    }
+    if (L.id === "soon") {
+      return `<div class="tile soon ${L.cls}">
+        <div class="row"><span class="tag" style="color:var(--faint)">Prossima sezione</span><span class="chip">In arrivo</span></div>
+        <h3>Dreamina Canvas CLI</h3>
+        <p>Installazione e primi prompt per generare con Dreamina dal tuo agente.</p>
+      </div>`;
+    }
+    const s = byId(L.id), p = prog(s.id), dc = doneCount(p), tot = s.steps.length;
+    const state = dc === tot ? `<span class="chip done">Completata</span>` : dc > 0 ? `<span class="chip go">${dc}/${tot}</span>` : `<span class="chip">Da iniziare</span>`;
+    const feat = L.cls.includes("tall");
+    const big = feat ? `<div class="big-num">${pad(tot)}</div><span class="feat-note">passi · l'unica volta che usi il Terminale</span>` : "";
+    return `<button type="button" class="tile ${feat ? "feature" : s.tone} ${L.cls}" data-go="${s.id}">
+      <div class="row"><span class="tag">${s.tag}</span>${state}</div>
+      <h3>${T(s.title)}</h3>
+      <p>${T(s.short)}</p>
+      <div class="foot">
+        ${big}
+        <div class="meta"><span>${tot} passi · ${s.time}</span>${s.requires ? `<span class="req">Richiede ${T(s.requires)}</span>` : ""}</div>
+        <div class="bar"><i style="width:${(dc / tot) * 100}%"></i></div>
+      </div>
+    </button>`;
+  };
+  const groups = GROUPS.map(g => `<section class="group" aria-labelledby="g-${g.id}">
+      <header class="group-head"><h2 id="g-${g.id}">${g.title}</h2><p>${g.desc}</p></header>
+      <div class="bento">${g.items.map(tileHTML).join("")}</div>
+    </section>`).join("");
+  const totSteps = SECTIONS.reduce((a, s) => a + s.steps.length, 0);
+  const totDone = SECTIONS.reduce((a, s) => a + doneCount(prog(s.id)), 0);
+  app.innerHTML = `
+    <section class="hero fade-in">
+      <div>
+        <h1><span class="hb">${A} al lavoro</span><span class="hl">sul tuo computer, un passo alla volta</span></h1>
+        <p>Il Terminale ti serve una volta sola: per installare ${A}. Da lì in poi ogni passo è un prompt da copiare e dare all'agente, che esegue lui i comandi. Il passo successivo si sblocca solo quando hai completato quello attuale. Usi ChatGPT? Scegli <b>Codex</b> in alto.</p>
+        <div class="hero-meta"><span><strong>${SECTIONS.length}</strong> percorsi</span><span><strong>${totSteps}</strong> passi in totale</span><span><strong>${totDone}</strong> completati con ${A}</span></div>
+      </div>
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 120 120"><defs><path id="c" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+          <text font-family="IBM Plex Mono, monospace" font-size="10.4" letter-spacing="2.6" fill="currentColor"><textPath href="#c">FUTURA · AI ACADEMY · SETUP LAB · MODULI ·</textPath></text>
+          <circle cx="60" cy="60" r="5" fill="var(--mint)"/></svg>
+      </div>
+    </section>
+    <div class="groups fade-in">${groups}</div>`;
+}
+
+/* ---------- Blocks ---------- */
+function blockHTML(b, i) {
+  const win = store.os === "win", A = AG[store.agent].A;
+  const kindName = b.k === "term" ? (win ? "PowerShell" : "Terminale") : b.k === "cc" ? `Dentro ${A}` : `Prompt per ${A}`;
+  const hint = b.label ? `<span class="hint">${esc(T(b.label))}</span>` : "";
+  let code = b.code;
+  if (win && b.k === "term" && "win" in b) {
+    if (b.win === null) {
+      return b.winNote ? `<div class="block term"><div class="bh"><span class="kind">${kindName}${hint}</span></div><div class="note">${b.winNote}</div></div>` : "";
+    }
+    code = b.win;
+  }
+  return `<div class="block ${b.k}">
+    <div class="bh"><span class="kind">${kindName}${hint}</span><button type="button" class="copy" data-copy="${i}">Copia</button></div>
+    <pre id="code-${i}">${esc(T(code))}</pre>
+    ${b.cap ? `<div class="cap">${T(b.cap)}</div>` : ""}
+  </div>`;
+}
+
+/* ---------- Showcase ---------- */
+function showcaseHTML(id) {
+  const sc = SHOWCASE[id]; if (!sc) return "";
+  const ag = store.agent, A = AG[ag].A, win = store.os === "win";
+  const mini = (k, code, label) => `<div class="block ${k}">
+      <div class="bh"><span class="kind">${label}</span><button type="button" class="copy" data-copy="sc-${++scN}">Copia</button></div>
+      <pre id="sc-${scN}">${esc(code)}</pre></div>`;
+  let scN = 0;
+  const caps = sc.caps.map(c => `<article class="cap-card">
+      <span class="tool">${esc(c.tool)}</span>
+      <h3>${c.t}</h3>
+      <p>${c.d}</p>
+      ${mini("prompt", c.p, `Prompt per ${A}`)}
+    </article>`).join("");
+  const isTools = !sc.install;
+  const inst = sc.install ? `<div class="sk-install">
+      <span class="eyebrow">Installale con ${A}</span>
+      ${mini("prompt", sc.install[ag], `Prompt per ${A}`)}
+      <a class="src" href="https://github.com/${sc.install.src}" target="_blank" rel="noopener">${sc.install.src} ↗</a>
+    </div>` : "";
+  return `<section class="showcase" aria-labelledby="sc-title">
+    <header>
+      <h2 id="sc-title">${sc.heading || `Cosa puoi fare con <em>${sc.name}</em> collegato`}</h2>
+      <p>${sc.intro}</p>
+    </header>
+    <div class="caps">${caps}</div>
+    <header style="margin-top:28px">
+      <h3 class="sc-sub">${sc.subTitle || (isTools ? "Gli strumenti che l'agente usa" : `Le skill di ${sc.name}`)}</h3>
+      <p>${sc.skillsIntro}</p>
+    </header>
+    <div class="sk-wrap" style="${isTools ? "grid-template-columns:minmax(0,1fr)" : ""}">
+      <div class="sk-list">${sc.skills.map(([n, d]) => `<div><b>${n}</b><span>${d}</span></div>`).join("")}</div>
+      ${inst}
+    </div>
+  </section>`;
+}
+
+let justDone = -1, navDir = "";
+/* ---------- Section ---------- */
+function renderSection(id, focusTop) {
+  const s = byId(id), p = prog(id), tot = s.steps.length, open = firstOpen(p);
+  if (p.cur > open || p.cur >= tot) p.cur = Math.min(open, tot - 1);
+  const allDone = open === tot;
+  const showFinish = allDone && p.cur === -1;
+  const i = p.cur, st = stepOf(s.steps[Math.max(i, 0)]);
+  const title = T(s.title);
+
+  const segs = s.steps.map((x0, k) => {
+    const x = stepOf(x0), can = k <= open;
+    const cls = [p.done[k] ? "done" : "", k === i ? "cur" : "", can ? "" : "locked", k === justDone ? "just" : ""].join(" ");
+    return `<button type="button" class="seg ${cls}" data-step="${k}" ${can ? "" : "disabled"} aria-label="Passo ${k + 1}: ${esc(strip(T(x.t)))}${can ? "" : " (bloccato)"}" title="${can ? esc(strip(T(x.t))) : "Completa i passi precedenti per sbloccarlo"}"></button>`;
+  }).join("");
+
+  const outline = s.steps.map((x0, k) => {
+    const x = stepOf(x0), can = k <= open;
+    return `<button type="button" class="ol-item ${p.done[k] ? "done" : ""} ${k === i && !showFinish ? "cur" : ""}" ${k === i && !showFinish ? 'aria-current="step"' : ""} data-step="${k}" ${can ? "" : "disabled"}>
+      <span class="no">${pad(k + 1)}</span><span>${strip(T(x.t))}</span>${p.done[k] ? ICON_CHECK : can ? "" : ICON_LOCK}</button>`;
+  }).join("");
+
+  const counter = `<div class="counter">
+      <div class="n ${s.tone}" aria-label="Passo ${showFinish ? tot : i + 1} di ${tot}"><b>${pad(showFinish ? tot : i + 1)}</b><span>/${pad(tot)}</span></div>
+      <div class="lbl"><span class="eyebrow">${showFinish ? "Sezione completata" : `Passo ${i + 1} di ${tot} · ${doneCount(p)} completati`}</span><h1 class="sec">${strip(title)}${s.requires ? ` · richiede ${T(s.requires)}` : ""}</h1></div>
+    </div>
+    <div class="segs" role="group" aria-label="Avanzamento">${segs}</div>`;
+
+  let main;
+  if (showFinish) {
+    const next = SECTIONS.find(x => doneCount(prog(x.id)) < x.steps.length);
+    main = `<div class="finish fade-in">
+      <h2>${strip(title)}: <em>fatto.</em></h2>
+      <p>Puoi rivedere qualsiasi passo dalla barra in alto. ${next ? `Il prossimo percorso consigliato è <b>${strip(T(next.title))}</b>.` : "Hai completato tutti i percorsi del Setup Lab."}</p>
+      <div class="nav">
+        ${next ? `<button type="button" class="btn primary" data-go="${next.id}">${strip(T(next.title))} ${ICON_ARROW}</button>` : ""}
+        <button type="button" class="btn" data-go="">Tutte le sezioni</button>
+      </div></div>`;
+  } else {
+    const isLast = i === tot - 1, done = p.done[i];
+    main = `<article class="step" data-dir="${navDir}" aria-live="polite">
+      <h2 id="step-title" tabindex="-1">${T(st.t)}</h2>
+      ${(st.d || []).map(x => `<p class="lead">${T(x)}</p>`).join("")}
+      ${st.list ? `<ol class="sub">${st.list.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>` : ""}
+      ${st.table ? `<div class="qa-wrap"><table class="qa"><thead><tr><th>Domanda</th><th>Risposta</th></tr></thead><tbody>${st.table.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${(st.blocks || []).map(blockHTML).join("")}
+      <div class="expect"><span class="eyebrow">Cosa devi vedere</span><div>${T(st.ok)}</div></div>
+      <div class="gate">
+        <label class="check ${done ? "on" : ""}" for="done-${s.id}-${i}">
+          <input type="checkbox" id="done-${s.id}-${i}" ${done ? "checked" : ""}>
+          <span class="box">${ICON_CHECK}</span>
+          <span class="ct"><b>Ho completato questo passo</b><small>${done ? "Passo segnato come fatto" : "Spuntalo quando vedi il risultato descritto qui sopra"}</small></span>
+        </label>
+        <div class="nav">
+          <button type="button" class="btn" id="prev" ${i === 0 ? "disabled" : ""}>${ICON_BACK} Passo precedente</button>
+          <button type="button" class="btn primary" id="next" ${done ? "" : "disabled"}>
+            ${done ? (isLast ? `Completa la sezione ${ICON_CHECK}` : `Passo ${i + 2} di ${tot} ${ICON_ARROW}`) : `${ICON_LOCK} Completa il passo per sbloccare`}
+          </button>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  app.innerHTML = `<div class="${s.tone === "pink" ? "pink-sec" : ""}">
+    <div class="view-head">
+      <button type="button" class="back" data-go="">${ICON_BACK} Tutte le sezioni</button>
+      <button type="button" class="reset" id="reset">Ricomincia la sezione</button>
+    </div>
+    ${s.variants ? `<div class="variant-bar"><span>Programma</span><div class="os" role="group" aria-label="Programma">${s.variants.map(v => `<button type="button" data-var="${v.id}" aria-pressed="${v.id === varOf(id)}">${v.label}</button>`).join("")}</div></div>` : ""}
+    ${counter}
+    <div class="stage">
+      ${main}
+      <aside class="outline"><span class="eyebrow">Tutti i passi</span>${outline}</aside>
+    </div>
+    ${showcaseHTML(id)}</div>`;
+
+  const cb = app.querySelector(`.check input`);
+  justDone = -1; navDir = "";
+  if (cb) cb.addEventListener("change", () => { p.done[i] = cb.checked; save(); justDone = cb.checked ? i : -1; navDir = ""; renderSection(id); app.querySelector("#next")?.focus(); });
+  app.querySelector("#next")?.addEventListener("click", () => {
+    if (!p.done[i]) return;
+    p.cur = i === tot - 1 ? -1 : i + 1; save(); navDir = "next"; renderSection(id, true);
+  });
+  app.querySelector("#prev")?.addEventListener("click", () => { if (i > 0) { p.cur = i - 1; save(); navDir = "prev"; renderSection(id, true); } });
+  app.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => {
+    const k = +b.dataset.step; if (k > firstOpen(p)) return; navDir = k > i ? "next" : k < i ? "prev" : ""; p.cur = k; save(); renderSection(id, true);
+  }));
+  app.querySelectorAll("[data-var]").forEach(b => b.addEventListener("click", () => {
+    store.vars = Object.assign({}, store.vars, { [id]: b.dataset.var }); save(); navDir = ""; renderSection(id, true);
+  }));
+  app.querySelector("#reset").addEventListener("click", e => {
+    const btn = e.currentTarget;
+    if (btn.dataset.armed) { store.prog[pkey(id)] = { done: [], cur: 0 }; save(); renderSection(id, true); return; }
+    btn.dataset.armed = "1"; btn.textContent = "Conferma: azzera i progressi";
+    setTimeout(() => { if (btn.isConnected) { delete btn.dataset.armed; btn.textContent = "Ricomincia la sezione"; } }, 3500);
+  });
+  wireCopy(k => document.getElementById(k.startsWith("sc-") ? k : "code-" + k));
+  if (focusTop) { window.scrollTo({ top: 0, behavior: "smooth" }); document.getElementById("step-title")?.focus({ preventScroll: true }); }
+}
+
+/* ---------- Markdown e contesto ---------- */
+const MD_CATS = [
+  { id: "syntax", name: "Sintassi" },
+  { id: "context", name: "File di contesto" },
+  { id: "tpl", name: "Template" },
+  { id: "tips", name: "Buone pratiche" }
+];
+const MD_SYNTAX = [
+  { t: "Titoli", n: "Da # a ###. La gerarchia dice all'agente cosa è importante e cosa sta dentro cosa.", md: "# Progetto MOVE\n## Tono di voce\n### Sui social", html: "<h1>Progetto MOVE</h1><h2>Tono di voce</h2><h3>Sui social</h3>" },
+  { t: "Paragrafi", n: "Una riga vuota separa due paragrafi. Andare a capo e basta non crea un paragrafo nuovo.", md: "MOVE è un'app per prenotare corsi.\n\nIl pubblico ha 25–40 anni.", html: "<p>MOVE è un'app per prenotare corsi.</p><p>Il pubblico ha 25–40 anni.</p>" },
+  { t: "Grassetto e corsivo", n: "Due asterischi per il grassetto, uno per il corsivo. Usali per le parole che l'agente non deve ignorare.", md: "Usa **sempre** il tono informale.\nIl nome è *MOVE*, tutto maiuscolo.", html: "<p>Usa <strong>sempre</strong> il tono informale.<br>Il nome è <em>MOVE</em>, tutto maiuscolo.</p>" },
+  { t: "Elenco puntato", n: "Un trattino e uno spazio. Ideale per regole e caratteristiche dello stesso livello.", md: "- palette rosa e menta\n- angoli arrotondati 12px\n- niente emoji", html: "<ul><li>palette rosa e menta</li><li>angoli arrotondati 12px</li><li>niente emoji</li></ul>" },
+  { t: "Elenco numerato", n: "Numero, punto e spazio. Per le sequenze in cui l'ordine conta.", md: "1. leggi BRIEF.md\n2. proponi 3 concept\n3. aspetta la mia scelta", html: "<ol><li>leggi BRIEF.md</li><li>proponi 3 concept</li><li>aspetta la mia scelta</li></ol>" },
+  { t: "Checklist", n: "Parentesi quadre vuote o con una x. L'agente può spuntarle mentre lavora.", md: "- [x] logo\n- [ ] palette\n- [ ] tipografia", html: "<ul class='md-check'><li>☑ logo</li><li>☐ palette</li><li>☐ tipografia</li></ul>" },
+  { t: "Link", n: "Testo tra quadre, indirizzo tra tonde. Funziona anche con i percorsi dei file.", md: "Riferimento: [moodboard](https://figma.com/...)\nRegole: [design](DESIGN.md)", html: "<p>Riferimento: <a>moodboard</a><br>Regole: <a>design</a></p>" },
+  { t: "Immagini", n: "Come un link, con il punto esclamativo davanti. Il testo tra quadre descrive l'immagine.", md: "![Logo MOVE su sfondo scuro](assets/logo.png)", html: "<p><span class='md-img'>immagine · Logo MOVE su sfondo scuro</span></p>" },
+  { t: "Codice in linea", n: "Tra due apici inversi. Per nomi di file, comandi e valori esatti da non riscrivere.", md: "Il colore primario è `#95F7CE`.\nSalva in `tokens.json`.", html: "<p>Il colore primario è <code>#95F7CE</code>.<br>Salva in <code>tokens.json</code>.</p>" },
+  { t: "Blocco di codice", n: "Tre apici inversi prima e dopo, con il linguaggio accanto. Per esempi da copiare uguali.", md: "```css\n.button { border-radius: 12px; }\n```", html: "<pre class='md-pre'>.button { border-radius: 12px; }</pre>" },
+  { t: "Citazione", n: "Il simbolo > davanti. Utile per riportare le parole esatte di un cliente o di un brief.", md: "> Vogliamo sembrare un club,\n> non una palestra.", html: "<blockquote>Vogliamo sembrare un club, non una palestra.</blockquote>" },
+  { t: "Tabella", n: "Colonne separate da barre verticali e una riga di trattini sotto l'intestazione.", md: "| Token | Valore |\n| --- | --- |\n| primary | #95F7CE |\n| accent | #FFAFD6 |", html: "<table><tr><th>Token</th><th>Valore</th></tr><tr><td>primary</td><td>#95F7CE</td></tr><tr><td>accent</td><td>#FFAFD6</td></tr></table>" },
+  { t: "Separatore", n: "Tre trattini su una riga da soli. Divide parti diverse dello stesso file.", md: "Fine delle regole di brand.\n\n---\n\nInizio delle regole social.", html: "<p>Fine delle regole di brand.</p><hr><p>Inizio delle regole social.</p>" },
+  { t: "Frontmatter", n: "Un blocco tra due righe di trattini in cima al file. Le skill lo usano: name e description dicono all'agente quando usarle.", md: "---\nname: brief-creativo\ndescription: Trasforma appunti in un brief strutturato.\n---", html: "<dl class='md-fm'><dt>name</dt><dd>brief-creativo</dd><dt>description</dt><dd>Trasforma appunti in un brief strutturato.</dd></dl>" }
+];
+const MD_CONTEXT = [
+  { tag: "Perché Markdown", t: "La lingua dei file di contesto", d: "Gli agenti leggono istruzioni scritte in Markdown: testo semplice, leggibile da persone e macchine, con titoli ed elenchi che danno struttura. Un buon file di contesto ti evita di ripetere le stesse cose a ogni conversazione." },
+  { tag: "./{CTX}", t: "Il file del progetto", d: "Sta nella cartella del progetto. {A} lo legge a ogni avvio: è il posto per obiettivo, pubblico, tono, regole visive e cartelle importanti." },
+  { tag: "{CTXG}", t: "Il file globale", d: "Vale per tutti i tuoi progetti. Mettici le tue preferenze personali: lingua, tono delle risposte, cosa chiedere prima di agire." },
+  { tag: "sottocartelle/{CTX}", t: "Regole per una parte del progetto", d: "Un file nella cartella social/ o design-system/ aggiunge regole solo per quella parte. Le regole più vicine alla cartella in cui lavori sono le più specifiche." },
+  { tag: "SKILL.md", t: "Le skill sono Markdown", d: "Ogni skill è un file SKILL.md con frontmatter (name, description) e istruzioni. La description decide quando l'agente la usa: scrivila come una frase che dice in quali situazioni serve." },
+  { tag: "BRIEF.md · DESIGN.md · README.md", t: "File di lavoro", d: "Non si caricano da soli: li richiami quando servono. Scrivi nel prompt il nome del file (\"leggi BRIEF.md e…\") oppure collegali dal file di progetto." },
+  { tag: "@file", t: "Collegare altri file", d: "Con Claude Code, una riga come @BRIEF.md dentro CLAUDE.md carica anche quel file a ogni avvio. Con Codex scrivi nel file di progetto quali file leggere e quando." },
+  { tag: "/init", t: "Partire da una bozza", d: "Il comando /init, scritto dentro {A}, analizza la cartella e crea una prima versione di {CTX}. Poi la correggi tu: è un punto di partenza, non il risultato finale." },
+  { tag: "CLAUDE.md + AGENTS.md", t: "Un file per entrambi gli agenti", d: "Se usi sia Claude Code sia Codex, scrivi le regole in AGENTS.md e metti in CLAUDE.md una sola riga: @AGENTS.md. Così modifichi le regole in un posto solo." },
+  { tag: "DESIGN.md", t: "Il design system in un file", d: "Un formato proposto da Google Labs (ancora in fase alpha) per descrivere un'identità visiva agli agenti: in cima i token in YAML (colori, tipografia, raggi, spaziature, componenti), sotto le sezioni che spiegano perché e come usarli. Ha anche un comando per controllarlo ed esportarlo in CSS: npx @google/design.md lint DESIGN.md." },
+  { tag: "awesome-design-md", t: "DESIGN.md di brand reali", d: "Una raccolta di file DESIGN.md ricavati da siti come Stripe, Linear o Claude. Copi quello che ti interessa nella cartella del progetto e chiedi all'agente di costruire seguendolo: ottimo per studiare come è fatto un sistema visivo." },
+  { tag: "AnyDoc", t: "Dai documenti al Markdown", d: "Brief in Word, presentazioni in PowerPoint, listini in Excel o PDF: AnyDoc li converte in Markdown pulito, il formato che l'agente legge meglio. Si installa come skill dalla libreria (categoria Documenti e slide)." }
+];
+const MD_TPL = [
+  { t: "File di contesto del progetto", file: "{CTX}", d: "Salvalo nella cartella del progetto. Sostituisci il testo tra parentesi quadre.", code: `# [Nome progetto]
+
+## Obiettivo
+[Cosa stiamo facendo e per chi, in 2 righe.]
+
+## Pubblico
+- età: [25–40]
+- cosa cerca: [...]
+- cosa evitare: [...]
+
+## Tono di voce
+- [informale, diretto, mai ironico sul prodotto]
+- frasi brevi, niente gergo tecnico
+
+## Regole visive
+- palette: [primario #95F7CE, accento #FFAFD6, sfondo #0C0C0C]
+- font: [IBM Plex Sans per i testi, IBM Plex Mono per le etichette]
+- [angoli 12px, niente ombre]
+
+## Cartelle
+- \`brief/\` brief e materiali del cliente
+- \`design-system/\` token e componenti
+- \`output/\` file consegnati
+
+## Come lavorare
+1. Leggi sempre BRIEF.md prima di proporre qualcosa.
+2. Proponi 3 opzioni e aspetta la mia scelta.
+3. Prima di generare immagini o video, dimmi il costo.` },
+  { t: "File globale personale", file: "{CTXG}", d: "Le tue preferenze, valide in tutti i progetti.", code: `# Preferenze di [Nome]
+
+- Rispondi sempre in italiano.
+- Sono una designer, non una sviluppatrice: spiega i passaggi tecnici in parole semplici.
+- Prima di cancellare o sovrascrivere un file, chiedimi conferma.
+- Prima di usare servizi a pagamento (crediti, API), dimmi quanto costa.
+- Quando crei un file, dimmi dove l'hai salvato.` },
+  { t: "Brief creativo", file: "BRIEF.md", d: "Il file che l'agente legge prima di ogni proposta.", code: `# Brief — [Nome progetto]
+
+## Cliente
+[Chi è, cosa fa, in una riga.]
+
+## Obiettivo
+[Il risultato misurabile che vogliamo ottenere.]
+
+## Target
+[Chi deve vedere il lavoro e cosa deve pensare dopo.]
+
+## Deliverable
+| Formato | Misure | Quantità | Scadenza |
+| --- | --- | --- | --- |
+| Post Instagram | 1080×1350 | 6 | [data] |
+| Reel | 1080×1920 | 2 | [data] |
+
+## Vincoli
+- [colori, loghi, claim obbligatori]
+- [cosa non fare]
+
+## Riferimenti
+- [link moodboard]
+- [link campagne passate]` },
+  { t: "Una skill tutta tua", file: "SKILL.md", d: "Salvalo in una cartella con il nome della skill, dentro la cartella delle skill globali.", code: `---
+name: caption-instagram
+description: Scrive caption Instagram nel tono del brand. Usala quando ti chiedo una caption, un testo per un post o un carosello.
+---
+
+# Caption Instagram
+
+## Prima di scrivere
+1. Leggi il file di contesto del progetto per tono e pubblico.
+2. Chiedimi il formato (post, carosello, reel) se non lo so già.
+
+## Struttura
+- prima riga: un gancio di massimo 8 parole
+- corpo: 3–4 righe brevi
+- chiusura: una domanda o una call to action
+- 3–5 hashtag specifici, mai generici
+
+## Da evitare
+- emoji a inizio riga
+- frasi fatte come "non vediamo l'ora"` },
+  { t: "Fallo scrivere all'agente", file: "prompt", prompt: true, d: "Se la cartella ha già dei file, chiedi una prima bozza e poi correggila.", code: `Leggi i file di questa cartella e crea il file {CTX} del progetto in Markdown: obiettivo, pubblico, tono di voce, regole visive, cartelle e come vuoi che lavori con me.
+Fammi prima 5 domande su quello che non riesci a capire dai file, una alla volta. Tienilo sotto le 80 righe.` },
+  { t: "Il design system in DESIGN.md", file: "DESIGN.md", d: "La struttura del formato di Google Labs: token in YAML in cima, spiegazioni sotto. Sostituisci i valori con quelli del tuo progetto.", code: `---
+name: Futura Setup Lab
+colors:
+  background: "#0C0C0C"
+  text: "#F2F0EB"
+  primary: "#95F7CE"
+  accent: "#FFAFD6"
+typography:
+  display: { fontFamily: "IBM Plex Sans", fontWeight: 300 }
+  body: { fontFamily: "IBM Plex Sans", fontSize: 16px, lineHeight: 1.55 }
+  label: { fontFamily: "IBM Plex Mono", fontSize: 12px }
+rounded:
+  sm: 8px
+  md: 14px
+spacing:
+  base: 4px
+---
+
+## Overview
+Sfondo nero con grana, accenti menta e rosa, molto spazio vuoto.
+
+## Colors
+Il menta indica le azioni e il progresso. Il rosa i momenti di enfasi.
+
+## Typography
+Titoli light di grandi dimensioni, etichette in monospace solo per codice e dati.` },
+  { t: "Parti da un brand reale", file: "prompt", prompt: true, d: "Usa un DESIGN.md di awesome-design-md come riferimento da studiare, poi adattalo al tuo progetto.", code: `Scarica dal repository github.com/VoltAgent/awesome-design-md il DESIGN.md di [nome brand] e salvalo come riferimento/DESIGN-[brand].md.
+Spiegami in 5 punti cosa rende riconoscibile quel sistema visivo. Poi crea il DESIGN.md del mio progetto con la stessa struttura ma con i miei colori, font e tono, leggendo BRIEF.md.` }
+];
+const MD_TIPS = [
+  ["Corto batte lungo", "Sotto le 200 righe. Un file lungo occupa memoria e le regole importanti si perdono."],
+  ["Specifico batte generico", "\"Angoli 12px, niente ombre\" funziona. \"Stile moderno e pulito\" no."],
+  ["Una regola per riga", "Gli elenchi puntati sono più facili da seguire dei paragrafi lunghi."],
+  ["Titoli che spiegano", "## Tono di voce, ## Regole visive: l'agente trova subito la parte giusta."],
+  ["Valori esatti tra apici", "Colori, nomi di file e misure in `codice`, così l'agente non li riscrive a modo suo."],
+  ["Mostra un esempio", "Un esempio di caption giusta vale più di tre righe di descrizione."],
+  ["Niente dati riservati", "Password, chiavi e dati personali dei clienti non vanno mai nei file di contesto."],
+  ["Aggiornalo spesso", "Quando correggi l'agente due volte sulla stessa cosa, aggiungila al file."]
+];
+function mdHTML() {
+  const cat = store.mdcat || "syntax", A = AG[store.agent].A;
+  let n = 0;
+  const copyBlock = (k, code, label) => `<div class="block ${k}">
+      <div class="bh"><span class="kind">${label}</span><button type="button" class="copy" data-copy="md-${++n}">Copia</button></div>
+      <pre id="md-${n}">${esc(code)}</pre></div>`;
+  let body = "";
+  if (cat === "syntax") {
+    body = `<div class="md-grid">${MD_SYNTAX.map(x => `<article class="md-card">
+        <h4>${x.t}</h4><p>${x.n}</p>
+        <div class="md-pair">
+          ${copyBlock("cc", x.md, "Scrivi")}
+          <div class="md-out"><span class="kind">Diventa</span><div class="md-render">${x.html}</div></div>
+        </div></article>`).join("")}</div>`;
+  } else if (cat === "context") {
+    body = `<div class="md-ctx">${MD_CONTEXT.map(x => `<article class="cap-card"><span class="tool">${esc(T(x.tag))}</span><h3>${x.t}</h3><p>${T(x.d)}</p></article>`).join("")}</div>`;
+  } else if (cat === "tpl") {
+    body = `<div class="md-tpls">${MD_TPL.map(x => `<article class="md-tpl">
+        <div><span class="tool">${esc(T(x.file))}</span><h3>${x.t}</h3><p>${x.d}</p></div>
+        ${copyBlock(x.prompt ? "prompt" : "cc", T(x.code), x.prompt ? `Prompt per ${A}` : "Markdown")}
+      </article>`).join("")}</div>`;
+  } else {
+    body = `<ol class="md-tips">${MD_TIPS.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ol>`;
+  }
+  return `
+    <div class="view-head"><button type="button" class="back" data-go="">${ICON_BACK} Tutte le sezioni</button></div>
+    <div class="lib-intro fade-in">
+      <h2>Markdown e <em>contesto</em></h2>
+      <p>Markdown è testo semplice con pochi simboli per dare struttura: titoli, elenchi, tabelle. È il formato in cui scrivi le istruzioni per ${A}, dai file di contesto alle skill. Qui trovi la sintassi, dove mettere i file e i template da copiare.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Argomenti">
+      ${MD_CATS.map(c => `<button type="button" data-mdcat="${c.id}" aria-pressed="${c.id === cat}">${c.name}</button>`).join("")}
+    </div>
+    ${body}`;
+}
+function renderMarkdown() {
+  app.innerHTML = mdHTML();
+  app.querySelectorAll("[data-mdcat]").forEach(b => b.addEventListener("click", () => { store.mdcat = b.dataset.mdcat; save(); renderMarkdown(); }));
+  wireCopy(k => document.getElementById(k));
+}
+
+/* ---------- Librerie e riferimenti UI ---------- */
+const UIREFS = [
+  { g: "Componenti da usare", items: [
+    ["21st.dev", "https://21st.dev/", "Registry di componenti frontend da cercare e portare nel progetto."],
+    ["Aceternity UI", "https://ui.aceternity.com/", "Componenti ed effetti per hero, sfondi, card e interazioni."],
+    ["Skiper UI", "https://skiper-ui.com/", "Componenti e microinterazioni animate: card, sezioni, navigazione."],
+    ["Beautiful UI", "https://www.beautifului.dev/", "Raccolta di componenti integrabili nel frontend."],
+    ["ThreeUI", "https://threeui.com/browse", "Componenti, template ed effetti con Three.js e shader per hero ed elementi 3D."],
+    ["OriginKit", "https://originkit.dev/", "Risorse UI pensate per lavorare con gli agenti, con integrazione MCP."],
+    ["Thinking Orbs", "https://libraries.dev/orbs", "Orb ed elementi animati per indicatori e stati dell'interfaccia."]
+  ] },
+  { g: "Riferimenti da studiare", items: [
+    ["Component Gallery", "https://component.gallery/", "Confronta come i grandi design system risolvono lo stesso componente."],
+    ["Mobbin", "https://mobbin.com/", "Schermate e flussi di app reali, con integrazione Figma."],
+    ["60fps.design", "https://60fps.design/", "Archivio di esempi di movimento e interazioni."]
+  ] },
+  { g: "Lavorare con l'agente", items: [
+    ["Agentation", "https://agentation.com/", "Annoti visivamente la UI e passi all'agente indicazioni precise su cosa modificare."]
+  ] }
+];
+function renderUiRefs() {
+  const A = AG[store.agent].A;
+  app.innerHTML = `
+    <div class="view-head"><button type="button" class="back" data-go="">${ICON_BACK} Tutte le sezioni</button></div>
+    <div class="lib-intro fade-in">
+      <h2>Librerie e <em>riferimenti UI</em></h2>
+      <p>Siti da consultare, non skill da installare: componenti pronti da adattare e archivi da studiare prima di progettare. Molti hanno una parte gratuita e una a pagamento.</p>
+    </div>
+    <div class="block prompt" style="max-width:860px;margin-bottom:28px">
+      <div class="bh"><span class="kind">Prompt per ${A}</span><button type="button" class="copy" data-copy="ui-p">Copia</button></div>
+      <pre id="ui-p">${esc(`Prendi questo componente e portalo nel mio progetto: [incolla il link o il codice].\nAdattalo ai token di tokens.css (colori, font, raggi), togli quello che non serve e mantieni accessibili focus e stati. Poi mostrami il risultato nel browser.`)}</pre>
+    </div>
+    ${UIREFS.map(gr => `<section class="ui-group"><h3 class="sc-sub">${gr.g}</h3><div class="md-ctx">${gr.items.map(([n, u, d]) => `<a class="cap-card ui-card" href="${u}" target="_blank" rel="noopener"><span class="tool">${esc(u.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""))}</span><h3>${n} <span class="go-arrow">${ICON_ARROW}</span></h3><p>${d}</p></a>`).join("")}</div></section>`).join("")}`;
+  wireCopy(k => document.getElementById(k));
+}
+
+/* ---------- Comandi e scorciatoie ---------- */
+const CMD_CATS = [ { id: "sym", name: "Simboli" }, { id: "keys", name: "Tasti" }, { id: "cmd", name: "Comandi" } ];
+const CMDS = {
+  claude: {
+    sym: [
+      ["/", "Comandi e skill", "All'inizio del messaggio apre il menu dei comandi: scrivi qualche lettera per filtrare. Funziona anche con le skill, e puoi metterne fino a 6 di fila.", "/model\n/frontend-design crea una landing page"],
+      ["@", "Menziona un file", "Inserisce il percorso di un file o di una cartella, con autocompletamento. L'agente lo legge senza che tu debba spiegare dov'è.", "Leggi @BRIEF.md e proponi 3 concept"],
+      ["!", "Comando diretto", "Esegue subito un comando nel Terminale e mette il risultato nella conversazione, così l'agente lo vede.", "! ls video-lab/export"],
+      ["?", "Aiuto rapido", "Scritto su un campo vuoto mostra il pannello delle scorciatoie.", "?"]
+    ],
+    keys: [
+      ["Esc", "Ferma l'agente mentre lavora. Quello che ha già fatto resta: puoi correggere la direzione."],
+      ["Esc Esc", "Con il campo vuoto apre il menu per tornare a un punto precedente della conversazione (anche del codice). Con del testo scritto, cancella la bozza."],
+      ["Shift+Tab", "Cambia modalità: manuale (chiede il permesso), accetta modifiche, plan (prima pianifica, poi agisce)."],
+      ["Shift+Invio", "Va a capo senza inviare. In alternativa \\ + Invio oppure Ctrl+J, che funzionano in ogni Terminale."],
+      ["Ctrl+V", "Incolla un'immagine dagli appunti (Cmd+V in iTerm2): compare come [Image #1] e la puoi citare nel prompt."],
+      ["↑ ↓", "Scorre i messaggi che hai già scritto."],
+      ["Ctrl+R", "Cerca tra i messaggi già scritti."],
+      ["Ctrl+C", "Interrompe o svuota il campo. Premuto due volte esce."],
+      ["Ctrl+S", "Mette da parte quello che stai scrivendo; premuto di nuovo lo ripristina."],
+      ["Ctrl+G", "Apre il prompt nel tuo editor di testo, comodo per prompt lunghi."],
+      ["Ctrl+T", "Mostra o nasconde la lista delle attività dell'agente."],
+      ["Ctrl+O", "Mostra il dettaglio di quello che l'agente sta facendo."],
+      ["Ctrl+B", "Manda in background un comando o un agente lungo, così continui a scrivere."],
+      ["Option+P", "Cambia modello senza perdere quello che stai scrivendo. Su Mac i tasti Option richiedono un'impostazione del Terminale."]
+    ],
+    cmd: [
+      ["Sessione", [
+        ["/clear", "Nuova conversazione da zero, nella stessa cartella."],
+        ["/resume", "Riprende una conversazione passata."],
+        ["/rename", "Dà un nome alla sessione, per ritrovarla."],
+        ["/rewind", "Torna indietro nella conversazione e, se vuoi, anche nei file."],
+        ["/branch", "Crea una variante della conversazione per provare un'altra strada."],
+        ["/btw", "Fai una domanda a margine senza sporcare la conversazione."],
+        ["/recap", "Riassunto di una riga di cosa sta succedendo."],
+        ["/copy", "Copia l'ultima risposta negli appunti."],
+        ["/export", "Esporta la conversazione come testo."],
+        ["/exit", "Esce. Solo da Terminale: nell'app chiudi o apri una sessione dai pulsanti."]
+      ]],
+      ["Contesto e memoria", [
+        ["/init", "Crea il file CLAUDE.md del progetto analizzando la cartella."],
+        ["/memory", "Apre e modifica i file CLAUDE.md e la memoria automatica."],
+        ["/compact", "Riassume la conversazione per liberare spazio, mantenendo l'essenziale."],
+        ["/context", "Mostra quanto spazio stai usando e cosa lo occupa."],
+        ["/add-dir", "Aggiunge un'altra cartella a cui l'agente può accedere."],
+        ["/cd", "Sposta la sessione in un'altra cartella."]
+      ]],
+      ["Modello e modalità", [
+        ["/model", "Sceglie il modello."],
+        ["/effort", "Quanto deve ragionare: da low a max."],
+        ["/fast", "Attiva o disattiva la modalità veloce."],
+        ["/plan", "Entra in modalità plan: prima il piano, poi le modifiche."],
+        ["/permissions", "Decide cosa l'agente può fare senza chiedere."],
+        ["/config", "Impostazioni: tema, modello, stile delle risposte."]
+      ]],
+      ["Collegamenti e skill", [
+        ["/mcp", "Elenca i collegamenti MCP e permette di autenticarsi."],
+        ["/plugin", "Cerca, installa e gestisce i plugin."],
+        ["/skills", "Elenca le skill disponibili."],
+        ["/reload-skills", "Carica le skill aggiunte durante la sessione, senza ricominciare."],
+        ["/reload-plugins", "Applica le modifiche ai plugin e ai loro collegamenti senza ricominciare."]
+      ]],
+      ["Skill incluse", [
+        ["/design", "Mockup, schermate, landing page o poster su una tela, pubblicati come artifact."],
+        ["/slides", "Una presentazione a partire da un brief."],
+        ["/dataviz", "Grafici e dashboard con regole di design per i dati."],
+        ["/deep-research", "Ricerca sul web con fonti verificate e report con citazioni."]
+      ]],
+      ["Controllo e aiuto", [
+        ["/diff", "Mostra le modifiche fatte ai file."],
+        ["/code-review", "Revisione delle modifiche alla ricerca di errori (alias /review)."],
+        ["/usage", "Consumi della sessione e limiti del piano."],
+        ["/status", "Versione, modello, account e connessione."],
+        ["/doctor", "Controlla installazione e configurazione e propone correzioni."],
+        ["/help", "Elenco completo dei comandi disponibili nella tua versione."]
+      ]]
+    ]
+  },
+  codex: {
+    sym: [
+      ["/", "Comandi", "All'inizio del messaggio apre il menu dei comandi: scrivi qualche lettera per filtrare.", "/model\n/review"],
+      ["@", "Menziona un file", "Cerca tra i file della cartella e inserisce il percorso nel prompt.", "Leggi @BRIEF.md e proponi 3 concept"],
+      ["!", "Comando diretto", "Esegue un comando nel Terminale con le regole di permesso attuali.", "! ls video-lab/export"],
+      ["$", "Skill e app", "Richiama una skill o un'app per nome. /skills e /apps le elencano.", "$skill-creator crea una skill per le caption"]
+    ],
+    keys: [
+      ["Esc Esc", "Con il campo vuoto modifica il messaggio precedente e riparte da lì."],
+      ["Invio", "Mentre Codex lavora, aggiunge istruzioni al compito in corso."],
+      ["Tab", "Mentre Codex lavora, mette in coda un messaggio o un comando per il turno dopo."],
+      ["↑ ↓", "Ripristina le bozze e i messaggi già scritti."],
+      ["Ctrl+R", "Cerca tra i messaggi già scritti."],
+      ["Ctrl+O", "Copia l'ultima risposta completa."],
+      ["Ctrl+L", "Pulisce lo schermo mantenendo la conversazione."],
+      ["Ctrl+C", "Chiude la sessione."]
+    ],
+    cmd: [
+      ["Sessione", [
+        ["/new", "Nuova conversazione nella stessa sessione."],
+        ["/clear", "Pulisce lo schermo e riparte da zero."],
+        ["/resume", "Riprende una conversazione salvata."],
+        ["/rename", "Dà un nome alla conversazione."],
+        ["/fork", "Crea una copia della conversazione per provare un'altra strada."],
+        ["/side", "Conversazione a margine, temporanea (alias /btw)."],
+        ["/recap", "Riassunto della conversazione senza compattarla."],
+        ["/copy", "Copia l'ultima risposta."],
+        ["/export", "Esporta la conversazione in Markdown."],
+        ["/exit", "Esce (alias /quit)."]
+      ]],
+      ["Contesto e memoria", [
+        ["/init", "Crea la bozza del file AGENTS.md nella cartella."],
+        ["/mention", "Allega un file o una cartella alla conversazione."],
+        ["/compact", "Riassume la conversazione per liberare spazio."],
+        ["/memories", "Configura l'uso e la creazione della memoria."],
+        ["/cd", "Cambia la cartella di lavoro."]
+      ]],
+      ["Modello e modalità", [
+        ["/model", "Sceglie modello e livello di ragionamento."],
+        ["/fast", "Attiva o disattiva la modalità veloce, se disponibile."],
+        ["/plan", "Passa in modalità plan."],
+        ["/goal", "Imposta un obiettivo su cui Codex continua a lavorare."],
+        ["/permissions", "Decide cosa Codex può fare senza chiedere."]
+      ]],
+      ["Collegamenti e skill", [
+        ["/mcp", "Elenca i collegamenti MCP; /mcp login nome per autenticarsi."],
+        ["/plugins", "Sfoglia, installa e attiva i plugin."],
+        ["/skills", "Sfoglia e applica le skill installate."],
+        ["/apps", "Sfoglia le app e le inserisce nel prompt."],
+        ["/hooks", "Controlla e autorizza gli hook dei plugin."],
+        ["/import", "Importa impostazioni e progetti da Claude Code o Cursor."]
+      ]],
+      ["Controllo e aiuto", [
+        ["/diff", "Mostra le modifiche ai file, compresi quelli nuovi."],
+        ["/review", "Revisione delle modifiche."],
+        ["/status", "Modello, permessi e consumo di token."],
+        ["/usage", "Consumi dell'account."],
+        ["/theme", "Tema dei colori per il codice."]
+      ]]
+    ]
+  }
+};
+function renderCommands() {
+  const ag = store.agent, A = AG[ag].A, D = CMDS[ag], cat = store.cmdcat || "sym";
+  let body = "";
+  if (cat === "sym") {
+    body = `<div class="sym-grid">${D.sym.map(([g, t, d, ex]) => `<article class="sym-card"><span class="sym-g">${esc(g)}</span><div><h3>${t}</h3><p>${d}</p><pre class="sym-ex">${esc(ex)}</pre></div></article>`).join("")}</div>`;
+  } else if (cat === "keys") {
+    body = `<div class="key-list">${D.keys.map(([k, d]) => `<div class="key-row"><span class="key-k">${k.split(" ").map(x => `<kbd>${esc(x)}</kbd>`).join(" ")}</span><span>${d}</span></div>`).join("")}</div>
+      ${ag === "claude" ? `<p class="lib-band" style="margin-top:24px">Le scorciatoie valgono quando usi ${A} nel Terminale. Nell'app desktop molte azioni hanno un pulsante dedicato e alcune scorciatoie possono cambiare.</p>` : ""}`;
+  } else {
+    body = D.cmd.map(([g, rows]) => `<section class="cmd-group"><h3 class="sc-sub">${g}</h3><div class="key-list">${rows.map(([c, d]) => `<div class="key-row"><code class="cmd-c">${c}</code><span>${d}</span></div>`).join("")}</div></section>`).join("")
+      + `<p class="lib-band">Questi sono i comandi più utili per chi lavora con l'agente, non l'elenco completo. Scrivi <code>/help</code> (o solo <code>/</code>) per vedere tutti quelli della tua versione.</p>`;
+  }
+  app.innerHTML = `
+    <div class="view-head"><button type="button" class="back" data-go="">${ICON_BACK} Tutte le sezioni</button></div>
+    <div class="lib-intro fade-in">
+      <h2>Comandi e <em>scorciatoie</em></h2>
+      <p>I simboli, i tasti e i comandi per lavorare più veloce con ${A}. Cambia agente in alto per vedere quelli di ${ag === "claude" ? "Codex" : "Claude Code"}.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Argomenti">${CMD_CATS.map(c => `<button type="button" data-cmdcat="${c.id}" aria-pressed="${c.id === cat}">${c.name}</button>`).join("")}</div>
+    ${body}`;
+  app.querySelectorAll("[data-cmdcat]").forEach(b => b.addEventListener("click", () => { store.cmdcat = b.dataset.cmdcat; save(); renderCommands(); }));
+}
+
+/* ---------- Library ---------- */
+const libTab = {};
+function skillPanel(x, i) {
+  const ag = store.agent, A = AG[ag].A, tab = libTab[i] || "prompt";
+  const tabs = [["prompt", A], ["term", "Terminale"], ["zip", "ZIP"]].filter(([k]) => !(k === "zip" && x.nozip)).map(([k, n]) =>
+    `<button type="button" role="tab" data-tab="${i}:${k}" aria-selected="${tab === k}">${n}</button>`).join("");
+  let body;
+  if (tab === "zip") {
+    body = `<div class="zip">
+      <a class="btn primary" href="https://github.com/${x.src}/archive/HEAD.zip" target="_blank" rel="noopener">Scarica lo ZIP ↗</a>
+      <p>Scompatta l'archivio e copia la cartella della skill (quella che contiene <code>SKILL.md</code>) in <code>${AG[ag].SK}</code>. Poi apri una nuova sessione di ${A}.</p>
+    </div>`;
+  } else {
+    const isT = tab === "term";
+    body = `<div class="block ${isT ? "term" : "prompt"}">
+      <div class="bh"><span class="kind">${isT ? (store.os === "win" ? "PowerShell" : "Terminale") : `Prompt per ${A}`}</span><button type="button" class="copy" data-copy="${i}">Copia</button></div>
+      <pre id="lib-${i}">${esc(isT ? skillTerm(x, ag) : skillPrompt(x, ag))}</pre>
+    </div>`;
+  }
+  return `<div class="panel"><div class="tabs" role="tablist">${tabs}</div>${body}</div>`;
+}
+function renderLibrary() {
+  const cat = store.cat || "all", A = AG[store.agent].A;
+  const list = SKILLS.map((x, i) => [x, i]).filter(([x]) => cat === "all" || x.cat === cat);
+  const catOf = id => CATS.find(c => c.id === id);
+  app.innerHTML = `
+    <div class="view-head"><button type="button" class="back" data-go="">${ICON_BACK} Tutte le sezioni</button></div>
+    <div class="lib-intro fade-in">
+      <h2>Una skill per <em>ogni mestiere</em></h2>
+      <p>Per ogni skill hai tre strade: il prompt da dare a ${A} (consigliato), il comando da Terminale, oppure il file ZIP da scompattare a mano. Se è la tua prima skill, fai prima la sezione <a href="#skill">Installare una skill</a>.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Categorie">
+      ${CATS.map(c => `<button type="button" data-cat="${c.id}" aria-pressed="${c.id === cat}">${c.name}<span>${c.id === "all" ? SKILLS.length : SKILLS.filter(x => x.cat === c.id).length}</span></button>`).join("")}
+    </div>
+    ${cat === "adv" ? `<p class="lib-band">Per chi vuole andare oltre: strumenti che riducono il contesto sprecato e danno memoria all'agente nei progetti lunghi. Non servono per seguire il corso.</p>` : cat === "dev" ? `<p class="lib-band">Strumenti nati per chi sviluppa software: utili quando costruisci siti, tool o automazioni con l'agente.</p>` : ""}
+    <div class="lib">
+      ${list.map(([x, i]) => {
+        const c = catOf(x.cat);
+        return `<article class="skill">
+          <div class="row"><span class="cat ${c.cls}">${c.name}</span></div>
+          <h4>${x.name}</h4>
+          <a class="src" href="https://github.com/${x.src}" target="_blank" rel="noopener">${x.src} ↗</a>
+          <p>${x.d}</p>
+          ${x.note ? `<p class="sk-note">${x.note}</p>` : ""}
+          <div id="panel-${i}">${skillPanel(x, i)}</div>
+        </article>`;
+      }).join("")}
+    </div>
+    <p class="warn">Le skill della community sono codice scritto da terzi: prima di installarne una, apri il repository e leggi cosa fa. Il comando da Terminale usa <code>npx skills</code>, che richiede Node.js.</p>`;
+  app.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { store.cat = b.dataset.cat; save(); renderLibrary(); }));
+  app.querySelector(".lib").addEventListener("click", e => {
+    const t = e.target.closest("[data-tab]"); if (!t) return;
+    const [i, k] = t.dataset.tab.split(":"); libTab[i] = k;
+    const host = document.getElementById("panel-" + i);
+    host.innerHTML = skillPanel(SKILLS[+i], +i);
+    wireCopy(n => document.getElementById("lib-" + n), host);
+  });
+  wireCopy(n => document.getElementById("lib-" + n));
+}
+
+/* ---------- Copy ---------- */
+function wireCopy(getPre, root) {
+  (root || app).querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
+    const pre = getPre(btn.dataset.copy); if (!pre) return;
+    const text = pre.textContent;
+    const ok = () => { btn.classList.add("ok"); btn.innerHTML = ICON_CHECK + " Copiato"; setTimeout(() => { btn.classList.remove("ok"); btn.textContent = "Copia"; }, 1600); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(pre);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      btn.textContent = "Selezionato: premi Cmd+C";
+      setTimeout(() => { btn.textContent = "Copia"; }, 2600);
+    };
+    try { navigator.clipboard.writeText(text).then(ok, fallback); } catch (e) { fallback(); }
+  }));
+}
+
+/* ---------- Router ---------- */
+let view = (location.hash || "").replace("#", "");
+if (view === "claude-code") view = "setup";
+function route(focusTop) {
+  const h = view;
+  if (h === "library") renderLibrary();
+  else if (h === "markdown") renderMarkdown();
+  else if (h === "ui-refs") renderUiRefs();
+  else if (h === "commands") renderCommands();
+  else if (byId(h)) renderSection(h, focusTop);
+  else renderHome();
+  if (focusTop !== false) window.scrollTo({ top: 0 });
+}
+function go(to) {
+  view = to; navDir = "";
+  try { if (location.hash.replace("#", "") !== to) history.replaceState(null, "", to ? "#" + to : location.pathname + location.search); } catch (e) {}
+  route();
+  const head = app.querySelector("h1, h2");
+  if (head) { head.setAttribute("tabindex", "-1"); head.focus({ preventScroll: true }); }
+}
+document.getElementById("skip").addEventListener("click", e => { e.preventDefault(); app.focus(); });
+/* sigillo: ruota con lo scroll */
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let tick = false;
+  addEventListener("scroll", () => {
+    if (tick) return; tick = true;
+    requestAnimationFrame(() => { const s = document.querySelector(".seal svg"); if (s) s.style.setProperty("--rot", (scrollY * 0.25) + "deg"); tick = false; });
+  }, { passive: true });
+})();
+app.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]");
+  if (g) {
+    e.preventDefault();
+    const to = g.dataset.go;
+    if (byId(to)) { const p = prog(to); if (p.cur === -1 && doneCount(p) < byId(to).steps.length) p.cur = 0; }
+    go(to); return;
+  }
+  const a = e.target.closest('a[href^="#"]');
+  if (a) { e.preventDefault(); go(a.getAttribute("href").slice(1)); }
+});
+document.getElementById("home-link").addEventListener("click", e => { e.preventDefault(); go(""); });
+window.addEventListener("hashchange", () => { view = location.hash.replace("#", ""); route(); });
+function syncToggles() {
+  document.querySelectorAll("[data-os]").forEach(x => x.setAttribute("aria-pressed", x.dataset.os === store.os));
+  document.querySelectorAll("[data-ag]").forEach(x => x.setAttribute("aria-pressed", x.dataset.ag === store.agent));
+}
+document.querySelectorAll("[data-os]").forEach(b => b.addEventListener("click", () => { store.os = b.dataset.os; save(); syncToggles(); route(false); }));
+document.querySelectorAll("[data-ag]").forEach(b => b.addEventListener("click", () => { store.agent = b.dataset.ag; save(); syncToggles(); route(false); }));
+syncToggles();
+route(false);
+</script>
