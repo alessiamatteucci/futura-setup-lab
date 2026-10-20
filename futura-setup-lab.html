@@ -3731,6 +3731,8 @@ function resize() {
 addEventListener("resize", resize); resize();
 
 const clock = new THREE.Clock(), tmp = new THREE.Vector3();
+const INTRO_DUR = 2.4;
+let baseY = 0;
 let spin = !reduce;
 window.addEventListener("spin-change", e => { spin = e.detail; });
 function frame() {
@@ -3743,7 +3745,10 @@ function frame() {
   }
   const follow = !dragging && pointer.x < 5 && !drawer.open ? 1 : 0;
   root.rotation.x += ((tilt.x - pointer.y * 0.12 * follow) - root.rotation.x) * 0.08;
-  root.rotation.y += ((tilt.y + pointer.x * 0.18 * follow) - root.rotation.y) * 0.08;
+  baseY += ((tilt.y + pointer.x * 0.18 * follow) - baseY) * 0.08;
+  // all'apertura il medaglione fa un giro completo su se stesso e si ferma di fronte
+  const ip = reduce ? 1 : Math.min(1, t / INTRO_DUR), ie = 1 - Math.pow(1 - ip, 4);
+  root.rotation.y = baseY + (1 - ie) * Math.PI * 2;
   // con il pannello aperto il logo si sposta nello spazio libero a destra
   const vs = viewSize();
   const targetX = drawer.open ? Math.min((drawer.edge / innerWidth) * vs.w * 0.5, vs.w * 0.5) : 0;
