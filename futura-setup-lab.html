@@ -457,9 +457,8 @@ body.open .intro { opacity: 0; transform: translateY(8px); pointer-events: none;
 .st-go svg { width: 14px; height: 14px; transition: transform .35s var(--e-out); }
 .star-tag:hover .st-go svg { transform: translateX(4px); }
 /* pannello a sinistra in overlay sul 3D */
-.drawer { position: fixed; z-index: 20; top: calc(64px + env(safe-area-inset-top, 0px)); bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: min(var(--dw, 660px), calc(100vw - 32px)); overflow-y: auto; overscroll-behavior: contain; border-radius: 18px; border: 1px solid var(--line-strong); background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 0 clamp(18px, 2.4vw, 32px) 32px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7); transition: width .45s var(--e-out), opacity .35s var(--e-out), transform .45s var(--e-out); }
+.drawer { position: fixed; z-index: 20; top: calc(64px + env(safe-area-inset-top, 0px)); bottom: calc(46px + env(safe-area-inset-bottom, 0px)); left: max(16px, env(safe-area-inset-left, 0px)); width: min(940px, calc(100vw - 32px)); overflow-y: auto; overscroll-behavior: contain; border-radius: 18px; border: 1px solid var(--line-strong); background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 0 clamp(18px, 2.4vw, 32px) 32px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7); transition: width .45s var(--e-out), opacity .35s var(--e-out), transform .45s var(--e-out); }
 .drawer[hidden] { display: block !important; opacity: 0; transform: translateX(-24px); pointer-events: none; visibility: hidden; }
-.drawer.wide { --dw: 1180px; }
 .drawer-close { position: sticky; top: 0; z-index: 3; display: flex; justify-content: flex-end; padding: 14px 0 0; margin-bottom: -8px; pointer-events: none; }
 .drawer-close button { pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--muted); border-radius: 999px; padding: 6px 12px; font-family: var(--mono); font-size: 12px; cursor: pointer; min-height: 34px; }
 .drawer-close button:hover { color: var(--fg); border-color: var(--fg); }
@@ -477,6 +476,32 @@ body.open .intro { opacity: 0; transform: translateY(8px); pointer-events: none;
   .st-card { min-width: 180px; } .st-line { width: 28px; }
 }
 body.no-webgl .intro { top: 90px; bottom: auto; }
+
+/* elenco delle sezioni nel pannello: solo testo e CTA */
+.g-head { display: grid; gap: 10px; padding: 18px 0 26px; }
+.g-head h2 { margin: 0; font-size: clamp(40px, 5.2vw, 68px); font-weight: 300; line-height: .98; letter-spacing: -.025em; text-wrap: balance; }
+.g-head h2 em { font-style: italic; font-weight: 700; color: var(--pink); }
+.g-head p { margin: 0; color: var(--muted); font-size: 15px; max-width: 52ch; }
+.g-list { display: grid; }
+.g-item { display: grid; gap: 8px; width: 100%; text-align: left; padding: 26px 0 28px; border: 0; border-top: 1px solid var(--line-strong); background: none; color: var(--fg); font: inherit; cursor: pointer; animation: rise .7s var(--e-out) both; animation-delay: calc(.05s + var(--i, 0) * 45ms); }
+.g-item:last-child { border-bottom: 1px solid var(--line-strong); }
+.g-tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--mint); }
+.g-item.pink .g-tag { color: var(--pink); }
+.g-title { font-size: clamp(30px, 3.6vw, 48px); font-weight: 300; line-height: 1.04; letter-spacing: -.02em; text-wrap: balance; transition: transform .45s var(--e-out), color .3s var(--e-quart); }
+.g-title em { font-style: italic; font-weight: 700; }
+.g-desc { color: var(--muted); font-size: 15px; max-width: 58ch; }
+.g-foot { display: flex; align-items: center; gap: 10px 18px; flex-wrap: wrap; margin-top: 6px; }
+.g-meta { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.g-state { font-family: var(--mono); font-size: 11.5px; padding: 3px 9px; border-radius: 999px; }
+.g-state.go { background: var(--mint); color: var(--ink); }
+.g-state.done { background: var(--pink); color: var(--ink); }
+.g-cta { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border-radius: 999px; background: var(--mint); color: var(--ink); font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .04em; transition: background .3s var(--e-quart); }
+.g-item.pink .g-cta { background: var(--pink); }
+.g-cta svg { width: 14px; height: 14px; transition: transform .35s var(--e-out); }
+.g-item:hover .g-title, .g-item:focus-visible .g-title { transform: translateX(10px); }
+.g-item:hover .g-cta svg, .g-item:focus-visible .g-cta svg { transform: translateX(4px); }
+.g-item:hover .g-cta { background: var(--fg); }
+@media (max-width: 620px) { .g-cta { margin-left: 0; } }
 
 .toggles { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .os .ag-ico { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: currentColor; opacity: .7; }
@@ -1397,9 +1422,35 @@ function renderGroup(gid) {
     </button>`;
   };
   const g = GROUPS.find(x => x.id === gid) || GROUPS[0];
-  app.innerHTML = `<section class="group fade-in" aria-labelledby="g-${g.id}">
-      <header class="group-head"><h2 id="g-${g.id}">${g.title}</h2><p>${g.desc}</p></header>
-      <div class="bento">${g.items.map(tileHTML).join("")}</div>
+  const ARR = ICON_ARROW;
+  const cons = {
+    library: { tag: "Repository", title: "Libreria di <em>skill</em>", d: `${SKILLS.length} skill per design di prodotto, motion graphic, 3D, marketing e documenti, con prompt, comando e ZIP.`, meta: `${CATS.length - 1} categorie` },
+    markdown: { tag: "Guida", title: "Markdown e <em>contesto</em>", d: `Sintassi, file ${AG[store.agent].CTX} e template da copiare.`, meta: `${MD_SYNTAX.length} elementi · ${MD_TPL.length} template` },
+    commands: { tag: "Guida", title: "Comandi e <em>scorciatoie</em>", d: `Simboli, tasti e comandi di ${A}, divisi per uso.`, meta: `${CMDS[store.agent].cmd.reduce((a, x) => a + x[1].length, 0)} comandi · ${CMDS[store.agent].keys.length} scorciatoie` },
+    "ui-refs": { tag: "Riferimenti", title: "Librerie e <em>riferimenti UI</em>", d: "Componenti da adattare e archivi da studiare prima di progettare.", meta: `${UIREFS.reduce((a, x) => a + x.items.length, 0)} siti` }
+  };
+  const item = (L, n) => {
+    const c = cons[L.id];
+    if (c) return `<button type="button" class="g-item" style="--i:${n}" data-go="${L.id}">
+        <span class="g-tag">${c.tag}</span>
+        <span class="g-title">${c.title}</span>
+        <span class="g-desc">${c.d}</span>
+        <span class="g-foot"><span class="g-meta">${c.meta}</span><span class="g-cta">Apri ${ARR}</span></span>
+      </button>`;
+    const s = byId(L.id); if (!s) return "";
+    const p = prog(s.id), dc = doneCount(p), tot = s.steps.length;
+    const status = dc === tot ? `<span class="g-state done">Completata</span>` : dc > 0 ? `<span class="g-state go">${dc}/${tot} fatti</span>` : "";
+    const cta = dc === tot ? "Rivedi" : dc > 0 ? "Continua" : "Inizia";
+    return `<button type="button" class="g-item ${s.tone}" style="--i:${n}" data-go="${s.id}">
+        <span class="g-tag">${s.tag}</span>
+        <span class="g-title">${T(s.title)}</span>
+        <span class="g-desc">${T(s.short)}</span>
+        <span class="g-foot"><span class="g-meta">${tot} passi · ${s.time}${s.requires ? ` · richiede ${T(s.requires)}` : ""}</span>${status}<span class="g-cta">${cta} ${ARR}</span></span>
+      </button>`;
+  };
+  app.innerHTML = `<section class="group g-text fade-in" aria-labelledby="g-${g.id}">
+      <header class="g-head"><h2 id="g-${g.id}">${g.title}</h2><p>${g.desc}</p></header>
+      <div class="g-list">${g.items.map(item).join("")}</div>
     </section>`;
 }
 
