@@ -965,7 +965,7 @@ const SECTIONS = [
       { t: "Installa il <em>componente MCP</em>",
         d: ["Il modo più semplice è trascinare un link dentro Blender. Va fatto <b>due volte</b>: la prima aggiunge la raccolta di estensioni di Blender Lab, la seconda installa il componente."],
         list: ["Trascina questo link nella finestra di Blender: <a href=\"https://projects.blender.org/lab/blender_mcp/releases/download/v1.0.3/mcp-1.0.3.zip?repository=https%3A%2F%2Flab.blender.org%2F&amp;blender_version_min=5.1.0\" target=\"_blank\" rel=\"noopener\">componente MCP di Blender Lab</a>.", "Conferma l'aggiunta della raccolta <b>lab.blender.org</b>.", "Trascina di nuovo lo stesso link e conferma l'installazione di <b>MCP</b>."],
-        blocks: [{ k: "cc", label: "in alternativa, a mano", code: "Edit → Preferences → Get Extensions → Repositories → +\nindirizzo: https://lab.blender.org/\npoi cerca \"MCP\", clicca Install e attiva il componente" }],
+        alt: { t: "Se il trascinamento non funziona, fallo a mano in Blender:", list: ["Apri <b>Edit → Preferences → Get Extensions</b>.", "Apri <b>Repositories</b>, clicca <b>+</b> e incolla l'indirizzo <code>https://lab.blender.org/</code>.", "Cerca <b>MCP</b>, clicca <b>Install</b> e attiva il componente."] },
         ok: "In <b>Preferences → Add-ons</b> trovi <b>MCP</b> installato e attivo." },
       { t: "Controlla che <em>Blender sia in ascolto</em>",
         list: ["Apri <b>Edit → Preferences → Add-ons</b> e apri la voce <b>MCP</b>.", "Lascia attivo <b>Auto Start</b>: così il collegamento parte ogni volta che apri Blender.", "Sotto deve comparire <b>Server is running</b>. Se vedi <b>Server is stopped</b>, clicca <b>Start MCP Bridge Server</b>."],
@@ -1801,6 +1801,7 @@ function renderSection(id, focusTop) {
       ${(st.d || []).map(x => `<p class="lead">${T(x)}</p>`).join("")}
       ${st.list ? `<ol class="sub">${st.list.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>` : ""}
       ${st.table ? `<div class="qa-wrap"><table class="qa"><thead><tr><th>${(st.thead || ["Domanda", "Risposta"])[0]}</th><th>${(st.thead || ["Domanda", "Risposta"])[1]}</th></tr></thead><tbody>${st.table.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${st.alt ? `<p class="lead">${T(st.alt.t)}</p><ol class="sub">${st.alt.list.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>` : ""}
       ${(st.blocks || []).map(blockHTML).join("")}
       ${st.warn ? `<div class="warn"><b>Attenzione.</b> ${T(st.warn)}</div>` : ""}
       <div class="expect"><span class="eyebrow">Cosa devi vedere</span><div>${T(st.ok)}</div></div>
