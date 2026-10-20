@@ -1916,7 +1916,8 @@ function renderUiRefs() {
 
 /* ---------- Mondo Figma: pagine di consultazione ---------- */
 /* Link di invito a Weave (ex Weavy): incolla qui il referral. Finché è vuoto il pulsante resta disattivato. */
-const WEAVY_REF = "";
+const WEAVY_REF = "http://app.weavy.ai/signin?promotion=futuraai";
+const WEAVY_CODE = "futuraai15";
 const FC = "https://www.figma.com/community/";
 const FIGMA_PAGES = {
   "figma-skills": {
@@ -2008,10 +2009,11 @@ const FIGMA_PAGES = {
   },
   "weavy": {
     tag: "Piattaforma", title: "<em>Weave</em>, ex Weavy",
-    short: "La piattaforma a nodi di Figma per generare immagini e video. Entra con il mio invito e hai lo sconto.",
+    short: "La piattaforma a nodi di Figma per generare immagini e video. Entra con l'invito di Futura AI e hai il 15% di sconto.",
     intro: "Weavy è stata acquisita da Figma ed è diventata Figma Weave: un canvas a nodi dove colleghi modelli di immagini e video, ritocchi e passaggi di editing in un unico flusso che puoi riusare. È una piattaforma separata da Figma, con un suo account e un suo abbonamento.",
-    how: ["Apri il mio link di invito qui sotto.", "Crea l'account Weave: lo sconto si applica da solo all'abbonamento.", "Parti da un workflow della Community e modificalo, invece che da una tela vuota."],
+    how: ["Apri il link di invito qui sotto. Funziona solo se crei un account Weave <b>nuovo</b>.", "Crea l'account e scegli l'abbonamento.", "Al pagamento inserisci il codice sconto <code>futuraai15</code>: hai il 15% sul primo acquisto di qualsiasi abbonamento Figma Weave.", "Parti da un workflow della Community e modificalo, invece che da una tela vuota."],
     ref: true,
+    coupon: ["Lo sconto vale una sola volta per persona.", "Copre il primo mese con il piano mensile, o il primo anno con il piano annuale.", "Il codice ha un numero limitato di utilizzi: se finiscono, te lo segnaliamo."],
     all: [FC + "weave", "Workflow Weave nella Community"],
     groups: [
       { g: "Da dove partire", items: [
@@ -2020,7 +2022,7 @@ const FIGMA_PAGES = {
         ["Guida a Weave", "https://help.weavy.ai/", "Il centro assistenza ufficiale, con le domande frequenti."]
       ] }
     ],
-    meta() { return "Invito con sconto"; }
+    meta() { return "Invito · 15% di sconto"; }
   },
   "weave-tools": {
     tag: "Marketplace", title: "Strumenti <em>Weave</em> in Figma",
@@ -2065,7 +2067,7 @@ function renderFigmaPage(id) {
   const f = FIGMA_PAGES[id], A = AG[store.agent].A;
   const host = u => u.replace(/^https?:\/\/(www\.)?/, "").replace(/^figma\.com\/community\//, "figma community / ").replace(/\/$/, "");
   const ref = f.ref ? (WEAVY_REF
-    ? `<a class="btn primary" href="${WEAVY_REF}" target="_blank" rel="noopener">Entra con il mio invito ${ICON_ARROW}</a>`
+    ? `<a class="btn primary" href="${WEAVY_REF}" target="_blank" rel="noopener">Entra con l'invito di Futura AI ${ICON_ARROW}</a>`
     : `<button type="button" class="btn primary" disabled>Link di invito in arrivo</button>`) : "";
   app.innerHTML = `
     <div class="view-head"><button type="button" class="back" data-go="@parent">${ICON_BACK} Torna alle sezioni</button></div>
@@ -2079,6 +2081,11 @@ function renderFigmaPage(id) {
       <ol>${f.how.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>
       <div class="fig-actions">${ref}<a class="btn" href="${f.all[0]}" target="_blank" rel="noopener">${f.all[1]} ${ICON_ARROW}</a></div>
     </div>
+    ${f.coupon ? `<div class="block prompt" style="max-width:860px;margin-bottom:28px">
+      <div class="bh"><span class="kind">Codice sconto · 15%</span><button type="button" class="copy" data-copy="fig-c">Copia</button></div>
+      <pre id="fig-c">${WEAVY_CODE}</pre>
+      <div class="cap">${f.coupon.join(" ")}</div>
+    </div>` : ""}
     ${f.prompt ? `<div class="block prompt" style="max-width:860px;margin-bottom:28px">
       <div class="bh"><span class="kind">Prompt per ${A}</span><button type="button" class="copy" data-copy="fig-p">Copia</button></div>
       <pre id="fig-p">${esc(T(f.prompt))}</pre>
