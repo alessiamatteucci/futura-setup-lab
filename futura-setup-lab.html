@@ -229,7 +229,7 @@ h1.sec { margin: 0; font-size: 15px; font-weight: 400; color: var(--muted); }
 .block { margin: 20px 0 0; border-radius: 12px; border: 1px solid var(--line-strong); background: #111211; overflow: hidden; }
 .block .bh { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 10px 9px 14px; border-bottom: 1px solid var(--line); }
 .block .kind { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
-.block .kind::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.block .kind::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .block.term .kind { color: var(--mint); }
 .block.prompt { border: 0; }
 .block.prompt .kind { color: var(--pink); }
