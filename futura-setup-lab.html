@@ -374,6 +374,8 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
 .md-render .md-fm { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13.5px; }
 .md-render .md-fm dt { font-family: var(--mono); color: var(--mint); }
 .md-render .md-fm dd { margin: 0; }
+.foot-link { color: inherit; text-decoration: none; }
+.foot-link:hover, .foot-link:focus-visible { color: var(--mint); text-decoration: underline; }
 .g-sub { margin: 44px 0 16px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 14px; }
 .g-sub::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
 .g-mat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -588,7 +590,7 @@ body.no-webgl .intro { top: 90px; bottom: auto; }
     <main id="app" tabindex="-1"></main>
   </aside>
   <footer>
-    <span>futuraaiacademy.com</span>
+    <a class="foot-link" href="https://futuraaiacademy.com" target="_blank" rel="noopener">futuraaiacademy.com</a>
     <span>Il tuo avanzamento resta salvato solo in questo browser</span>
     <span class="master">AI x UX UI Repository</span>
   </footer>
