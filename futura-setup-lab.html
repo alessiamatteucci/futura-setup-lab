@@ -374,6 +374,14 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
 .md-render .md-fm { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13.5px; }
 .md-render .md-fm dt { font-family: var(--mono); color: var(--mint); }
 .md-render .md-fm dd { margin: 0; }
+.fig-how { max-width: 860px; margin: 18px 0 28px; padding: 20px 22px; border-radius: 14px; background: var(--bg-raise); border: 1px solid var(--line); display: grid; gap: 12px; }
+.fig-how .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mint); }
+.fig-how ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; }
+.fig-how li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 8px; }
+.fig-how li::before { content: counter(s, decimal-leading-zero); font-family: var(--mono); font-size: 12px; color: var(--mint); padding-top: 3px; }
+.fig-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.fig-actions a.btn { text-decoration: none; }
+.step ol.sub a { color: var(--mint); }
 .md-ctx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 1020px) { .md-ctx { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 620px) { .md-ctx { grid-template-columns: minmax(0, 1fr); } }
@@ -828,6 +836,31 @@ const SECTIONS = [
         d: ["Non lavorare mai direttamente sul ramo principale di una repo che non è solo tua."],
         blocks: [{ k: "prompt", code: `Crea un branch "design-system-audit" e fai commit di AUDIT.md e della cartella design-system. Se la repository è mia apri una pull request con gh e dammi il link. Se non è mia, crea prima un fork nel mio account e lavora lì.` }],
         ok: "Il link alla pull request (o al tuo fork) con audit e token." }
+    ]
+  },
+  {
+    id: "figma-chrome", tone: "pink", tag: "Estensione · browser",
+    title: "Estensione Figma <em>per Chrome</em>",
+    short: "Cattura un sito, o un solo elemento, e incollalo in Figma come livelli che puoi modificare.",
+    time: "5 min", requires: "Google Chrome + account Figma",
+    steps: [
+      { t: "Cosa <em>installi</em>",
+        d: ["Installi l'estensione ufficiale di Figma per Google Chrome. Serve a catturare una pagina web vera, la tua o un riferimento, e a portarla in Figma come livelli modificabili invece che come screenshot.", "Funziona con tutti i piani Figma. Con un piano a pagamento si attiva da sola anche la cattura come codice (code to canvas)."],
+        ok: "Hai Chrome aperto e sai con quale account entri in Figma." },
+      { t: "Aggiungi <em>l'estensione</em>",
+        list: ["Apri la <a href=\"https://chromewebstore.google.com/detail/figma/fkmaohpngenfoccdgceedjkfhkdcohmg\" target=\"_blank\" rel=\"noopener\">pagina dell'estensione Figma</a> nel Chrome Web Store.", "Clicca <b>Aggiungi a Chrome</b> e conferma con <b>Aggiungi estensione</b>.", "Clicca l'icona del puzzle in alto a destra e fissa <b>Figma</b> con la puntina, così resta nella barra."],
+        ok: "L'icona di Figma è nella barra di Chrome." },
+      { t: "Accedi <em>con Figma</em>",
+        list: ["Clicca l'icona di Figma nella barra.", "Accedi con lo stesso account che usi in Figma."],
+        ok: "L'estensione mostra il tuo account Figma." },
+      { t: "Cattura <em>una pagina</em>",
+        list: ["Apri il sito che vuoi portare in Figma e clicca l'icona dell'estensione.", "Scegli cosa catturare: un elemento (lo selezioni e clicchi) oppure la pagina intera, anche la parte sotto lo scroll.", "La cattura finisce nel vassoio dell'estensione ed è già copiata negli appunti."],
+        ok: "L'estensione conferma che la cattura è negli appunti." },
+      { t: "Incolla <em>in Figma</em>",
+        list: ["Apri un file Figma Design o una board FigJam.", "Se vuoi che Figma usi le tue variabili, aggiungi prima la libreria che le contiene.", "Incolla con <kbd>Cmd+V</kbd> (su Windows <kbd>Ctrl+V</kbd>)."],
+        d: ["Se hai collegato Figma al tuo agente, puoi fargli analizzare subito quello che hai catturato."],
+        blocks: [{ k: "prompt", code: `Usa l'MCP di Figma: guarda il frame che ho appena incollato da un sito [incolla il link al frame].\nDimmi colori, tipografia, spaziature e componenti che usa, e cosa terresti per il nostro design system.` }],
+        ok: "La pagina compare nel file come livelli modificabili." }
     ]
   },
   {
@@ -1325,9 +1358,7 @@ const GROUPS = [
       { id: "figma-mcp", cls: "" },
       { id: "higgsfield-mcp", cls: "" },
       { id: "github", cls: "" },
-      { id: "dreamina", cls: "" },
-      { id: "design-system", cls: "span2" },
-      { id: "design-system-repo", cls: "span2" }
+      { id: "dreamina", cls: "" }
     ] },
   { id: "consultazione", title: "Repository e <em>consultazione</em>", desc: "Nessun passo da completare: materiali da sfogliare e copiare quando ti servono.",
     items: [
@@ -1335,6 +1366,16 @@ const GROUPS = [
       { id: "markdown", cls: "span2" },
       { id: "commands", cls: "span2" },
       { id: "ui-refs", cls: "span2" }
+    ] },
+  { id: "figma", title: "Mondo <em>Figma</em>", desc: "Tutto quello che succede dentro Figma: estensione, design system, skill, shader e strumenti Weave.",
+    items: [
+      { id: "figma-chrome", cls: "" },
+      { id: "design-system", cls: "span2" },
+      { id: "design-system-repo", cls: "span2" },
+      { id: "figma-skills", cls: "span2" },
+      { id: "shaders", cls: "span2" },
+      { id: "weavy", cls: "span2" },
+      { id: "weave-tools", cls: "span2" }
     ] }
 ];
 const LAYOUT = GROUPS.flatMap(g => g.items);
@@ -1436,6 +1477,7 @@ function renderGroup(gid) {
     commands: { tag: "Guida", title: "Comandi e <em>scorciatoie</em>", d: `Simboli, tasti e comandi di ${A}, divisi per uso.`, meta: `${CMDS[store.agent].cmd.reduce((a, x) => a + x[1].length, 0)} comandi · ${CMDS[store.agent].keys.length} scorciatoie` },
     "ui-refs": { tag: "Riferimenti", title: "Librerie e <em>riferimenti UI</em>", d: "Componenti da adattare e archivi da studiare prima di progettare.", meta: `${UIREFS.reduce((a, x) => a + x.items.length, 0)} siti` }
   };
+  Object.keys(FIGMA_PAGES).forEach(k => { const f = FIGMA_PAGES[k]; cons[k] = { tag: f.tag, title: f.title, d: T(f.short), meta: f.meta() }; });
   const item = (L, n) => {
     const c = cons[L.id];
     if (c) return `<button type="button" class="g-item" style="--i:${n}" data-go="${L.id}">
@@ -1489,12 +1531,13 @@ function renderIntro() {
     <h1><span class="hb">${A} al lavoro</span><span class="hl">sul tuo computer, un passo alla volta</span></h1>
     <p>Il Terminale ti serve una volta sola: per installare ${A}. Da lì in poi ogni passo è un prompt da copiare e dare all'agente, che esegue lui i comandi. Il passo successivo si sblocca solo quando hai completato quello attuale. Usi ChatGPT? Scegli <b>Codex</b> in alto.</p>
     <div class="meta"><span><strong>${SECTIONS.length}</strong> percorsi</span><span><strong>${totSteps}</strong> passi in totale</span><span><strong>${totDone}</strong> completati con ${A}</span></div>
-    <div class="quick"><button type="button" data-open="g-percorsi">Percorsi guidati</button><button type="button" data-open="g-consultazione">Repository e consultazione</button><button type="button" data-open="commands">Comandi e scorciatoie</button></div>`;
+    <div class="quick"><button type="button" data-open="g-percorsi">Percorsi guidati</button><button type="button" data-open="g-consultazione">Repository e consultazione</button><button type="button" data-open="g-figma">Mondo Figma</button></div>`;
   const cons = GROUPS.find(g => g.id === "consultazione").items.length;
+  const perc = GROUPS.find(g => g.id === "percorsi").items;
   window.__groupInfo = {
-    "g-percorsi": { title: "Percorsi guidati", sub: `${SECTIONS.length} percorsi · ${totSteps} passi` },
+    "g-percorsi": { title: "Percorsi guidati", sub: `${perc.length} percorsi · ${perc.reduce((a, i) => a + byId(i.id).steps.length, 0)} passi` },
     "g-consultazione": { title: "Repository e consultazione", sub: `${cons} raccolte · ${SKILLS.length} skill` },
-    "commands": { title: "Comandi e scorciatoie", sub: `${CMDS[store.agent].cmd.reduce((a, g) => a + g[1].length, 0)} comandi · ${CMDS[store.agent].keys.length} scorciatoie di ${A}` }
+    "g-figma": { title: "Mondo Figma", sub: `${GROUPS.find(g => g.id === "figma").items.length} sezioni · design system, skill, shader e Weave` }
   };
   window.dispatchEvent(new Event("labels-change"));
 }
@@ -1870,6 +1913,180 @@ function renderUiRefs() {
   wireCopy(k => document.getElementById(k));
 }
 
+
+/* ---------- Mondo Figma: pagine di consultazione ---------- */
+/* Link di invito a Weave (ex Weavy): incolla qui il referral. Finché è vuoto il pulsante resta disattivato. */
+const WEAVY_REF = "";
+const FC = "https://www.figma.com/community/";
+const FIGMA_PAGES = {
+  "figma-skills": {
+    tag: "Skill", title: "Skill di <em>Figma</em>",
+    short: "Le skill ufficiali per {A} e le migliori della Community di Figma, divise per uso.",
+    intro: "Una skill è un file Markdown che insegna all'agente un flusso di lavoro preciso. Con Figma ne usi di due tipi: quelle ufficiali, che arrivano insieme al collegamento a Figma in {A}, e quelle della Community, che puoi provare con l'agente dentro Figma o salvare per {A}.",
+    how: ["Apri una skill e clicca <b>Try it out</b>: la provi subito con l'agente di Figma, dentro un tuo file.", "Nella chat dell'agente di Figma la richiami scrivendo <code>/</code> e il suo nome.", "Per usarla in {A}, copia le istruzioni della pagina e dai il prompt qui sotto."],
+    prompt: `Salva questa skill di Figma come skill personale in {SK}/[nome-skill]/SKILL.md, con nome e descrizione nell'intestazione. Poi dimmi quando usarla.\n[incolla qui le istruzioni copiate dalla pagina della skill]`,
+    all: [FC + "ai-skills", "Tutte le skill nella Community"],
+    groups: [
+      { g: "Ufficiali per {A}", items: [
+        ["figma-use", "https://help.figma.com/hc/en-us/articles/32132100833559", "La base per leggere e scrivere nei file senza errori. Va caricata prima di ogni modifica."],
+        ["figma-generate-design", "https://help.figma.com/hc/en-us/articles/32132100833559", "Trasforma una pagina o un'interfaccia in una schermata Figma con i componenti del design system."],
+        ["figma-generate-library", "https://help.figma.com/hc/en-us/articles/32132100833559", "Costruisce variabili, temi chiaro e scuro e componenti con varianti."],
+        ["figma-code-connect", "https://help.figma.com/hc/en-us/articles/32132100833559", "Collega i componenti Figma ai componenti del codice."]
+      ] },
+      { g: "Revisione e qualità", items: [
+        ["superfuture-design-review", FC + "skill/65434/superfuture-design-review", "Una critica da senior designer del tuo file, con i problemi ordinati per gravità."],
+        ["accessibility-review", FC + "skill/75662/accessibility-review", "Controlla un frame rispetto alle WCAG 2.2 e appunta le correzioni sul canvas."],
+        ["spacing-audit", FC + "skill/70410/spacing-audit", "Trova e corregge padding, gap e margini fuori scala."],
+        ["analyze-components", FC + "skill/61009/analyze-components", "Analizza tutti i componenti del file e propone come sistemarli."],
+        ["layer-cleanup", FC + "skill/71390/layer-cleanup", "Da \"Frame 427\" a un file con livelli che si spiegano da soli."],
+        ["checklist-design", FC + "skill/74536/checklist-design", "Feedback concreti sul design a partire da checklist UI e UX."]
+      ] },
+      { g: "Design system", items: [
+        ["design-system-gen", FC + "skill/65614/design-system-gen", "Ricava un primo design system dagli elementi che selezioni."],
+        ["build-a-variable-library", FC + "skill/75779/build-a-variable-library", "Crea la libreria di variabili, con modalità chiara e scura."],
+        ["make-a-type-scale", FC + "skill/62736/make-a-type-scale", "Una scala tipografica visiva, legata alle variabili."],
+        ["create-anatomy", FC + "skill/71321/create-anatomy", "Documenta l'anatomia di un componente con marcatori numerati e tabelle."],
+        ["design-system-documentation", FC + "skill/77925/design-system-documentation", "Genera la documentazione del design system."],
+        ["design-system-checker", FC + "skill/76301/design-system-checker", "Controlla che il sistema resti coerente quando cresce."]
+      ] },
+      { g: "Schermate e varianti", items: [
+        ["desktop-to-mobile", FC + "skill/72495/desktop-to-mobile", "Dalla versione desktop a quella mobile con un comando."],
+        ["ui-state-expander", FC + "skill/60839/ui-state-expander", "Disegna tutti gli stati di una schermata o di un flusso: vuoto, errore, caricamento."],
+        ["screen-alternatives", FC + "skill/75445/screen-alternatives", "Mette alla prova una schermata e ne disegna due alternative diverse."],
+        ["dark-mode-mirror", FC + "skill/76446/dark-mode-mirror", "La versione scura del design, accessibile."],
+        ["ios-app-design", FC + "skill/75623/ios-app-design", "Le regole per progettare bene un'app iOS."],
+        ["social-media-post-creator", FC + "skill/76660/social-media-post-creator", "Post, storie e annunci coerenti con il brand."]
+      ] },
+      { g: "Testi, handoff e motion", items: [
+        ["balise-ux-writing", FC + "skill/64048/balise-ux-writing", "Testi dell'interfaccia più chiari, scritti direttamente in Figma."],
+        ["developer-handoff", FC + "skill/75290/developer-handoff", "Trasforma un componente in una scheda tecnica pronta per lo sviluppo."],
+        ["usability-test-guide", FC + "skill/71690/usability-test-guide", "Prepara in fretta un test di usabilità sul tuo design."],
+        ["find-animation-opportunities", FC + "skill/68151/find-animation-opportunities", "Indica dove un'animazione migliorerebbe l'interfaccia."],
+        ["ui-motion-choreography", FC + "skill/41506/ui-motion-choreography", "Tempi, easing e gerarchia del movimento nella UI."],
+        ["font-pairings", FC + "skill/71703/font-pairings", "Esplora abbinamenti di font in pochi secondi."]
+      ] }
+    ],
+    meta() { return `${this.groups.reduce((a, x) => a + x.items.length, 0)} skill`; }
+  },
+  "shaders": {
+    tag: "Marketplace", title: "<em>Shader</em> in Figma",
+    short: "Riempimenti e effetti generativi da applicare ai livelli, dal marketplace della Community.",
+    intro: "Gli shader sono piccoli programmi che decidono come vengono disegnati i pixel. In Figma diventano riempimenti (gradienti mesh, nuvole, pattern) o effetti da sovrapporre alle immagini (halftone, dither, distorsioni), con i controlli da regolare sul canvas. Usarli è gratis su tutti i piani; crearne di nuovi con l'agente di Figma consuma crediti AI.",
+    how: ["Apri uno shader qui sotto e clicca <b>Try it out</b>: si apre in un tuo file.", "Dentro Figma li trovi anche dal pannello <b>Tools</b>, filtrando per Shaders.", "Seleziona un livello e applicalo come riempimento o come effetto, poi regola i controlli."],
+    prompt: `Usa l'MCP di Figma. Nel file [incolla il link] crea uno shader di riempimento per lo sfondo della hero: [descrivi l'effetto, es. grana morbida con gradiente mint e rosa che si muove piano].\nAggiungi pochi controlli chiari (colori, scala, velocità) e mostrami uno screenshot.`,
+    all: [FC + "shaders", "Tutti gli shader nella Community"],
+    groups: [
+      { g: "Riempimenti e sfondi", items: [
+        ["Mesh gradient", FC + "shader/1650660537411598424/mesh-gradient", "Gradienti mesh morbidi con 16 punti colore da spostare sul canvas."],
+        ["Moving gradient", FC + "shader/1676361123401176242/moving-gradient", "Gradiente in movimento, da animare con Figma Motion."],
+        ["Water caustic", FC + "shader/1650660549837923423/water-caustic", "I riflessi della luce sul fondo di una piscina."],
+        ["Nebula", FC + "shader/1650660547703080030/nebula", "Nebulose e polveri cosmiche."],
+        ["Clouds", FC + "shader/1650660539202510937/clouds", "Nuvole procedurali."],
+        ["Glowing wave", FC + "shader/1650660545778016349/glowing-wave", "Onde luminose per sfondi e hero."],
+        ["Fractal noise", FC + "shader/1650731338534358129/fractal-noise", "Rumore frattale per texture e grana."],
+        ["Moire", FC + "shader/1650660543818811484/moire", "Interferenze moiré tra linee."],
+        ["Concentric patterns", FC + "shader/1650660541440366682/concentric-patterns", "Cerchi e forme concentriche."],
+        ["Pattern grid", FC + "shader/1650660535581071447/pattern-grid", "Griglie di pattern ripetuti."],
+        ["Shape-based particles", FC + "shader/1676362904633974964/shape-based-particles", "Particelle che seguono una forma."]
+      ] },
+      { g: "Effetti sulle immagini", items: [
+        ["Halftone", FC + "shader/1650660527370397779/halftone", "Retino a punti da stampa."],
+        ["Dither", FC + "shader/1650660508039530568/dither", "Dithering a pochi colori, look retrò."],
+        ["Pixelate", FC + "shader/1650660504217386054/pixelate", "Pixel grandi e regolabili."],
+        ["Gradient map", FC + "shader/1650660513699345483/gradient-map", "Rimappa le luci e le ombre su un gradiente."],
+        ["Chromatic metal", FC + "shader/1650660502137244741/chromatic-metal", "Superfici metalliche cromate."],
+        ["Lens distortion", FC + "shader/1650660511777647690/lens-distortion", "Distorsione da obiettivo."],
+        ["Warp", FC + "shader/1650660506105824327/warp", "Deforma e piega l'immagine."],
+        ["Pattern refraction", FC + "shader/1650660515974921293/pattern-refraction", "Rifrazione attraverso un pattern, effetto vetro."],
+        ["Outlines", FC + "shader/1650660529511348308/outlines", "Contorni disegnati sui bordi."]
+      ] },
+      { g: "Crearne di tuoi", items: [
+        ["shader-starter", FC + "skill/64012/shader-starter", "Skill ufficiale: ti guida a creare uno shader con l'agente di Figma, domanda dopo domanda."]
+      ] }
+    ],
+    meta() { return `${this.groups.reduce((a, x) => a + x.items.length, 0)} shader e risorse`; }
+  },
+  "weavy": {
+    tag: "Piattaforma", title: "<em>Weave</em>, ex Weavy",
+    short: "La piattaforma a nodi di Figma per generare immagini e video. Entra con il mio invito e hai lo sconto.",
+    intro: "Weavy è stata acquisita da Figma ed è diventata Figma Weave: un canvas a nodi dove colleghi modelli di immagini e video, ritocchi e passaggi di editing in un unico flusso che puoi riusare. È una piattaforma separata da Figma, con un suo account e un suo abbonamento.",
+    how: ["Apri il mio link di invito qui sotto.", "Crea l'account Weave: lo sconto si applica da solo all'abbonamento.", "Parti da un workflow della Community e modificalo, invece che da una tela vuota."],
+    ref: true,
+    all: [FC + "weave", "Workflow Weave nella Community"],
+    groups: [
+      { g: "Da dove partire", items: [
+        ["Weave", "https://weave.figma.com/", "La piattaforma: qui crei e lanci i tuoi workflow."],
+        ["Workflow nella Community", FC + "weave", "Flussi già pronti da duplicare e adattare."],
+        ["Guida a Weave", "https://help.weavy.ai/", "Il centro assistenza ufficiale, con le domande frequenti."]
+      ] }
+    ],
+    meta() { return "Invito con sconto"; }
+  },
+  "weave-tools": {
+    tag: "Marketplace", title: "Strumenti <em>Weave</em> in Figma",
+    short: "Mockup, foto prodotto, vettoriali, texture e stili: workflow Weave pronti da usare dentro Figma.",
+    intro: "Ogni strumento è un workflow di Weave chiuso in una finestra semplice: scegli le immagini, compili due campi e generi, senza scrivere un prompt da zero. Servono un piano Professional, Organization o Enterprise e il permesso di modifica sul file; ogni generazione consuma crediti AI di Figma.",
+    how: ["In un file Figma Design clicca <b>Tools</b> nella barra.", "Filtra per <b>Weave</b> e scegli lo strumento.", "Imposta immagini, testo e opzioni, scegli quante varianti generare e avvia.", "Dal link qui sotto puoi anche aprire lo strumento dalla Community e cliccare <b>Try it out</b>."],
+    all: [FC + "tools?tab=weave", "Tutti gli strumenti Weave"],
+    groups: [
+      { g: "Prodotto e mockup", items: [
+        ["Generate mockup", FC + "weave_tool/1/generate-mockup", "Mette il tuo design su un oggetto reale: schermo, packaging, poster."],
+        ["Product shoot", FC + "weave_tool/23/product-shoot", "Una foto prodotto curata a partire da un'immagine semplice."],
+        ["Add logo to product", FC + "weave_tool/5/add-logo-to-product", "Applica il logo su un prodotto, nel punto che descrivi."],
+        ["Virtual try-on", FC + "weave_tool/14/virtual-try-on", "Fa indossare un capo a un modello."],
+        ["Change lighting", FC + "weave_tool/4/change-lighting", "Cambia la luce della scena."],
+        ["Replace background", FC + "weave_tool/12/replace-background", "Nuovo sfondo, stesso soggetto."],
+        ["Change aspect ratio", FC + "weave_tool/2/change-aspect-ratio", "Allarga l'immagine in un altro formato senza tagliarla."]
+      ] },
+      { g: "Stile e materiali", items: [
+        ["Transfer style", FC + "weave_tool/11/transfer-style", "Applica lo stile di un'immagine a un'altra."],
+        ["Texturize", FC + "weave_tool/19/texturize", "Dà una texture (pietra, stoffa, cromo) a un logo o a una forma."],
+        ["Extract material", FC + "weave_tool/16/extract-material", "Ricava i materiali presenti in un'immagine."],
+        ["Grainy airbrush", FC + "weave_tool/30/grainy-airbrush", "Finitura ad aerografo con grana."],
+        ["Time machine", FC + "weave_tool/21/time-machine", "Reinterpreta un'immagine nello stile di un decennio."]
+      ] },
+      { g: "Illustrazione e vettoriale", items: [
+        ["Image to vector", FC + "weave_tool/13/image-to-vector", "Da foto a illustrazione vettoriale."],
+        ["Text to vector illustration", FC + "weave_tool/10/text-to-vector-illustration", "Un'illustrazione vettoriale da una descrizione."],
+        ["On-brand icons", FC + "weave_tool/9/on-brand-icons", "Nuove icone nello stile del tuo set."],
+        ["Minimal sketch", FC + "weave_tool/36/minimal-sketch", "Uno schizzo minimale da un testo."],
+        ["Sticker pack", FC + "weave_tool/6/sticker-pack", "Un set di 4 sticker da un'immagine."]
+      ] },
+      { g: "Stampa e pixel", items: [
+        ["Risograph print", FC + "weave_tool/28/risograph-print", "Effetto stampa risograph."],
+        ["Stamp machine", FC + "weave_tool/37/stamp-machine", "Trasforma un'immagine in un timbro."],
+        ["Monochrome pixel art", FC + "weave_tool/31/monochrome-pixel-art", "Pixel art monocromatica."]
+      ] }
+    ],
+    meta() { return `${this.groups.reduce((a, x) => a + x.items.length, 0)} strumenti`; }
+  }
+};
+function renderFigmaPage(id) {
+  const f = FIGMA_PAGES[id], A = AG[store.agent].A;
+  const host = u => u.replace(/^https?:\/\/(www\.)?/, "").replace(/^figma\.com\/community\//, "figma community / ").replace(/\/$/, "");
+  const ref = f.ref ? (WEAVY_REF
+    ? `<a class="btn primary" href="${WEAVY_REF}" target="_blank" rel="noopener">Entra con il mio invito ${ICON_ARROW}</a>`
+    : `<button type="button" class="btn primary" disabled>Link di invito in arrivo</button>`) : "";
+  app.innerHTML = `
+    <div class="view-head"><button type="button" class="back" data-go="@parent">${ICON_BACK} Torna alle sezioni</button></div>
+    <div class="lib-intro fade-in">
+      <span class="g-tag">${f.tag}</span>
+      <h2>${f.title}</h2>
+      <p>${T(f.intro)}</p>
+    </div>
+    <div class="fig-how">
+      <span class="eyebrow">Come si usa</span>
+      <ol>${f.how.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>
+      <div class="fig-actions">${ref}<a class="btn" href="${f.all[0]}" target="_blank" rel="noopener">${f.all[1]} ${ICON_ARROW}</a></div>
+    </div>
+    ${f.prompt ? `<div class="block prompt" style="max-width:860px;margin-bottom:28px">
+      <div class="bh"><span class="kind">Prompt per ${A}</span><button type="button" class="copy" data-copy="fig-p">Copia</button></div>
+      <pre id="fig-p">${esc(T(f.prompt))}</pre>
+    </div>` : ""}
+    ${f.groups.map(gr => `<section class="ui-group"><h3 class="sc-sub">${T(gr.g)}</h3><div class="md-ctx">${gr.items.map(([n, u, d]) => `<a class="cap-card ui-card" href="${u}" target="_blank" rel="noopener"><span class="tool">${esc(host(u))}</span><h3>${n} <span class="go-arrow">${ICON_ARROW}</span></h3><p>${d}</p></a>`).join("")}</div></section>`).join("")}`;
+  wireCopy(k => document.getElementById(k));
+}
+
 /* ---------- Comandi e scorciatoie ---------- */
 const CMD_CATS = [ { id: "sym", name: "Simboli" }, { id: "keys", name: "Tasti" }, { id: "cmd", name: "Comandi" } ];
 const CMDS = {
@@ -2113,7 +2330,7 @@ function wireCopy(getPre, root) {
 let view = (location.hash || "").replace("#", "");
 if (view === "claude-code") view = "setup";
 const drawerEl = document.getElementById("drawer");
-const parentOf = v => byId(v) ? "g-percorsi" : "g-consultazione";
+const parentOf = v => { const g = GROUPS.find(x => x.items.some(i => i.id === v)); return "g-" + (g ? g.id : "percorsi"); };
 function setDrawer(open, wide) {
   drawerEl.hidden = !open; drawerEl.classList.toggle("wide", !!wide);
   document.body.classList.toggle("open", open);
@@ -2133,6 +2350,7 @@ function route(focusTop) {
   else if (h === "markdown") renderMarkdown();
   else if (h === "ui-refs") renderUiRefs();
   else if (h === "commands") renderCommands();
+  else if (FIGMA_PAGES[h]) renderFigmaPage(h);
   else if (byId(h)) renderSection(h, focusTop);
   else { view = ""; setDrawer(false); return; }
   if (focusTop !== false) drawerEl.scrollTop = 0;
@@ -3614,8 +3832,8 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 const FRAME = {"cx": 1882.0, "cy": 1876.0, "outerR": 1830};
 const PINK = 0xffafd6, MINT = 0x95f7ce;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-// stellina a sinistra → Percorsi guidati · in alto a destra → Repository e consultazione · in basso a destra → Comandi e scorciatoie
-const STAR_LINKS = { left: "g-percorsi", upperRight: "g-consultazione", lowerRight: "commands" };
+// stellina a sinistra → Percorsi guidati · in alto a destra → Repository e consultazione · in basso a destra → Mondo Figma
+const STAR_LINKS = { left: "g-percorsi", upperRight: "g-consultazione", lowerRight: "g-figma" };
 
 const canvas = document.getElementById("stage");
 let renderer;
