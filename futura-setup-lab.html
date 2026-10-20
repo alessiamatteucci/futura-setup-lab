@@ -772,38 +772,42 @@ const SECTIONS = [
     variants: [
       { id: "ae", label: "After Effects", steps: [
         { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
-          d: ["After Effects da solo non parla con l'agente. Serve un ponte: <b>after-effects-mcp</b>, un progetto open source della community (non di Adobe) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede After Effects.", "Il ponte ha due pezzi: un <b>server</b> che l'agente avvia da solo e un <b>pannello</b> che vive dentro After Effects ed esegue i comandi."],
-          list: ["After Effects 2022 o successivo, installato da Creative Cloud nella cartella predefinita.", "Node.js, che hai già dalla sezione di installazione."],
+          d: ["After Effects da solo non parla con l'agente. Serve un ponte: <b>after-effects-mcp</b>, un progetto open source della community (non di Adobe) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede After Effects.", "Il ponte ha due pezzi: un <b>server</b> che l'agente avvia da solo e un <b>pannello</b> che vive dentro After Effects. Si passano i comandi attraverso una cartella sul tuo computer (<code>Documenti/ae-mcp-bridge</code>): nessuna porta di rete aperta."],
+          list: ["After Effects 2022 o successivo, installato da Creative Cloud.", "Node.js, che hai già dalla sezione di installazione.", "La password del tuo computer: serve una volta, per copiare il pannello nella cartella di After Effects."],
           blocks: [],
           ok: "After Effects è installato e {A} è aperto nella cartella del corso." },
         { t: "Scarica e installa <em>after-effects-mcp</em>",
-          d: ["L'agente scarica il progetto da GitHub nella cartella <code>strumenti</code> del corso e lo prepara. Approva i comandi che ti propone."],
-          blocks: [{ k: "prompt", code: `Scarica il progetto github.com/Dakkshin/after-effects-mcp in una cartella "strumenti" dentro questa cartella del corso (creala se manca), poi esegui npm install: prepara anche la cartella build.\nControlla che esistano build/index.js e build/scripts/mcp-bridge-auto.jsx e dimmi il percorso completo della cartella.` }],
-          ok: "L'agente conferma che <code>strumenti/after-effects-mcp/build</code> è pronta e ti dà il percorso completo." },
-        { t: "Installa il pannello <em>in After Effects</em>",
-          d: ["Il pannello va copiato nella cartella degli script di After Effects. Su questa cartella a volte serve la password di amministratore: in quel caso l'agente non può inserirla per te, quindi ti apre le cartelle e trascini tu il file."],
-          blocks: [{ k: "prompt", code: `Installa il pannello di after-effects-mcp in After Effects eseguendo npm run install-bridge nella cartella strumenti/after-effects-mcp.\nSe serve la password di amministratore, non usare sudo: aprimi nel Finder (su Windows in Esplora file) la cartella build/scripts e la cartella "ScriptUI Panels" di After Effects, e dimmi quale file trascinare.` }],
-          ok: "Il file <code>mcp-bridge-auto.jsx</code> è nella cartella <b>Scripts → ScriptUI Panels</b> di After Effects." },
+          d: ["L'agente scarica il progetto da GitHub nella cartella <code>strumenti</code> del corso e lo prepara. Approva i comandi che ti propone.", "Durante l'installazione npm può segnalare delle <b>vulnerabilità</b>: riguardano parti del progetto che qui non si usano, e l'agente le riduce con <code>npm audit fix</code>. Il prompt fa anche togliere un file di configurazione lasciato dall'autore, che altrimenti ti proporrebbe un server con un percorso sbagliato."],
+          blocks: [{ k: "prompt", code: `Scarica il progetto github.com/Dakkshin/after-effects-mcp in una cartella "strumenti" dentro questa cartella del corso (creala se manca).\nNella cartella del progetto:\n1. esegui npm install (fa già anche la build) e poi npm audit fix;\n2. elimina il file .mcp.json lasciato dall'autore: contiene un percorso Windows che non è il nostro;\n3. controlla che esistano build/index.js e build/scripts/mcp-bridge-auto.jsx.\nDimmi il percorso completo della cartella.` }],
+          ok: "L'agente conferma che <code>build/index.js</code> e <code>build/scripts/mcp-bridge-auto.jsx</code> esistono e ti dà il percorso completo." },
+        { t: "Copia il pannello <em>in After Effects</em>",
+          d: ["La cartella degli script di After Effects è protetta: l'agente non può scriverci e <b>non deve usare</b> lo script di installazione del progetto, che chiederebbe la password nel Terminale. La copia la fai tu, trascinando un file."],
+          blocks: [{ k: "prompt", code: `Aprimi nel Finder (su Windows in Esplora file) due cartelle:\n1. strumenti/after-effects-mcp/build/scripts\n2. la cartella "ScriptUI Panels" di After Effects: su Mac /Applications/Adobe After Effects [versione]/Scripts/ScriptUI Panels, su Windows C:\\Program Files\\Adobe\\Adobe After Effects [versione]\\Support Files\\Scripts\\ScriptUI Panels.\nNon usare sudo e non eseguire npm run install-bridge.` }],
+          list: ["Trascina <b>solo</b> <code>mcp-bridge-auto.jsx</code> nella cartella <b>ScriptUI Panels</b>. Su Mac tieni premuto <kbd>⌥ Option</kbd> mentre trascini, così il file viene copiato e non spostato.", "Quando il computer lo chiede, clicca <b>Autentica</b> (su Windows <b>Continua</b>) e inserisci la password."],
+          ok: "Il file <code>mcp-bridge-auto.jsx</code> è nella cartella <b>ScriptUI Panels</b> di After Effects." },
         { t: "Permetti agli script <em>di comunicare</em>",
-          list: ["Apri After Effects.", "Su Mac vai in <b>After Effects → Impostazioni → Scripting ed espressioni</b>. Su Windows in <b>Modifica → Preferenze → Scripting ed espressioni</b>.", "Attiva <b>Consenti agli script di scrivere file e accedere alla rete</b>.", "Chiudi e riapri After Effects."],
+          list: ["Apri After Effects.", "Su Mac vai in <b>After Effects → Impostazioni → Scripting ed espressioni</b> (in inglese <i>Settings → Scripting &amp; Expressions</i>). Su Windows in <b>Modifica → Preferenze → Scripting ed espressioni</b>.", "Attiva <b>Consenti agli script di scrivere file e accedere alla rete</b> (<i>Allow Scripts to Write Files and Access Network</i>).", "Chiudi e riapri After Effects."],
+          warn: "Questa impostazione vale per tutti gli script, non solo per il pannello: esegui solo script di cui ti fidi.",
           ok: "L'opzione è attiva e hai riavviato After Effects." },
         { t: "Registra <em>il collegamento</em>",
           d: ["Ora l'agente aggiunge il server ai suoi collegamenti, con il percorso del file che ha preparato nel passo 2."],
-          blocks: [{ k: "prompt", code: `Registra after-effects-mcp come server MCP di Claude Code per tutti i miei progetti, con il nome aftereffects:\nclaude mcp add aftereffects --scope user -- node [percorso completo di strumenti/after-effects-mcp/build/index.js]\nSostituisci tu il percorso. Poi mostrami claude mcp list.` }],
-          codex: { blocks: [{ k: "prompt", code: `Registra after-effects-mcp come server MCP di Codex, con il nome aftereffects:\ncodex mcp add aftereffects -- node [percorso completo di strumenti/after-effects-mcp/build/index.js]\nSostituisci tu il percorso. Poi mostrami codex mcp list.` }] },
-          ok: "Nell'elenco dei server compare <b>aftereffects</b>." },
+          blocks: [{ k: "prompt", code: `Registra after-effects-mcp come server MCP di Claude Code per tutti i miei progetti, con il nome aftereffects:\nclaude mcp add aftereffects --scope user -- node "[percorso completo di strumenti/after-effects-mcp/build/index.js]"\nSostituisci tu il percorso. Poi mostrami claude mcp list.` }],
+          codex: { blocks: [{ k: "prompt", code: `Registra after-effects-mcp come server MCP di Codex, con il nome aftereffects:\ncodex mcp add aftereffects -- node "[percorso completo di strumenti/after-effects-mcp/build/index.js]"\nSostituisci tu il percorso. Poi mostrami codex mcp list.` }] },
+          ok: "Nell'elenco compare <b>aftereffects</b> come collegato. Se ti viene proposto anche un server <b>AfterEffectsMCP</b>, non approvarlo." },
         { t: "Apri il pannello e <em>una nuova sessione</em>",
-          list: ["In After Effects apri un progetto, anche vuoto.", "Vai in <b>Finestra → mcp-bridge-auto.jsx</b>.", "Nel pannello attiva <b>Auto-run commands</b> e lascialo aperto: controlla i comandi ogni pochi secondi.", "Apri una nuova sessione di {A} nella stessa cartella: i collegamenti si caricano solo all'avvio. Scrivi <code>/mcp</code> e cerca <b>aftereffects</b>."],
-          blocks: [{ k: "prompt", label: "Se in /mcp non lo vedi", code: `Elenca i server MCP configurati per te e dimmi se c'è aftereffects. Se manca, controlla quale dei passi precedenti non è andato a buon fine (cartella scaricata, build, registrazione) e sistemalo.` }],
-          ok: "In <code>/mcp</code> compare aftereffects e in After Effects il pannello è aperto con Auto-run commands attivo." },
+          d: ["I collegamenti si caricano solo quando apri una sessione: quella in cui hai registrato il server non vede ancora After Effects."],
+          list: ["In After Effects apri un progetto, anche vuoto.", "Vai in <b>Finestra → mcp-bridge-auto.jsx</b>.", "Nel pannello attiva <b>Auto-run commands</b> e <b>lascialo aperto</b>: se lo chiudi, i comandi restano in coda.", "Apri una <b>nuova sessione</b> di {A} nella stessa cartella. Scrivi <code>/mcp</code> e cerca <b>aftereffects</b>."],
+          blocks: [{ k: "prompt", label: "poi verifica con", code: `Usa aftereffects: leggi le informazioni del progetto aperto in After Effects e dimmi il nome del progetto e quante composizioni contiene.` }],
+          ok: "L'agente ti risponde con il nome del progetto e il numero di composizioni." },
         { t: "La prima <em>composizione</em>",
-          d: ["Tieni After Effects in primo piano con il pannello aperto: vedrai comparire livelli e keyframe mentre l'agente lavora."],
-          blocks: [{ k: "prompt", code: `In After Effects crea una composizione "Reel intro" 1080×1920, 30 fps, 6 secondi, sfondo #0C0C0C.\nAggiungi il testo "AI per creativi" in IBM Plex Sans bold, colore #FFAFD6, che entra dal basso con keyframe morbidi nei primi 0,8 secondi, e un cerchio color menta dietro il testo che pulsa lentamente con un'espressione.\nPoi, con uno script, aggiungi la composizione alla coda di rendering con uscita nella cartella video-lab/export.` }],
-          ok: "In After Effects trovi la composizione animata e il render in coda." },
-        { t: "Controllo finale <em>e piano B</em>",
-          d: ["Fai verificare all'agente che tutto funzioni. Se il ponte non va sul tuo computer, il piano B è uno script <code>.jsx</code> che esegui tu da <b>File → Script → Esegui file di script</b>: funziona sempre, senza installare niente."],
-          blocks: [{ k: "prompt", code: `Fai un controllo del collegamento con After Effects: elenca gli strumenti di aftereffects che vedi, poi leggi le informazioni del progetto aperto e l'elenco delle composizioni.\nSe non funziona, scrivi invece uno script ExtendScript compatibile ES3 (niente let, const o arrow function) che crea la stessa composizione "Reel intro" e salvalo in video-lab/scripts/reel-intro.jsx.` }],
-          ok: "L'agente legge il progetto aperto, oppure ti consegna lo script di piano B." }
+          d: ["Prima di iniziare, quattro regole che l'agente deve rispettare. Il prompt le contiene già:"],
+          list: ["<b>Un comando alla volta</b>: il pannello li esegue in ordine, con qualche secondo di ritardo.", "<b>Ordine dei livelli</b>: ogni nuovo livello va in cima, quindi quello che sta dietro si crea per primo.", "<b>Font</b>: serve il nome PostScript, per esempio <code>IBMPlexSans-Bold</code>.", "<b>Morbidezza e render</b>: i keyframe del ponte sono solo lineari e la coda di rendering non è tra i comandi. Per entrambi l'agente ti prepara uno script <code>.jsx</code> che esegui tu."],
+          blocks: [{ k: "prompt", code: `Usa aftereffects, un comando alla volta.\n1. Crea una composizione "Reel intro" 1080×1920, 30 fps, 6 secondi, sfondo #0C0C0C.\n2. Crea per primo un cerchio color menta #95F7CE di 620 px al centro, che pulsa lentamente con un'espressione sulla Scala.\n3. Poi aggiungi il testo "AI per creativi" in IBMPlexSans-Bold, 120 pt, colore #FFAFD6, che entra dal basso in 0,8 secondi con keyframe di Posizione.\n4. Infine scrivi uno script ExtendScript (ES3) in video-lab/ae-script/reel-intro-rifinitura.jsx che rende morbidi i keyframe del testo e aggiunge la composizione alla coda di rendering con uscita in video-lab/export.\nDimmi quando posso eseguirlo.` }],
+          ok: "In After Effects trovi la composizione animata. Se non la vedi, fai doppio clic su <b>Reel intro</b> nel pannello Progetto: il viewer potrebbe mostrarne un'altra." },
+        { t: "Rifinitura, controllo <em>e piano B</em>",
+          d: ["L'agente non vede i frame: legge livelli e composizioni, ma il risultato lo controlli tu in After Effects.", "Esegui lo script del passo precedente da <b>File → Script → Esegui file di script</b>, poi avvia il render. Lo stesso metodo è anche il <b>piano B</b>: se il ponte non funziona sul tuo computer, l'agente ti prepara uno script <code>.jsx</code> per qualsiasi lavoro, senza installare niente."],
+          blocks: [{ k: "prompt", code: `Controllo finale di aftereffects: elenca le composizioni del progetto e i livelli di "Reel intro" con posizione e ordine.\nSe il collegamento non funziona, scrivi invece uno script ExtendScript compatibile ES3 (niente let, const o arrow function) che crea la stessa composizione "Reel intro" e salvalo in video-lab/ae-script/reel-intro.jsx.` }],
+          ok: "Il video renderizzato in <code>video-lab/export</code>, oppure lo script di piano B pronto da eseguire." }
       ] },
       { id: "resolve", label: "DaVinci Resolve", steps: [
         { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
@@ -1455,6 +1459,7 @@ function renderSection(id, focusTop) {
       ${st.list ? `<ol class="sub">${st.list.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>` : ""}
       ${st.table ? `<div class="qa-wrap"><table class="qa"><thead><tr><th>Domanda</th><th>Risposta</th></tr></thead><tbody>${st.table.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table></div>` : ""}
       ${(st.blocks || []).map(blockHTML).join("")}
+      ${st.warn ? `<div class="warn"><b>Attenzione.</b> ${T(st.warn)}</div>` : ""}
       <div class="expect"><span class="eyebrow">Cosa devi vedere</span><div>${T(st.ok)}</div></div>
       <div class="gate">
         <label class="check ${done ? "on" : ""}" for="done-${s.id}-${i}">
