@@ -374,6 +374,10 @@ footer { margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
 .md-render .md-fm { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: 13.5px; }
 .md-render .md-fm dt { font-family: var(--mono); color: var(--mint); }
 .md-render .md-fm dd { margin: 0; }
+.g-item.soon { cursor: default; }
+.g-item.soon .g-title { color: var(--muted); }
+.g-item.soon:hover .g-title { transform: none; }
+.g-item.soon .g-state { font-family: var(--mono); font-size: 12px; color: var(--faint); border: 1px dashed var(--line-strong); border-radius: 999px; padding: 5px 12px; }
 .foot-link { color: inherit; text-decoration: none; }
 .foot-link:hover, .foot-link:focus-visible { color: var(--mint); text-decoration: underline; }
 .g-sub { margin: 44px 0 16px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 14px; }
@@ -1406,6 +1410,7 @@ const GROUPS = [
       { id: "figma-chrome", cls: "" },
       { id: "design-system", cls: "span2" },
       { id: "design-system-repo", cls: "span2" },
+      { id: "crea-shader", cls: "span2", soon: { tag: "Progetto · shader", title: "Crea il tuo <em>shader</em>", d: "Progetta uno shader nativo in Figma insieme all'agente e a Shader Architect, dal materiale che hai in mente ai controlli da regolare." } },
       { id: "figma-skills", cls: "span2", mat: true },
       { id: "shaders", cls: "span2", mat: true },
       { id: "weave-tools", cls: "span2", mat: true },
@@ -1524,6 +1529,12 @@ function renderGroup(gid) {
       </button>`;
   };
   const item = (L, n) => {
+    if (L.soon) return `<div class="g-item soon" style="--i:${n}" aria-disabled="true">
+        <span class="g-tag">${L.soon.tag}</span>
+        <span class="g-title">${L.soon.title}</span>
+        <span class="g-desc">${L.soon.d}</span>
+        <span class="g-foot"><span class="g-state">In preparazione</span></span>
+      </div>`;
     const c = cons[L.id];
     if (c) return `<button type="button" class="g-item" style="--i:${n}" data-go="${L.id}">
         <span class="g-tag">${c.tag}</span>
@@ -1976,6 +1987,9 @@ const FIGMA_PAGES = {
     prompt: `Salva questa skill di Figma come skill personale in {SK}/[nome-skill]/SKILL.md, con nome e descrizione nell'intestazione. Poi dimmi quando usarla.\n[incolla qui le istruzioni copiate dalla pagina della skill]`,
     all: [FC + "ai-skills", "Tutte le skill nella Community"],
     groups: [
+      { g: "Di Futura AI", items: [
+        ["Shader Architect", "https://github.com/alessiamatteucci/Shader-Architect", "Progetta, crea e rifinisce shader nativi in Figma tramite l'MCP: vetro, cromo, olografie, distorsioni organiche, noise animato. Funziona con Claude Code e Codex."]
+      ] },
       { g: "Ufficiali per {A}", items: [
         ["figma-use", "https://help.figma.com/hc/en-us/articles/32132100833559", "La base per leggere e scrivere nei file senza errori. Va caricata prima di ogni modifica."],
         ["figma-generate-design", "https://help.figma.com/hc/en-us/articles/32132100833559", "Trasforma una pagina o un'interfaccia in una schermata Figma con i componenti del design system."],
