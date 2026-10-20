@@ -812,7 +812,7 @@ const SECTIONS = [
       { id: "resolve", label: "DaVinci Resolve", steps: [
         { t: "Cosa ti serve e <em>cosa scarichiamo</em>",
           d: ["DaVinci Resolve da solo non parla con l'agente. Serve <b>davinci-resolve-mcp</b>, un progetto open source della community (non di Blackmagic) che <b>scarichi e installi nel passo 2</b>. Finché non è installato, l'agente non vede Resolve."],
-          list: ["DaVinci Resolve 18.5 o successivo. Con la versione <b>Studio</b> il collegamento è diretto; con la <b>gratuita</b> serve anche un piccolo ponte (passo 3).", "Python 3.10–3.12: se manca, lo installa l'agente nel passo 2.", "Solo Studio: <b>Preferenze → Sistema → Generali</b> → <b>Scripting esterno</b> su <b>Locale</b>."],
+          list: ["DaVinci Resolve 18.5 o successivo. Con la versione <b>Studio</b> il collegamento è diretto. Con la <b>gratuita</b> serve un piccolo ponte (passo 3), che funziona <b>solo fino alla 21.0.x</b>: dalla 21.1 Blackmagic ha riservato gli script Python alla Studio.", "Python 3.10–3.12: se manca, lo installa l'agente nel passo 2.", "Solo Studio: <b>Preferenze → Sistema → Generali</b> → <b>Scripting esterno</b> su <b>Locale</b>."],
           blocks: [],
           ok: "Resolve è installato e sai se hai la versione Studio o quella gratuita." },
         { t: "Scarica e installa <em>davinci-resolve-mcp</em>",
@@ -820,9 +820,12 @@ const SECTIONS = [
           blocks: [{ k: "prompt", code: `Installa il server MCP per DaVinci Resolve del progetto github.com/samuelgursky/davinci-resolve-mcp con "npx davinci-resolve-mcp setup". Se serve, installa prima Python 3.12.\nRegistralo come server MCP di {A} per tutti i miei progetti, con il nome davinci-resolve.` }],
           ok: "L'agente conferma l'installazione e la registrazione di <code>davinci-resolve</code>." },
         { t: "Solo versione gratuita: <em>il ponte</em>",
-          d: ["Se hai Resolve Studio, segna il passo come fatto. Con la versione gratuita l'agente installa uno script che poi avvii tu da dentro Resolve: <b>Area di lavoro → Script → resolve_bridge</b>."],
-          blocks: [{ k: "prompt", code: `Ho DaVinci Resolve gratuito: installa il ponte del server MCP con lo script scripts/install_resolve_bridge.py e dimmi dove trovarlo dentro Resolve.` }],
-          ok: "Dentro Resolve, da Area di lavoro → Script, avvii <code>resolve_bridge</code>." },
+          d: ["Se hai Resolve Studio, segna il passo come fatto. Con la versione gratuita l'agente installa uno script che poi avvii tu da dentro Resolve: <b>Area di lavoro → Script → resolve_bridge</b>.", "Controlla prima la versione in <b>DaVinci Resolve → Informazioni su DaVinci Resolve</b>. Dalla <b>21.1</b> il ponte si installa senza errori ma non parte: nel menu Script compare solo <code>resolve_bridge_canary</code> e nessuno script Python. In quel caso hai due strade: passare a <b>Resolve Studio</b>, oppure installare <b>Resolve 21.0.x gratuito</b>, l'ultima versione in cui il ponte è verificato."],
+          blocks: [{ k: "prompt", code: `Ho DaVinci Resolve gratuito, versione [scrivi la versione]. Se è la 21.1 o successiva, fermati e dimmi che il ponte non funziona su questa versione.
+Altrimenti installa il ponte del server MCP con lo script scripts/install_resolve_bridge.py. Su macOS controlla anche che Resolve trovi Python 3: lo cerca solo nella variabile PYTHON3HOME o in /usr/local/bin/python3, quindi il Python di Homebrew non basta. Se manca, dimmi come installare Python da python.org.
+Poi dimmi dove trovare lo script dentro Resolve.` }],
+          warn: "Su macOS, se nel menu Script non compare <code>resolve_bridge</code>, di solito Resolve non trova Python: serve quello di python.org. La variabile PYTHON3HOME impostata con <code>launchctl setenv</code> si perde al riavvio del Mac.",
+          ok: "Dentro Resolve, da Area di lavoro → Script, avvii <code>resolve_bridge</code>. Se hai la 21.1 o successiva gratuita, sai che ti serve Studio o la 21.0.x." },
         { t: "Apri una <em>nuova sessione</em>",
           d: ["Apri Resolve con un progetto. Poi apri una nuova sessione di {A} nella stessa cartella: i collegamenti si caricano solo all'avvio. Scrivi <code>/mcp</code> e cerca <b>davinci-resolve</b>."],
           blocks: [{ k: "cc", code: `/mcp` }, { k: "prompt", label: "Se in /mcp non lo vedi", code: `Elenca i server MCP configurati per te e dimmi se c'è davinci-resolve. Se manca, controlla cosa non è andato a buon fine nell'installazione e completalo.` }],
