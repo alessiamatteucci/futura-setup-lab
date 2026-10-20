@@ -503,6 +503,12 @@ body.no-webgl .intro { top: 90px; bottom: auto; }
 .g-item:hover .g-cta { background: var(--fg); }
 @media (max-width: 620px) { .g-cta { margin-left: 0; } }
 
+/* messaggio al centro del logo, al primo arrivo */
+.logo-hint { position: fixed; z-index: 11; left: var(--x, 50%); top: var(--y, 50%); transform: translate(-50%, -50%); margin: 0; width: max-content; white-space: nowrap; text-align: center; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; letter-spacing: .04em; color: var(--mint); pointer-events: none; opacity: 0; transition: opacity .6s var(--e-out); }
+.logo-hint b { font-weight: 600; }
+.logo-hint.on { opacity: 1; animation: hint-blink 1.6s ease-in-out infinite; }
+@keyframes hint-blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .logo-hint.on { animation: none; } }
 .toggles { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .os .ag-ico { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: currentColor; opacity: .7; }
 .os button[aria-pressed="true"] .ag-ico { background: var(--pink); opacity: 1; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); }
@@ -521,6 +527,7 @@ body.no-webgl .intro { top: 90px; bottom: auto; }
 <a class="skip" href="#app" id="skip">Vai al contenuto</a>
 <canvas id="stage" aria-label="Sigillo Futura AI Academy in 3D: passa sulle stelline per aprire le sezioni"></canvas>
 <div id="star-tags"></div>
+<p class="logo-hint" id="logo-hint" aria-live="polite"></p>
 <section class="intro" id="intro" aria-label="Presentazione"></section>
 <div class="wrap">
   <header class="top">
@@ -3702,7 +3709,7 @@ canvas.addEventListener("pointermove", e => {
     tilt.y += dx * 0.008; tilt.x += dy * 0.008; vel = { x: dy * 0.008, y: dx * 0.008 };
   }
 });
-canvas.addEventListener("pointerdown", e => { toNdc(e); dragging = true; moved = 0; last = { x: e.clientX, y: e.clientY }; canvas.setPointerCapture(e.pointerId); canvas.classList.add("dragging"); });
+canvas.addEventListener("pointerdown", e => { endHint(); toNdc(e); dragging = true; moved = 0; last = { x: e.clientX, y: e.clientY }; canvas.setPointerCapture(e.pointerId); canvas.classList.add("dragging"); });
 canvas.addEventListener("pointerup", e => {
   const click = moved < 6; dragging = false; last = null; canvas.classList.remove("dragging");
   if (!click) return;
@@ -3732,6 +3739,14 @@ addEventListener("resize", resize); resize();
 
 const clock = new THREE.Clock(), tmp = new THREE.Vector3();
 const INTRO_DUR = 2.4;
+const HINT_FROM = INTRO_DUR - 0.2, HINT_FOR = 9;      // compare a fine giro e lampeggia per circa 9 secondi
+const hintEl = document.getElementById("logo-hint");
+const touch = matchMedia("(pointer: coarse)").matches;
+hintEl.innerHTML = touch
+  ? "<b>Trascina</b> per ruotare<br><b>Tocca le stelline</b><br>per aprire le sezioni"
+  : "<b>Trascina</b> per ruotare<br><b>Clicca le stelline</b><br>per aprire le sezioni";
+let hintDone = false;
+const endHint = () => { if (!hintDone) { hintDone = true; hintEl.classList.remove("on"); } };
 let baseY = 0;
 let spin = !reduce;
 window.addEventListener("spin-change", e => { spin = e.detail; });
@@ -3786,6 +3801,16 @@ function frame() {
       s.tag.tabIndex = show ? 0 : -1;
     }
   });
+  // messaggio al centro del logo
+  if (!hintDone) {
+    if (drawer.open || t > HINT_FROM + HINT_FOR) endHint();
+    else if (t > HINT_FROM) {
+      root.getWorldPosition(tmp); tmp.project(camera);
+      hintEl.style.setProperty("--x", ((tmp.x * 0.5 + 0.5) * innerWidth) + "px");
+      hintEl.style.setProperty("--y", ((-tmp.y * 0.5 + 0.5) * innerHeight) + "px");
+      hintEl.classList.add("on");
+    }
+  }
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
