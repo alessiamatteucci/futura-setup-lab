@@ -1431,11 +1431,12 @@ function renderIntro() {
     <h1><span class="hb">${A} al lavoro</span><span class="hl">sul tuo computer, un passo alla volta</span></h1>
     <p>Il Terminale ti serve una volta sola: per installare ${A}. Da lì in poi ogni passo è un prompt da copiare e dare all'agente, che esegue lui i comandi. Il passo successivo si sblocca solo quando hai completato quello attuale. Usi ChatGPT? Scegli <b>Codex</b> in alto.</p>
     <div class="meta"><span><strong>${SECTIONS.length}</strong> percorsi</span><span><strong>${totSteps}</strong> passi in totale</span><span><strong>${totDone}</strong> completati con ${A}</span></div>
-    <div class="quick"><button type="button" data-open="g-percorsi">Percorsi guidati</button><button type="button" data-open="g-consultazione">Repository e consultazione</button></div>`;
+    <div class="quick"><button type="button" data-open="g-percorsi">Percorsi guidati</button><button type="button" data-open="g-consultazione">Repository e consultazione</button><button type="button" data-open="commands">Comandi e scorciatoie</button></div>`;
   const cons = GROUPS.find(g => g.id === "consultazione").items.length;
   window.__groupInfo = {
     "g-percorsi": { title: "Percorsi guidati", sub: `${SECTIONS.length} percorsi · ${totSteps} passi` },
-    "g-consultazione": { title: "Repository e consultazione", sub: `${cons} raccolte · ${SKILLS.length} skill` }
+    "g-consultazione": { title: "Repository e consultazione", sub: `${cons} raccolte · ${SKILLS.length} skill` },
+    "commands": { title: "Comandi e scorciatoie", sub: `${CMDS[store.agent].cmd.reduce((a, g) => a + g[1].length, 0)} comandi · ${CMDS[store.agent].keys.length} scorciatoie di ${A}` }
   };
   window.dispatchEvent(new Event("labels-change"));
 }
@@ -3555,8 +3556,8 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 const FRAME = {"cx": 1882.0, "cy": 1876.0, "outerR": 1830};
 const PINK = 0xffafd6, MINT = 0x95f7ce;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-// stellina a sinistra → Percorsi guidati · in alto a destra → Repository e consultazione · la terza resta decorativa
-const STAR_LINKS = { left: "g-percorsi", upperRight: "g-consultazione" };
+// stellina a sinistra → Percorsi guidati · in alto a destra → Repository e consultazione · in basso a destra → Comandi e scorciatoie
+const STAR_LINKS = { left: "g-percorsi", upperRight: "g-consultazione", lowerRight: "commands" };
 
 const canvas = document.getElementById("stage");
 let renderer;
@@ -3616,6 +3617,7 @@ const byX = [...stars].sort((a, b) => a.c.x - b.c.x);
 byX[0].link = STAR_LINKS.left;
 const rest = byX.slice(1).sort((a, b) => b.c.y - a.c.y);
 if (rest[0]) rest[0].link = STAR_LINKS.upperRight;
+if (rest[1]) rest[1].link = STAR_LINKS.lowerRight;
 
 /* ---------- etichette delle stelline ---------- */
 const tagLayer = document.getElementById("star-tags");
