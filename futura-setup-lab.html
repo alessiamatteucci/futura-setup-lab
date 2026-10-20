@@ -902,6 +902,53 @@ const SECTIONS = [
     ]
   },
   {
+    id: "crea-shader", tone: "pink", tag: "Progetto · shader",
+    title: "Crea il tuo <em>shader</em>",
+    short: "Descrivi un effetto, fallo costruire a {A} e provalo in Figma. Non scrivi codice: scegli il risultato, guardi l'anteprima e chiedi le modifiche.",
+    time: "30–45 min", requires: "{A} + Figma collegato",
+    steps: [
+      { t: "Cosa <em>ti serve</em>",
+        d: ["Uno shader è un piccolo programma che disegna o trasforma una superficie: grana, onde, metallo, riflessi, gradienti, distorsioni. Qui lo fai costruire all'agente e lo provi direttamente in Figma.", "Ti serve Figma già collegato a {A}: se non l'hai fatto, completa prima il percorso <b>Collegare Figma</b> in questa sezione. In più installi <b>Shader Architect</b>, la skill di Futura AI che aiuta l'agente nelle scelte creative: tipo di shader, materiali, luce e controlli.", "Se lavori dentro Figma con il suo agente, puoi usare invece la skill ufficiale <a href=\"https://www.figma.com/community/skill/64012/shader-starter\" target=\"_blank\" rel=\"noopener\">shader-starter</a>, che ti guida domanda dopo domanda."],
+        blocks: [{ k: "prompt", label: "installa Shader Architect", code: `Installa la skill Shader Architect: clona https://github.com/alessiamatteucci/Shader-Architect in una cartella temporanea e copia la cartella "shader-architect" in {SK}.\nPoi dimmi se la skill è installata e cosa sa fare.` }],
+        ok: "L'agente conferma che Shader Architect è installata. Apri una nuova sessione di {A} per caricarla." },
+      { t: "Verifica <em>gli strumenti shader</em>",
+        d: ["Essere collegati a Figma non basta da solo: l'agente deve avere anche le operazioni per creare, leggere e aggiornare gli shader. Chiediglielo prima di iniziare."],
+        blocks: [{ k: "prompt", code: `Vorrei creare uno shader nativo in Figma.\nVerifica se in questa conversazione puoi creare, leggere e aggiornare shader attraverso gli strumenti Figma collegati.\nSe puoi farlo, usa le istruzioni ufficiali Figma per questa operazione.\nSe non puoi, spiegami quale collegamento o funzionalità manca.` }],
+        ok: "L'agente conferma di poter creare, leggere e aggiornare shader. Se può solo scrivere testo o codice, puoi sviluppare l'idea con lui, ma per realizzarla serve un collegamento con le operazioni shader attive." },
+      { t: "Decidi <em>cosa vuoi ottenere</em>",
+        d: ["In Figma gli shader sono di due tipi. Per il primo esperimento scegli un risultato semplice: un fondo ondulato con due colori e pochi controlli.", "Per farti un'idea puoi sfogliare gli shader già pronti nella pagina <b>Shader in Figma</b>, tra i Materiali di questa sezione."],
+        thead: ["Vuoi…", "Tipo di shader"],
+        table: [["Creare una superficie da zero, come un fondo astratto", "Fill · riempimento"], ["Trasformare un'immagine o un contenuto che esiste già", "Effect · effetto"]],
+        ok: "Sai se ti serve un fill o un effect." },
+      { t: "Descrivi aspetto, <em>movimento e controlli</em>",
+        d: ["Prepara una breve descrizione. Non servono termini tecnici: «onde grandi e morbide, con poco contrasto» è più utile di «un effetto bellissimo»."],
+        list: ["<b>Aspetto:</b> cosa devo vedere? Onde, gocce, grana, superfici metalliche?", "<b>Colori:</b> quali colori e quanto contrasto?", "<b>Movimento:</b> fermo o animato? Lento, fluido, regolare?", "<b>Controlli:</b> cosa voglio poter cambiare dopo?"],
+        blocks: [{ k: "prompt", label: "se hai una reference, allegala con", code: `Usa questa immagine come riferimento per forme, colori e luce.\nPrima di costruire lo shader, individua le caratteristiche principali e spiegami quali puoi riprodurre e quali richiedono un'approssimazione.` }],
+        ok: "Hai una descrizione con aspetto, colori, movimento e controlli." },
+      { t: "Crea <em>il primo shader</em>",
+        d: ["Parti da questo esempio, poi sostituisci la descrizione con la tua. Se l'agente ti chiede quale team o piano Figma deve possedere lo shader, scegli quello in cui vuoi lavorare."],
+        blocks: [{ k: "prompt", code: `Crea uno shader fill nativo in Figma chiamato "Onde morbide".\n\nVoglio un fondo astratto con onde ampie e fluide, nei colori blu notte e lilla. I passaggi devono essere morbidi e il contrasto moderato.\nPer questa prima versione voglio un'immagine statica.\n\nEsponi questi controlli:\n- i due colori;\n- la dimensione delle onde;\n- l'intensità della deformazione;\n- il contrasto.\n\nImposta valori iniziali che mostrino chiaramente l'effetto.\nUsa gli strumenti Figma collegati per realizzare lo shader completo.\nAlla fine dammi il link per provarlo e spiegami come regolarlo.` }],
+        ok: "L'agente ti dà nome, ID e link dello shader, con i controlli disponibili." },
+      { t: "Aprilo <em>in Figma</em>",
+        d: ["Apri il link che ti ha dato l'agente. Se vuoi usare un tuo file, mandagli il link."],
+        blocks: [{ k: "prompt", code: `Voglio provare questo shader nel mio file Figma: [incolla il link].\nIndicami come aprirlo e applicarlo a un rettangolo di prova.` }],
+        list: ["Seleziona o crea un rettangolo.", "Applica lo shader come <b>riempimento</b>. Per uno shader effect usa invece gli <b>effetti</b>.", "Controlla che il risultato sia quello che hai chiesto: che il codice funzioni non basta a dire che l'aspetto sia giusto."],
+        ok: "Il rettangolo mostra lo shader come lo avevi descritto." },
+      { t: "Regola <em>una cosa alla volta</em>",
+        d: ["Prova i controlli: cambia un colore, ingrandisci le onde, alza o abbassa il contrasto. Poi chiedi una sola modifica precisa, nella stessa conversazione.", "Se il problema è difficile da descrivere, allega uno screenshot. Se apri una nuova sessione, dai all'agente anche l'ID dello shader, così ritrova quello giusto."],
+        blocks: [{ k: "prompt", code: `Le onde sono troppo piccole. Rendile più ampie e più morbide.\nMantieni gli stessi colori e lo stesso contrasto.\nAggiorna lo shader che abbiamo appena creato.` }],
+        ok: "Lo shader è aggiornato e il resto è rimasto com'era." },
+      { t: "Aggiungi <em>il movimento</em>",
+        d: ["Quando la versione ferma ti convince, puoi animarla. Per un loop senza stacchi indica anche la durata, per esempio «un loop continuo di 6 secondi», e guarda l'animazione intera: un'immagine sola non basta a giudicare fluidità e chiusura del loop.", "Se l'animazione diretta non è disponibile, chiedi quali alternative ci sono, compresa l'animazione dei parametri nella timeline."],
+        blocks: [{ k: "prompt", code: `Aggiungi a questo shader un movimento lento e continuo delle onde.\nMantieni colori, scala e contrasto della versione attuale.\nVoglio un controllo per la velocità e la possibilità di avere una versione ferma.\nVerifica prima che l'animazione sia supportata nell'ambiente Figma collegato.` }],
+        ok: "Le onde si muovono e puoi regolarne la velocità o fermarle." },
+      { t: "Conserva <em>lo shader</em>",
+        d: ["Tieni nome, ID e link insieme al prompt iniziale e ai valori dei controlli che ti piacciono. Per passare ad altri materiali usa lo stesso metodo: descrivi, crea, osserva, regola.", "Per vetro e distorsioni chiarisci quale immagine o contenuto deve essere trasformato: uno shader fill non distorce da solo quello che ha dietro."],
+        blocks: [{ k: "prompt", code: `Riepiloga questo shader: nome, ID, link, controlli disponibili e impostazioni attuali che riesci a verificare.\nAggiungi una breve descrizione del risultato, così potrò riprenderlo.` }],
+        ok: "Hai il riepilogo con nome, ID, link e impostazioni, pronto da conservare." }
+    ]
+  },
+  {
     id: "video-setup", tone: "mint", tag: "Video · setup",
     title: "Prepararsi a <em>montare video</em>",
     short: "FFmpeg, sottotitoli automatici e motion graphic: {A} installa tutto e monta per te da prompt.",
@@ -1410,7 +1457,7 @@ const GROUPS = [
       { id: "figma-chrome", cls: "" },
       { id: "design-system", cls: "span2" },
       { id: "design-system-repo", cls: "span2" },
-      { id: "crea-shader", cls: "span2", soon: { tag: "Progetto · shader", title: "Crea il tuo <em>shader</em>", d: "Progetta uno shader nativo in Figma insieme all'agente e a Shader Architect, dal materiale che hai in mente ai controlli da regolare." } },
+      { id: "crea-shader", cls: "span2" },
       { id: "figma-skills", cls: "span2", mat: true },
       { id: "shaders", cls: "span2", mat: true },
       { id: "weave-tools", cls: "span2", mat: true },
@@ -1679,7 +1726,7 @@ function renderSection(id, focusTop) {
       <h2 id="step-title" tabindex="-1">${T(st.t)}</h2>
       ${(st.d || []).map(x => `<p class="lead">${T(x)}</p>`).join("")}
       ${st.list ? `<ol class="sub">${st.list.map(x => `<li><span>${T(x)}</span></li>`).join("")}</ol>` : ""}
-      ${st.table ? `<div class="qa-wrap"><table class="qa"><thead><tr><th>Domanda</th><th>Risposta</th></tr></thead><tbody>${st.table.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table></div>` : ""}
+      ${st.table ? `<div class="qa-wrap"><table class="qa"><thead><tr><th>${(st.thead || ["Domanda", "Risposta"])[0]}</th><th>${(st.thead || ["Domanda", "Risposta"])[1]}</th></tr></thead><tbody>${st.table.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table></div>` : ""}
       ${(st.blocks || []).map(blockHTML).join("")}
       <div class="expect"><span class="eyebrow">Cosa devi vedere</span><div>${T(st.ok)}</div></div>
       <div class="gate">
@@ -2062,11 +2109,8 @@ const FIGMA_PAGES = {
         ["Pattern refraction", FC + "shader/1650660515974921293/pattern-refraction", "Rifrazione attraverso un pattern, effetto vetro."],
         ["Outlines", FC + "shader/1650660529511348308/outlines", "Contorni disegnati sui bordi."]
       ] },
-      { g: "Crearne di tuoi", items: [
-        ["shader-starter", FC + "skill/64012/shader-starter", "Skill ufficiale: ti guida a creare uno shader con l'agente di Figma, domanda dopo domanda."]
-      ] }
     ],
-    meta() { return `${this.groups.reduce((a, x) => a + x.items.length, 0)} shader e risorse`; }
+    meta() { return `${this.groups.reduce((a, x) => a + x.items.length, 0)} shader`; }
   },
   "weavy": {
     tag: "Piattaforma", title: "Figma <em>Weave</em>", kind: "link", cta: "Apri", tone: "pink",
