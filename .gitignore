@@ -2,3 +2,5 @@
 *
 !.gitignore
 !futura-setup-lab.html
+!skills/
+!skills/*.zip
