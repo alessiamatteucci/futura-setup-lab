@@ -2469,7 +2469,7 @@ function skillPanel(x, i) {
   let body;
   if (x.zip) {
     body = `<div class="zip">
-      <a class="btn primary" href="${x.zip}" download="${x.file}">Scarica lo ZIP ↓</a>
+      <a class="btn primary" href="${x.zip}" download="${x.file}" data-zip="${i}">Scarica lo ZIP ↓</a>
       <p>Scompatta l'archivio e copia la cartella <code>${x.file.replace(".zip", "")}</code> in <code>${AG[ag].SK}</code>. Poi apri una nuova sessione di ${A}.</p>
     </div>`;
   } else if (tab === "zip") {
@@ -2516,6 +2516,8 @@ function renderLibrary() {
     <p class="warn">Le skill della community sono codice scritto da terzi: prima di installarne una, apri il repository e leggi cosa fa. Il comando da Terminale usa <code>npx skills</code>, che richiede Node.js.</p>`;
   app.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { store.cat = b.dataset.cat; save(); renderLibrary(); }));
   app.querySelector(".lib").addEventListener("click", e => {
+    const z = e.target.closest("[data-zip]");
+    if (z && window.claude) { e.preventDefault(); saveZip(SKILLS[+z.dataset.zip], z); return; }
     const t = e.target.closest("[data-tab]"); if (!t) return;
     const [i, k] = t.dataset.tab.split(":"); libTab[i] = k;
     const host = document.getElementById("panel-" + i);
@@ -2523,6 +2525,16 @@ function renderLibrary() {
     wireCopy(n => document.getElementById("lib-" + n), host);
   });
   wireCopy(n => document.getElementById("lib-" + n));
+}
+
+/* Dentro claude.ai il download passa dalla capability "downloads"; aperta come file locale basta il link */
+async function saveZip(x, btn) {
+  const downloads = await claude.use("downloads");
+  const note = btn.nextElementSibling;
+  if (!downloads) { note.textContent = "Il download non è disponibile in questa vista: apri la pagina in claude.ai."; return; }
+  const data = await (await fetch(x.zip)).blob();
+  try { await downloads.save({ filename: x.file, data }); }
+  catch (err) { if (err.code !== "declined") note.textContent = "Download non riuscito, riprova tra poco."; }
 }
 
 /* ---------- Copy ---------- */
